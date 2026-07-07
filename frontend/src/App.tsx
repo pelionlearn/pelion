@@ -1,7 +1,10 @@
 import "./App.css";
+import Upload from "./Upload";
 
 function App() {
-    return <></>;
+    return <>
+        <Upload></Upload>
+    </>;
 }
 
 export default App;
