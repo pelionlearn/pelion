@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
+# import chromadb
 
 from embeddings import NemotronEmbedding
 
@@ -15,8 +16,15 @@ client = OpenAI(
 
 embedding_function = NemotronEmbedding(client)
 
+print("connecting to vector store")
+# chroma_client = chromadb.Http
+
 print("initializing vector store...")
-vector_store = Chroma(collection_name="pelion", embedding_function=embedding_function)
+vector_store = Chroma(
+    collection_name="pelion",
+    embedding_function=embedding_function,
+    host="chromadb",
+)
 
 print("adding documents...")
 document_1 = Document(page_content="i am hungry")

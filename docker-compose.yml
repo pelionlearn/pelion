@@ -3,3 +3,17 @@ services:
     build: backend/
     env_file:
       - backend/.env
+    depends_on: [chromadb]
+
+  chromadb:
+    image: chromadb/chroma
+    ports:
+      - "8000:8000"
+    volumes:
+      - chromadb:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+
+volumes:
+  chromadb:
