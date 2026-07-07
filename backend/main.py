@@ -1,9 +1,8 @@
 import os
 from dotenv import load_dotenv
-
-# from langchain.chat_models import init_chat_model
-from langchain_openai import OpenAIEmbeddings
 from openai import OpenAI
+
+from embeddings import NemotronEmbedding
 
 load_dotenv()
 
@@ -12,11 +11,7 @@ client = OpenAI(
     api_key=os.environ.get("OPENROUTER_API_KEY"),
 )
 
-response = client.embeddings.create(
-    model="nvidia/llama-nemotron-embed-vl-1b-v2:free",
-    input=[{"content": [{"type": "text", "text": "What is in this image?"}]}],
-    encoding_format="float",
-)
+embeddings = NemotronEmbedding(client)
 
-vector = response.data[0].embedding[:5]
-print(vector)
+vector = embeddings.embed_query("What is OpenRouter?")
+print(vector[:5])
