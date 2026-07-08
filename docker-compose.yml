@@ -3,9 +3,23 @@ services:
     build: backend/
     env_file:
       - backend/.env
-    depends_on: [chromadb]
+    depends_on:
+      pelionllm-neo4j:
+        condition: service_started
+      chromadb:
+        condition: service_started
 
-  chromadb:
+  pelionllm-neo4j:
+    image: neo4j:2026.05.0
+    env_file:
+     - backend/.env
+    ports:
+      - "6868:7474"
+      - "6969:7687"
+    volumes:
+      - neo4j:/etc/neo4j
+
+  pelionllm-chromadb:
     image: chromadb/chroma
     ports:
       - "8000:8000"
@@ -16,4 +30,5 @@ services:
       - PERSIST_DIRECTORY=/chroma/chroma
 
 volumes:
+  neo4j:
   chromadb:
