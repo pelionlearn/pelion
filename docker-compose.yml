@@ -6,7 +6,7 @@ services:
     depends_on:
       pelionllm-neo4j:
         condition: service_started
-      chromadb:
+      pelionllm-chromadb:
         condition: service_started
 
   pelionllm-neo4j:
