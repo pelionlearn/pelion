@@ -1,52 +1,66 @@
+import { useState } from "react";
 import "./App.css";
+import { motion } from "motion/react"
 
 function App() {
+    const [active, setActive] = useState("Home");
+
+    const items = [
+        ["house", "Home"],
+        ["users", "Classes"],
+        ["comment", "Tutor"],
+        ["question", "Quizzes"],
+        ["magnifying-glass", "Search"],
+    ];
+
     return (
         <div className="flex h-screen bg-(--bg-950) text-(--text)">
-            {/* Sidebar */}
+            {/* sidebar */}
             <aside className="glass-bar flex w-72 flex-col border-r border-(--border)">
                 <div className="p-6">
                     <h1 className="text-4xl font-bold">Pelion</h1>
                 </div>
 
-                <nav className="flex flex-1 flex-col gap-1 px-3 text-xl">
-                    <button className="glass rounded-xl bg-white/8 px-4 py-3 text-left">
-                        <i className="fa-solid fa-house mr-3"></i>
-                        Home
-                    </button>
-
-                    <button className="button-text rounded-xl px-4 py-3 text-left transition hover:bg-white/5">
-                        <i className="fa-solid fa-users mr-3"></i>
-                        Classes
-                    </button>
-
-                    <button className="button-text rounded-xl px-4 py-3 text-left transition hover:bg-white/5">
-                        <i className="fa-solid fa-comment mr-3"></i>
-                        Tutor
-                    </button>
-
-                    <button className="button-text rounded-xl px-4 py-3 text-left transition hover:bg-white/5">
-                        <i className="fa-solid fa-question mr-3"></i>
-                        Quizzes
-                    </button>
-
-                    <button className="button-text rounded-xl px-4 py-3 text-left transition hover:bg-white/5">
-                        <i className="fa-solid fa-magnifying-glass mr-3"></i>
-                        Search
-                    </button>
-
-                    <div className="mt-auto mb-4">
-                        <button className="button-text w-full rounded-xl px-4 py-3 text-left transition hover:bg-white/5">
-                            <i className="fa-solid fa-gear mr-3"></i>
-                            Settings
-                        </button>
-                    </div>
-                </nav>
+                <motion.nav
+                    className="flex flex-1 flex-col gap-1 px-3 text-xl"
+                    initial="hidden"
+                    animate="show"
+                    variants={{
+                        hidden: {},
+                        show: {
+                            transition: {
+                                staggerChildren: 0.08
+                            }
+                        }
+                    }}
+                >
+                    {items.map(([icon, name]) => (
+                        <motion.button
+                            key={name}
+                            variants={{
+                                hidden: {
+                                    opacity: 0,
+                                    x: -20
+                                },
+                                show: {
+                                    opacity: 1,
+                                    x: 0
+                                }
+                            }}
+                            transition={{
+                                duration: .3
+                            }}
+                            className={`button-text rounded-xl px-4 py-3 text-left hover:bg-white/5 ${active === name ? "glass" : ""}`}
+                        >
+                            <i className={`fa-solid fa-${icon} mr-3`}></i>
+                            {name}
+                        </motion.button>
+                    ))}
+                </motion.nav>
             </aside>
 
-            {/* Application */}
             <div className="flex flex-1 flex-col overflow-hidden">
-                {/* Top bar */}
+                {/* top bar */}
                 <header className="glass-bar flex h-18 items-center justify-between border-b border-(--border) px-8">
                     <h2 className="text-xl font-semibold">Home</h2>
 
@@ -69,12 +83,12 @@ function App() {
                     </div>
                 </header>
 
-                {/* Content */}
-                <main className="flex-1 overflow-auto p-8">
-                    <div className="mb-8">
+                {/* content */}
+                <motion.main className="flex-1 overflow-auto p-8" animate={{ opacity: [0, 1], y: [-20, 0] }} transition={{ duration: 0.5 }}>
+                    <div className="mb-6">
                         <h1 className="text-4xl font-bold">Good evening, Jeremy</h1>
 
-                        <p className="mt-2 text-(--text-secondary)">
+                        <p className="mt-3 text-(--text-secondary)">
                             What do you want to learn today?
                         </p>
                     </div>
@@ -88,8 +102,8 @@ function App() {
                         <button className="rounded-xl button-primary px-5 py-2">Ask</button>
                     </div>
 
-                    {/* Classes */}
-                    <section className="mt-8">
+                    {/* classes */}
+                    <section className="mt-12">
                         <div className="mb-4 flex justify-between">
                             <h2 className="text-xl font-semibold">Your Classes</h2>
 
@@ -106,7 +120,7 @@ function App() {
                             </div>
                         </div>
                     </section>
-                </main>
+                </motion.main>
             </div>
         </div>
     );
