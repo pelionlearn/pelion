@@ -42,4 +42,4 @@ ENV PATH="/home/myuser/.venv/bin:$PATH"
 
 COPY . .
 
-CMD ["python", "main.py"]
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "5000"]

@@ -5,14 +5,13 @@ import { motion } from "motion/react"
 function App() {
     const [active, setActive] = useState("Home");
 
-    const items = [
+    const items: [string, string][] = [
         ["house", "Home"],
-        ["users", "Classes"],
         ["comment", "Tutor"],
         ["question", "Quizzes"],
         ["magnifying-glass", "Search"],
     ];
-
+    
     return (
         <div className="flex h-screen bg-(--bg-950) text-(--text)">
             {/* sidebar */}
@@ -86,7 +85,7 @@ function App() {
                 {/* content */}
                 <motion.main className="flex-1 overflow-auto p-8" animate={{ opacity: [0, 1], y: [-20, 0] }} transition={{ duration: 0.5 }}>
                     <div className="mb-6">
-                        <h1 className="text-4xl font-bold">Good evening, Jeremy</h1>
+                        <h1 className="text-4xl font-bold">Good evening, Jeremy.</h1>
 
                         <p className="mt-3 text-(--text-secondary)">
                             What do you want to learn today?
@@ -110,7 +109,7 @@ function App() {
                             <button className="button-text text-(--green-400)">+ Create Class</button>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-5">
+                        <div className="cursor-pointer grid grid-cols-3 gap-5">
                             <div className="glass rounded-xl p-6">
                                 <h3 className="font-semibold">Discrete Math</h3>
 
