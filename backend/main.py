@@ -1,9 +1,12 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+from langchain_openrouter import ChatOpenRouter
+from langchain_neo4j import Neo4jGraph
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-# import chromadb
+from langchain_core.language_models import BaseLanguageModel
+from langchain_experimental.graph_transformers import LLMGraphTransformer
 
 from embeddings import NemotronEmbedding
 
@@ -43,6 +46,19 @@ vector_store.add_images(
     uris=["images/images.jpeg", "images/images (1).jpeg", "images/images (2).jpeg"],
     ids=["cat", "dog", "camel"],
 )
+
+print("initializing graph...")
+graph = Neo4jGraph(
+    url=os.environ.get("_NEO4J_URI"),
+    username=os.environ.get("_NEO4J_USERNAME"),
+    password=os.environ.get("_NEO4J_PASSWORD"),
+)
+
+print("building graph...")
+llm = ChatOpenRouter(model="tencent/hy3:free")
+graph_transformer = LLMGraphTransformer(llm=llm)
+graph_docs = graph_transformer.convert_to_graph_documents(documents)
+graph.add_graph_documents(graph_docs)  # type: ignore
 
 print("running similarity search...")
 results = vector_store.similarity_search_with_score("dog", 7)

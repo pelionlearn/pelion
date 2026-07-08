@@ -5,7 +5,21 @@ services:
       - "5000:5000"
     env_file:
       - backend/.env
-    depends_on: [chromadb]
+    depends_on:
+      pelionllm-neo4j:
+        condition: service_started
+      pelionllm-chromadb:
+        condition: service_started
+
+  pelionllm-neo4j:
+    image: neo4j:2026.05.0
+    env_file:
+     - backend/.env
+    ports:
+      - "6868:7474"
+      - "6969:7687"
+    volumes:
+      - neo4j:/etc/neo4j
 
   pelionllm-frontend:
     build: frontend/
@@ -13,7 +27,7 @@ services:
       - "80:5173"
     depends_on: [pelionllm-backend]
 
-  chromadb:
+  pelionllm-chromadb:
     image: chromadb/chroma
     ports:
       - "8000:8000"
@@ -23,7 +37,7 @@ services:
       - IS_PERSISTENT=TRUE
       - PERSIST_DIRECTORY=/chroma/chroma
 
-  postgres:
+  pelionllm-postgres:
     image: postgres:17
     container_name: postgres
     restart: unless-stopped
@@ -37,5 +51,6 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
 volumes:
+  neo4j:
   chromadb:
   postgres_data:
