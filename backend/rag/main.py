@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+import chromadb
 from langchain_openrouter import ChatOpenRouter
 from langchain_neo4j import Neo4jGraph
 from langchain_chroma import Chroma
@@ -12,21 +13,35 @@ from embeddings import NemotronEmbedding
 
 load_dotenv()
 
+
+def get_env(key):
+    val = os.environ.get(key)
+    if val is None:
+        print(
+            f"Required key {key} not found in environment. Make sure .env is configured correctly."
+        )
+        exit(1)
+    return val
+
+
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=os.environ.get("OPENROUTER_API_KEY"),
+    api_key=get_env("OPENROUTER_API_KEY"),
 )
 
 embedding_function = NemotronEmbedding(client)
 
 print("connecting to vector store")
-# chroma_client = chromadb.Http
+chroma_client = chromadb.HttpClient(
+    host=get_env("CHROMA_HOST"),
+    port=int(get_env("CHROMA_PORT")),
+)
 
 print("initializing vector store...")
 vector_store = Chroma(
     collection_name="pelion",
     embedding_function=embedding_function,
-    host="chromadb",
+    client=chroma_client,
 )
 
 print("adding documents...")
@@ -49,9 +64,9 @@ vector_store.add_images(
 
 print("initializing graph...")
 graph = Neo4jGraph(
-    url=os.environ.get("_NEO4J_URI"),
-    username=os.environ.get("_NEO4J_USERNAME"),
-    password=os.environ.get("_NEO4J_PASSWORD"),
+    url=get_env("_NEO4J_URI"),
+    username=get_env("_NEO4J_USERNAME"),
+    password=get_env("_NEO4J_PASSWORD"),
 )
 
 print("building graph...")
