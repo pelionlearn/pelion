@@ -23,12 +23,12 @@ export default function Upload() {
         <>
             <input
                 type="file"
-                onChange={(e) => {
+                onChange={e => {
                     if (e.target.files) setFile(e.target.files[0]);
                 }}
             />
 
-            <button onClick={upload}>
+            <button className="glass button-primary" onClick={upload}>
                 Upload
             </button>
         </>
