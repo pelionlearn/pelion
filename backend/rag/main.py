@@ -1,4 +1,5 @@
 import os
+import asyncio
 from dotenv import load_dotenv
 from openai import OpenAI
 import chromadb
@@ -6,8 +7,10 @@ from langchain_openrouter import ChatOpenRouter
 from langchain_neo4j import Neo4jGraph
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-from langchain_core.language_models import BaseLanguageModel
+from langchain_core.runnables import RunnableConfig
 from langchain_experimental.graph_transformers import LLMGraphTransformer
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
 
 from embeddings import NemotronEmbedding
 
@@ -24,43 +27,52 @@ def get_env(key):
     return val
 
 
-client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=get_env("OPENROUTER_API_KEY"),
-)
+# client = OpenAI(
+#     base_url="https://openrouter.ai/api/v1",
+#     api_key=get_env("OPENROUTER_API_KEY"),
+# )
 
-embedding_function = NemotronEmbedding(client)
+# embedding_function = NemotronEmbedding(client)
 
-print("connecting to vector store")
-chroma_client = chromadb.HttpClient(
-    host=get_env("CHROMA_HOST"),
-    port=int(get_env("CHROMA_PORT")),
-)
+# print("connecting to vector store")
+# chroma_client = chromadb.HttpClient(
+#     host=get_env("CHROMA_HOST"),
+#     port=int(get_env("CHROMA_PORT")),
+# )
 
-print("initializing vector store...")
-vector_store = Chroma(
-    collection_name="pelion",
-    embedding_function=embedding_function,
-    client=chroma_client,
-)
+# print("initializing vector store...")
+# vector_store = Chroma(
+#     collection_name="pelion",
+#     embedding_function=embedding_function,
+#     client=chroma_client,
+# )
 
-print("adding documents...")
-document_1 = Document(page_content="i am hungry")
-document_2 = Document(page_content="openrouter gives me free ai models")
-document_3 = Document(
-    page_content="nvidia gives me free ai models but it steals all my data to train them",
-)
-document_4 = Document(
-    page_content="i love dogs! dogs have 4 legs and a tail. dogs are really cute and i love to pet them.",
-)
-documents = [document_1, document_2, document_3, document_4]
-vector_store.add_documents(documents=documents, ids=["1", "2", "3", "4"])
+# print("adding documents...")
+# document_1 = Document(page_content="i am hungry")
+# document_2 = Document(page_content="openrouter gives me free ai models")
+# document_3 = Document(
+#     page_content="nvidia gives me free ai models but it steals all my data to train them",
+# )
+# document_4 = Document(
+#     page_content="i love dogs! dogs have 4 legs and a tail. dogs are really cute and i love to pet them.",
+# )
+# documents = [document_1, document_2, document_3, document_4]
+# vector_store.add_documents(documents=documents, ids=["1", "2", "3", "4"])
 
-print("adding images...")
-vector_store.add_images(
-    uris=["images/images.jpeg", "images/images (1).jpeg", "images/images (2).jpeg"],
-    ids=["cat", "dog", "camel"],
-)
+# print("adding images...")
+# vector_store.add_images(
+#     uris=["images/images.jpeg", "images/images (1).jpeg", "images/images (2).jpeg"],
+#     ids=["cat", "dog", "camel"],
+# )
+
+
+async def get_graph_docs(graph_transformer, documents):
+    config = RunnableConfig({"max_concurrency": 4})
+    graph_docs = await graph_transformer.aconvert_to_graph_documents(
+        documents, config=config
+    )
+    return graph_docs
+
 
 print("initializing graph...")
 graph = Neo4jGraph(
@@ -69,14 +81,49 @@ graph = Neo4jGraph(
     password=get_env("_NEO4J_PASSWORD"),
 )
 
+text_splitter = RecursiveCharacterTextSplitter(
+    separators=[" ", ",", ":", ";", ".", "\n"],
+    chunk_size=2000,
+    chunk_overlap=250,
+    keep_separator=True,
+)
+
+documents = []
+# files = ["docs/ela/1.txt", "docs/ela/2.txt", "docs/ela/3.txt", "docs/ela/4.txt", "docs/ela/5.txt"]
+files = ["docs/platos-republic.txt"]
+
+for file in files:
+    with open(file) as f:
+        text = f.read()
+        document = Document(page_content=text, metadata={"filename": file})
+        documents.append(document)
+
+documents_chunked = text_splitter.split_documents(documents)
+
+# print(documents)
+# print("\n" * 5)
+# print(documents_chunked)
+# print(len(documents_chunked))
+# print(len(documents_chunked[0].page_content))
+# exit(1)
+
 print("building graph...")
+# llm = ChatOpenRouter(model="mistralai/mistral-nemo") # paid but very cheap ($0.02 input / $0.03 output per 1M tokens)
 llm = ChatOpenRouter(model="tencent/hy3:free")
 graph_transformer = LLMGraphTransformer(llm=llm)
-graph_docs = graph_transformer.convert_to_graph_documents(documents)
+# graph_transformer = LLMGraphTransformer(
+#     llm=llm,
+#     allowed_nodes=["Person", "Organization", "Location"],
+#     allowed_relationships=["WORKS_AT", "LOCATED_IN"]
+# )
+
+# graph_docs = graph_transformer.convert_to_graph_documents(documents_chunked)
+graph_docs = asyncio.run(get_graph_docs(graph_transformer, documents_chunked))
+
 graph.add_graph_documents(graph_docs)  # type: ignore
 
-print("running similarity search...")
-results = vector_store.similarity_search_with_score("dog", 7)
+# print("running similarity search...")
+# results = vector_store.similarity_search_with_score("dog", 7)
 
-for result in results:
-    print(f"id: {result[0].id}, similarity score: {result[1]}")
+# for result in results:
+#     print(f"id: {result[0].id}, similarity score: {result[1]}")

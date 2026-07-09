@@ -1,0 +1,25 @@
+ela history sg (5.1KB)
+before:
+	time:		23:23
+	requests:	153
+after:
+	time:		23:26
+	requests:	280
+total:
+	time:		00:03
+	requests:	127
+	nodes:		707
+	relationships:	1360
+
+platos republic (1.2MB)
+before:
+	time:		00:08
+	requests:	280
+after:
+	time:		DNF
+	requests:	851
+total:
+	time:		DNF
+	requests:	571
+	nodes:		DNF
+	relationships:	DNF

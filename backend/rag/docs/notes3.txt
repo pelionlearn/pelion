@@ -1,0 +1,184 @@
+Latin IV Midterm Study Guide: 
+Essay Question
+Summarize the main reasons why Cicero believes that the jury should reject Caecilius. How did the structure of Cicero’s speech (a dialogue with Caecilius) and his use of various rhetorical devices (balanced expressions, congeries verborum, hendiadys) help convince the jury that he should represent the Sicilians?
+Congeries verborum: literally “piling up of words”
+Hendiadys: literally “one through two”, the expression of a single idea by two words connected with “and”, e.g. “nice and warm”, when one could be used to modify the other, as in “nicely warm”
+
+Tactics:
+Humor, sarcasm, invective (slander/personal attack), exaggeration, appealing to emotion, rhetorical questions, digression, dubitatio (doubt, mock modesty), hendiadys, alliteration, assonance, simile, metaphor, litotes, anaphora, balanced expression
+
+Claim:
+Cicero argues that Caecilius is not qualified to represent the Sicilians by using rhetorical devices to show his incompetence and emphasize his superior abilities.
+Rhetorical questions: “Putasne posse…”
+Balanced expression: “if you had learned Greek literature in Athens, not Lilybae, Latin in Rome, not Sicily”
+Congeries Verborum: “Still it is a great task to follow through with diligence, embrace in your memory, set forth with your speech, and sustain with your voice and strength such a cause, so eagerly awaited”
+Anaphora: “Do you think that… Do you think that…”
+Mock Modesty: “And if I, because of the immense difficulty of these things, am not able to acquire them, who have done nothing else in all my life, how far do you think that you fall short from these things which you have thought of not only never before, but not even now, when you entered into this, can you understand their nature and importance?”
+Reasons:
+Lack of experience
+Cicero has superior education
+Largeness of the Case 
+
+Claim, Main Reasons, Rhetorical Devices 
+Specific Rhetorical Devices 
+Specific Reason (maybe two) 
+Conclusion 
+
+Cicero argues that Caecilius is not qualified to represent the Sicilians by using rhetorical devices like invectives and anaphora to show his incompetence and emphasize his superior abilities.
+One of the main reasons Cicero says the jury should reject Caecilius is that he lacks experience and the case is too large and complicated for him, especially when Cicero has a superior education. He shows how Caecilius is inept by pointing out flaws in Caecilius’s speech and how he has not had enough experience for such a large case. He points out in Section 43 that Caecilius did not end his speech with “Iovem ego optimum maximum” or “I praise Jupiter, the best and greatest” which is how all the great orators end their speeches (invective). He also points out how Caecilius has had subpar schooling, having been taught in Sicily and not Athens and Rome where Cicero has (Anaphora/Balanced Expression/Mock Modesty). He insults him by listing all the things that are very hard for a rookie like him to do (anaphora/invective). Another example is the use of congeries verborum or “a piling up of words.” He says, “Still it is a great task to follow through with diligence, embrace in your memory, set forth with your speech, and sustain with your voice and strength such a cause, so eagerly awaited." Here, Cicero is piling up words to emphasize the difficulty of the case. Multiple times in his speech, he says, “Putasne posse” (“Do you think that you can”), asking Caecilius a rhetorical question and showing the difficulty of the case. He repeats this phrase multiple times, making it an anaphora. In this anaphora, he sarcastically asks Caecilius if he thinks he can thoroughly demonstrate Verres’ crimes and convince the Roman people of his guilt.
+	Cicero argues that the jury should reject Caecilius due to his lack of experience. He emphasizes his superior education and preparation for the case, which makes him more qualified to represent the Sicilians. By showing the difficulty of the case and contrasting his expertise with Caecilius’ inferior education, Cicero is able to convince the jury that he is the most capable advocate for the Sicilian’s cause. 
+Passage Translation
+8
+
+{de te}, Caecili, (iam mehercule hoc extra hanc contentionem certamenque nostrum familiariter tecum loquar),
+O Caecilius, (now by Hercules, I will speak familiarly with you, beyond this contest and rivalry of ours),
+
+tu ipse quem ad modum [de te] existimes vide etiam atque etiam,
+see how you yourself think about yourself again and again
+"vide" is the first imperative in a tricola
+Goofy translation I disagree, also what happened to "quem ad modum"
+I think "ad modum" means "in this manner" or "such an extent" but imma just skip it like we did in class
+
+et tu te collige, et qui sis et quid facere possis considera.
+and collect yourself, and consider who you are and what you are able to do.
+"collige" and "considera" are both imperatives
+two small indirect questions following "considera"
+
+BIG CUM CLAUSE INTERRUPTS THE MAIN CLAUSE
+
+Putasne te posse de maximis acerbissimisque rebus, [INTERRUPTING CUM CLAUSE], tot res tam graves, tam varias, voce, memoria, consilio, ingenio sustinere?
+Do you think that you are able to sustain such grave and such various things with your voice, memory, plan, talent, from the greatest and harshest things,
+
+
+INTERRUPTING CUM CLAUSE
+cum causam sociorum fortunasque provinciae, ius populi Romani, gravitatem iudici legumque susceperis,
+when you have undertaken the cause of the allies, and the fortunes of the province, the rights of the Roman people, the dignity of the judgement and the law?
+it might actually be better to insert the cum clause after "Do you think that" but it doesn't really matter
+
+9
+
+Putasne te posse [distinguere] quae C. Verres in quaestura, quae in legatione, quae in praetura, quae Romae, quae in Italia, quae in Achaia, Asia Pamphyliaque peccarit, ea,
+Do you think that you are able to distinguish those things which Verres did wrong in in his quaestorship, as a deputy governor (legate), during his praestorship, when in Rome, when in Italy, when in Greece, Asia and Pamphylia,
+
+quem ad modum locis temporibusque divisa sint,
+just as they have been divided by time and place,
+
+sic criminibus et oratione distinguere?
+thus in your accusation and in your speech?
+
+Cicero is asking Caecilius if he thinks he can in his argument properly show what Verres did wrong (if he were to win, of course)
+
+Putasne posse, facere ut, quae ille libidinose, quae nefarie, quae crudeliter fecerit,
+Do you think that you are able to do it so that those things, which he did willingly, which he did nefariously, which he did cruelly,
+"fecerit" is the main verb of all of the relative clauses
+
+ea aeque acerba et indigna videantur esse his qui audient atque illis visa sunt qui senserunt?
+seem to those listening equally as harsh and unjust as they seemed to those who experienced them?
+aeque = equally
+his qui audient = those listening
+qui senserunt = those who experienced them
+
+10
+
+Magna sunt ea quae dico, mihi crede;
+Great are the things which I say, believe me;
+
+noli haec contemnere.
+do not disregard this.
+
+dicenda, demonstranda, explicanda sunt omnia,
+All these things must be said, demonstrated, and explained,
+
+causa non solum exponenda, sed etiam graviter copioseque agenda est;
+the case must not only be put forth, but also must be done seriously and in great detail;
+copiose = literally plentifully; in great detail
+
+perficiendum est, si quid agere aut proficere vis,
+this must be achieved, if you want to do or achieve anything,
+
+ut homines te non solum audiant, verum etiam libenter studioseque audiant.
+so that the men not only hear you, but even hear you willingly and eagerly.
+
+in quo si te multum natura adiuvaret,
+In which, if nature helped you much,
+
+si optimis a pueritia disciplinis atque artibus studuisses et in his elaborasses,
+if you had been eager for the best training and arts from your youth and you had worked hard in these,
+
+si litteras Graecas Athenis non Lilybaei, Latinas Romae non in Sicilia didicisses,
+if you had learned Greek literature in Athens not Lilybaei, Latin in Rome not Sicily,
+
+tamen esset magnum tantam causam, tam exspectatam, et diligentia consequi et memoria complecti et oratione exponere et voce ac viribus sustinere.
+Still it is a great task to follow through with diligence, embrace in your memory, set forth with your speech, and sustain with your voice and strength such a cause, so eagerly awaited.
+I used magnum as the direct object for "esset" and took the list of infinitives as complementaries with "tantam causam" as the direct object for the infinitives
+
+
+11
+
+fortasse dices: "quid ergo? haec in te sunt omnia?"
+Perhaps you say: "What then? Are all these things in you?"
+
+Utinam quidem essent!
+Indeed I wish they were!
+
+verum tamen ut esse possent magno studio mihi a puerita est elaboratum.
+Nevertheless, in order to acquire these qualities, I have worked hard with great studiousness from my childhood.
+ut esse possent = in order to acquire these qualities; literally: so that these things could be
+mihi est elaboratum = I have worked hard; literally?: hard work was done by me
+
+quodsi ego haec, propter magnitudinem rerum ac difficultatem adsequi non potui,
+And if I, because of the greatness of these things and their difficulty, am not able to acquire them,
+
+qui in omni vita nihil aliud egi,
+who have done nothing else in all my life,
+
+quam longe tu te ab his rebus abesse arbitrare,
+how far do you think that you fall short from these things
+
+quas non modo antea numquam cogitasti,
+which you have thought of not only never before,
+
+sed ne nunc quidem, cum in eas ingrederis,
+but not even now, when you entered into this,
+
+quae et quantae sint suspicari potes?
+can you understand their nature and importance?
+
+12
+
+iam nunc mente et cogitatione prospicio quae tum studia hominum,
+already now I foresee with my mind and imagination what excitement of men then,
+
+qui concursus futuri sint,
+who are likely to be the crowd,
+
+quantam expectationem magnitudo iudicii sit allatura,
+how great an expectation the importance of the trial will excite,
+
+quantam auditorum multitudinem infamia C. Verris concitatura,
+how great a multitude of listeners the infamy of Verres will attract,
+
+quantam denique audientiam orationi meae improbitas illius factura sit.
+finally, how great an audience for my speech his wickedness will bring.
+
+how I translated the "quantam" clauses:
+"how great" + accusative (D.O.) + nominative (subject) + verb
+maybe you could put it in the usual order of nom + verb + acc, but it sounds better if the accusative is right after the "how great"
+
+quae cum cogito, iam nunc timeo quidnam pro offensione hominum, qui illi inimici infensique sunt, et expectatione omnium et magnitudine rerum dignum eloqui possim.
+When I think about these things, already now I fear what I can say that will be worthy to the indignation of the people who are unfriendly and hostile to Verres, and will be worthy of all expectations and the importance of the deed.
+
+13
+
+tu horum nihil metuis, nihil cogitas, nihil laboras:
+Of all these things, do you fear nothing, do you think of nothing, are you anxious about nothing:
+
+si quid ex vetere aliqua oratione,
+If from some old speech,
+
+"Iovem ego optimum maximum," aut "vellem, si fieri potuisset, iudices," aut aliquid eius modi ediscere potueris,
+You are able to learn "I praise Jupiter, the best and greatest" or "I wish, if it could have been done, O judges," or something of the sort,
+"Iovem ego optimum maximum" = "I [praise/invoke] Jupiter, the best and greatest."
+
+praeclare te paratum in iudicium venturum arbitraris.
+do you think you will be coming well prepared to the court?
