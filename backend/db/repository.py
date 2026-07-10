@@ -1,18 +1,18 @@
 from db.database import Session
-from db.models import User, Class, Document, ClassMembers, ClassDocuments
 
 
-def create_user(name: str, email: str):
+def create(model, **kwargs):
     with Session() as session:
-        user = User(name, email)
-
-        session.add(user)
+        obj = model(**kwargs)
+        session.add(obj)
         session.commit()
-        session.refresh(user)
+        session.refresh(obj)
+        return obj
 
-        return user
 
-
-def get_users():
-    with Session() as session:
-        return session.query(User).all()
+def delete(model, id):
+    with Session as session:
+        obj = session.get(model, id)
+        if obj:
+            session.delete(obj)
+            session.commit()

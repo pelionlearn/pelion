@@ -15,4 +15,4 @@ DATABASE_URL = f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@postgres:5432/{DB_
 
 engine = create_engine(DATABASE_URL)
 
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine, autoflush=True)
