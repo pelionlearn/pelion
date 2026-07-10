@@ -14,11 +14,11 @@
     --glass-border: rgba(255, 255, 255, 0.07);
     --glass-highlight: rgba(255, 255, 255, 0.1);
 
-    --green-300: #5be09a;
-    --green-400: #38d27d;
-    --green-500: #22b864;
-    --green-600: #19884a;
-    --green-700: #115d33;
+    --green-300: #DCE1DE;
+    --green-400: #9CC5A1;
+    --green-500: #49A078;
+    --green-600: #216869;
+    --green-700: #1F2421;
 
     --text: #d6dbd7;
     --text-secondary: #a7b4ad;
@@ -48,7 +48,7 @@ body {
         radial-gradient(circle at bottom right, rgba(34, 184, 100, 0.06), transparent 30%),
         var(--bg-950);
 
-    color: var(--text);
+    /* color: var(--text); */
 
     font-family: Merriweather, serif;
 }
@@ -114,7 +114,6 @@ body {
 }
 
 .button-text {
-    color: var(--text);
     cursor: pointer;
 }
 

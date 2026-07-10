@@ -15,13 +15,13 @@ function App() {
     return (
         <div className="flex h-screen bg-(--bg-950) text-(--text)">
             {/* sidebar */}
-            <aside className="glass-bar flex w-72 flex-col border-r border-(--border)">
+            <aside className="glass-bar flex w-52 flex-col border-r border-(--border)">
                 <div className="p-6">
                     <h1 className="text-4xl font-bold">Pelion</h1>
                 </div>
 
                 <motion.nav
-                    className="flex flex-1 flex-col gap-1 px-3 text-xl"
+                    className="flex flex-1 flex-col gap-1 px-3 text-md"
                     initial="hidden"
                     animate="show"
                     variants={{
@@ -49,7 +49,7 @@ function App() {
                             transition={{
                                 duration: .3
                             }}
-                            className={`button-text rounded-xl px-4 py-3 text-left hover:bg-white/5 ${active === name ? "glass" : ""}`}
+                            className={`button-text rounded-xl px-4 py-1.5 text-left hover:bg-white/5 ${active === name ? "glass text-(--green-400)" : ""}`}
                         >
                             <i className={`fa-solid fa-${icon} mr-3`}></i>
                             {name}
@@ -69,7 +69,7 @@ function App() {
                         </button>
 
                         <button className="glass flex items-center gap-3 rounded-xl px-4 py-2">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-(--green-500) font-semibold text-black">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-(--green-400) font-semibold text-black">
                                 J
                             </div>
 
@@ -85,7 +85,7 @@ function App() {
                 {/* content */}
                 <motion.main className="flex-1 overflow-auto p-8" animate={{ opacity: [0, 1], y: [-20, 0] }} transition={{ duration: 0.5 }}>
                     <div className="mb-6">
-                        <h1 className="text-4xl font-bold">Good evening, Jeremy.</h1>
+                        <h1 className="text-4xl font-bold text-(--text)">Good evening, Jeremy.</h1>
 
                         <p className="mt-3 text-(--text-secondary)">
                             What do you want to learn today?
@@ -104,7 +104,7 @@ function App() {
                     {/* classes */}
                     <section className="mt-12">
                         <div className="mb-4 flex justify-between">
-                            <h2 className="text-xl font-semibold">Your Classes</h2>
+                            <h2 className="text-xl font-semibold text-(--green-400)">Your Classes</h2>
 
                             <button className="button-text text-(--green-400)">+ Create Class</button>
                         </div>
