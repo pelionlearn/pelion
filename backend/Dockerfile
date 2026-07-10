@@ -40,6 +40,7 @@ ENV PYTHONUNBUFFERED=1
 ENV VIRTUAL_ENV=/home/myuser/.venv
 ENV PATH="/home/myuser/.venv/bin:$PATH"
 
-COPY . .
+COPY --chown=myuser:myuser . .
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
+RUN chmod +x /home/myuser/entrypoint.sh
+ENTRYPOINT [ "/home/myuser/entrypoint.sh" ]

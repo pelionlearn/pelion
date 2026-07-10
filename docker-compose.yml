@@ -16,6 +16,8 @@ services:
         condition: service_started
       chromadb:
         condition: service_started
+    volumes:
+      - ./backend/migrations:/home/myuser/migrations
 
   neo4j:
     image: neo4j:2026.05.0
