@@ -12,7 +12,7 @@ def create(self, name, class_id):
 
 
 def delete(self, id):
-    with Session as session:
+    with Session() as session:
         obj = session.get(Document, id)
         if obj:
             session.delete(obj)
@@ -22,7 +22,7 @@ def delete(self, id):
 
 
 def get(self, id):
-    with Session as session:
+    with Session() as session:
         obj = session.get(Document, id)
         return obj
 
@@ -40,3 +40,9 @@ def rename(self, id, name: str):
         session.refresh(document)
 
         return document
+
+
+def get_class(self, id):
+    with Session() as session:
+        document = session.get(Document, id)
+        return document.class_

@@ -14,7 +14,7 @@ class ClassRepository:
             return obj
 
     def delete(self, id: UUID):
-        with Session as session:
+        with Session() as session:
             obj = session.get(Class, id)
             if obj:
                 session.delete(obj)
@@ -23,7 +23,7 @@ class ClassRepository:
                 return None
 
     def get(self, id: UUID):
-        with Session as session:
+        with Session() as session:
             obj = session.get(Class, id)
             return obj
 
@@ -43,14 +43,10 @@ class ClassRepository:
 
     def get_members(self, class_id: UUID):
         with Session() as session:
-            return session.scalars(
-                select(User).join(ClassMembers).where(ClassMembers.class_id == class_id)
-            )
+            class_obj = session.get(Class, class_id)
+            return class_obj.members
 
     def get_documents(self, class_id: UUID):
         with Session() as session:
-            return session.scalars(
-                select(Document)
-                .join(ClassDocuments)
-                .where(ClassDocuments.class_id == class_id)
-            )
+            class_obj = session.get(Class, class_id)
+            return class_obj.documents

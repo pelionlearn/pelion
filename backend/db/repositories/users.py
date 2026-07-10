@@ -14,7 +14,7 @@ class UserRepository:
             return user
 
     def delete(self, id):
-        with Session as session:
+        with Session() as session:
             user = session.get(User, id)
             if user:
                 session.delete(user)
@@ -23,7 +23,7 @@ class UserRepository:
                 return None
 
     def get(self, id):
-        with Session as session:
+        with Session() as session:
             user = session.get(User, id)
             return user
 
