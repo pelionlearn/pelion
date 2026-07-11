@@ -1,4 +1,3 @@
 from . import users
 from . import classes
 from . import documents
-from . import class_members

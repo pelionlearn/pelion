@@ -1,5 +1,5 @@
 from db.database import Session
-from db.models import Document
+from db.models import Document, Class
 from uuid import UUID
 
 
@@ -18,6 +18,7 @@ def delete(id):
         if obj:
             session.delete(obj)
             session.commit()
+            return obj
         else:
             return None
 
@@ -47,3 +48,9 @@ def get_class(id):
     with Session() as session:
         document = session.get(Document, id)
         return document.class_
+
+
+def get_documents(class_id: UUID):
+    with Session() as session:
+        class_obj = session.get(Class, class_id)
+        return class_obj.documents

@@ -19,6 +19,7 @@ def delete(id):
         if user:
             session.delete(user)
             session.commit()
+            return user
         else:
             return None
 

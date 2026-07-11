@@ -4,12 +4,7 @@ import shutil
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-import db.database
-
-from db import repositories
-from db.models import *
-
-from api.schemas.user import UserCreate, UserResponse
+from api.routers import users, documents, classes, class_members
 
 
 app = FastAPI()
@@ -27,28 +22,12 @@ app.add_middleware(
 # UPLOAD_DIR = Path("uploads")
 # UPLOAD_DIR.mkdir(exist_ok=True)
 
+app.include_router(users.router)
+app.include_router(classes.router)
+app.include_router(documents.router)
+app.include_router(class_members.router)
+
 
 @app.get("/")
 async def root():
     return {"status": "API is running"}
-
-
-# @app.post("/upload")
-# async def upload_file(file: UploadFile = File(...)):
-#     destination = UPLOAD_DIR / file.filename
-
-#     with destination.open("wb") as buffer:
-#         shutil.copyfileobj(file.file, buffer)
-
-#     return {
-#         "success": True,
-#         "filename": file.filename,
-#         "content_type": file.content_type,
-#         "size": destination.stat().st_size,
-#     }
-
-
-@app.post("/user", response_model=UserResponse)
-def create_user(user: UserCreate):
-    user = repositories.users.create(user.name, user.email)
-    return user
