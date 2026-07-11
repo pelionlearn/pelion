@@ -1,17 +1,18 @@
 from db.database import Session
-from db.models import Document, ClassDocuments
+from db.models import Document
+from uuid import UUID
 
 
-def create(self, name, class_id):
+def create(file_name: str, file_url: str, class_id: UUID):
     with Session() as session:
-        obj = Document(name)
+        obj = Document(file_name=file_name, file_url=file_url, class_id=class_id)
         session.add(obj)
         session.commit()
         session.refresh(obj)
         return obj
 
 
-def delete(self, id):
+def delete(id):
     with Session() as session:
         obj = session.get(Document, id)
         if obj:
@@ -21,13 +22,13 @@ def delete(self, id):
             return None
 
 
-def get(self, id):
+def get(id):
     with Session() as session:
         obj = session.get(Document, id)
         return obj
 
 
-def rename(self, id, name: str):
+def rename(id, name: str):
     with Session() as session:
         document = session.get(Document, id)
 
@@ -42,7 +43,7 @@ def rename(self, id, name: str):
         return document
 
 
-def get_class(self, id):
+def get_class(id):
     with Session() as session:
         document = session.get(Document, id)
         return document.class_

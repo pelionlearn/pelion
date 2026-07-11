@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from db.database import Base, DATABASE_URL
+from db.database import DATABASE_URL
+from db.base import Base
 import db.models
 
 # DB_NAME = os.environ["POSTGRES_DB"]

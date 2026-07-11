@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from db.database import Base
+from db.base import Base
 
 
 class User(Base):
@@ -43,10 +43,10 @@ class Document(Base):
 
 
 # join table between classes and users
-class ClassMembers(Base):
+class ClassMember(Base):
     __tablename__ = "class_members"
 
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
     class_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("classes.id"), primary_key=True
     )
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)

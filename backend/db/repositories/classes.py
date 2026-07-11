@@ -1,52 +1,72 @@
 from db.database import Session
-from db.models import Class, ClassMembers, User, ClassDocuments, Document
+from db.models import Class, ClassMember
 from uuid import UUID
-from sqlalchemy import select
 
 
-class ClassRepository:
-    def create(self, name: str):
-        with Session() as session:
-            obj = Class(name)
-            session.add(obj)
+def create(name: str):
+    with Session() as session:
+        obj = Class(name=name)
+        session.add(obj)
+        session.commit()
+        session.refresh(obj)
+        return obj
+
+
+def delete(id: UUID):
+    with Session() as session:
+        obj = session.get(Class, id)
+        if obj:
+            session.delete(obj)
             session.commit()
-            session.refresh(obj)
-            return obj
+        else:
+            return None
 
-    def delete(self, id: UUID):
-        with Session() as session:
-            obj = session.get(Class, id)
-            if obj:
-                session.delete(obj)
-                session.commit()
-            else:
-                return None
 
-    def get(self, id: UUID):
-        with Session() as session:
-            obj = session.get(Class, id)
-            return obj
+def get(id: UUID):
+    with Session() as session:
+        obj = session.get(Class, id)
+        return obj
 
-    def rename(self, id: UUID, name: str):
-        with Session() as session:
-            class_obj = session.get(Class, id)
 
-            if class_obj is None:
-                return None
+def rename(id: UUID, name: str):
+    with Session() as session:
+        class_obj = session.get(Class, id)
 
-            class_obj.name = name
+        if class_obj is None:
+            return None
 
-            session.commit()
-            session.refresh(class_obj)
+        class_obj.name = name
 
-            return class_obj
+        session.commit()
+        session.refresh(class_obj)
 
-    def get_members(self, class_id: UUID):
-        with Session() as session:
-            class_obj = session.get(Class, class_id)
-            return class_obj.members
+        return class_obj
 
-    def get_documents(self, class_id: UUID):
-        with Session() as session:
-            class_obj = session.get(Class, class_id)
-            return class_obj.documents
+
+def get_members(class_id: UUID):
+    with Session() as session:
+        class_obj = session.get(Class, class_id)
+        return class_obj.members
+
+
+def add_member(class_id: UUID, user_id: UUID):
+    with Session() as session:
+        class_member = ClassMember(class_id=class_id, user_id=user_id)
+        session.add(class_member)
+        session.commit()
+        session.refresh(class_member)
+
+
+def remove_member(class_id: UUID, user_id: UUID):
+    with Session() as session:
+        class_member = session.get(ClassMember, (class_id, user_id))
+        if class_member:
+            session.delete(class_member)
+        else:
+            return None
+
+
+def get_documents(class_id: UUID):
+    with Session() as session:
+        class_obj = session.get(Class, class_id)
+        return class_obj.documents
