@@ -13,23 +13,28 @@
   gap: 1rem;
 }
 
-
 .hero h1 {
-  font-size: 4rem;
+  font-size: 3.5rem;
 }
 
 
 .subtitle {
+  margin-top: -2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: .5rem;
+  margin-bottom: 1rem;
+}
+
+.notified-heading {
+  
 }
 
 .email-input {
   font-size: 1rem;
   border-radius: 4px;
-  width: 300px;
+  width: 400px;
   padding: 1rem;
 }
 
@@ -45,7 +50,7 @@
   margin-top: 1rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  letter-spacing: .04em;
+  letter-spacing: .03em;
 }
 
 .email-notification button {
@@ -57,7 +62,7 @@
 .signup-success {
   align-items: center;
   gap: 1rem;
-  letter-spacing: .04em;
+  letter-spacing: .03em;
 }
 
 .contact-btn {
@@ -66,7 +71,7 @@
   cursor: pointer;
   border-bottom: 1px solid transparent;
   transition: all var(--transition);
-  letter-spacing: .04em;
+  letter-spacing: .03em;
 }
 
 .contact-btn:hover {
@@ -180,4 +185,14 @@
 
 .contact-popup {
   position: relative;
+}
+
+.button-shape {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-xl);
+}
+
+
+.contact-button {
+  margin-top: 1em;
 }

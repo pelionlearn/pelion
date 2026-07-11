@@ -43,14 +43,16 @@ body {
 
     min-height: 100vh;
 
-    background:
+    background-color: var(--bg-950);
+
+    /* background:
         radial-gradient(circle at top left, rgba(34, 184, 100, 0.12), transparent 35%),
         radial-gradient(circle at bottom right, rgba(34, 184, 100, 0.06), transparent 30%),
-        var(--bg-950);
+        var(--bg-950); */
 
     color: var(--text);
 
-    font-family: Merriweather, serif;
+    font-family: Arvo, serif;
 }
 
 .glass {
@@ -106,11 +108,19 @@ body {
 }
 
 .button-secondary {
-    background: var(--glass-2);
+    background: var(--bg-950);
     backdrop-filter: var(--blur);
     border: 1px solid var(--glass-border);
     color: var(--text);
     cursor: pointer;
+    transition:
+        filter var(--transition),
+        transform var(--transition);
+}
+
+.button-secondary:hover {
+
+    filter: brightness(1.12);
 }
 
 .button-text {
