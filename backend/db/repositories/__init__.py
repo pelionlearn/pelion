@@ -1,4 +1,4 @@
 from . import users
-from . import classes
+from . import classrooms
 from . import documents
-from . import class_members
+from . import classroom_members

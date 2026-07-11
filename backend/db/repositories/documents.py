@@ -3,7 +3,7 @@ from db.models import Document, Class
 from uuid import UUID
 
 
-def create(file_name: str, file_url: str, class_id: UUID):
+def create_document(file_name: str, file_url: str, class_id: UUID):
     with Session() as session:
         obj = Document(file_name=file_name, file_url=file_url, class_id=class_id)
         session.add(obj)
@@ -12,7 +12,7 @@ def create(file_name: str, file_url: str, class_id: UUID):
         return obj
 
 
-def delete(id):
+def delete_document(id):
     with Session() as session:
         obj = session.get(Document, id)
         if obj:
@@ -23,13 +23,13 @@ def delete(id):
             return None
 
 
-def get(id):
+def get_document(id):
     with Session() as session:
         obj = session.get(Document, id)
         return obj
 
 
-def rename(id, name: str):
+def rename_document(id, name: str):
     with Session() as session:
         document = session.get(Document, id)
 
@@ -44,7 +44,7 @@ def rename(id, name: str):
         return document
 
 
-def get_class(id):
+def get_document_class(id):
     with Session() as session:
         document = session.get(Document, id)
         if document is None:
@@ -52,7 +52,7 @@ def get_class(id):
         return document.classroom
 
 
-def get_documents(class_id: UUID):
+def get_class_documents(class_id: UUID):
     with Session() as session:
         class_obj = session.get(Class, class_id)
         if class_obj is None:

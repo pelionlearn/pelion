@@ -2,10 +2,10 @@ from pydantic import BaseModel
 from uuid import UUID
 
 
-class ClassCreate(BaseModel):
+class ClassroomCreate(BaseModel):
     name: str
 
 
-class ClassResponse(BaseModel):
+class ClassroomResponse(BaseModel):
     id: UUID
     name: str

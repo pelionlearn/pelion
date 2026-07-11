@@ -43,7 +43,7 @@ class Document(Base):
 
 
 # join table between classrooms and users
-class ClassMember(Base):
+class ClassroomMember(Base):
     __tablename__ = "classroom_members"
 
     classroom_id: Mapped[uuid.UUID] = mapped_column(

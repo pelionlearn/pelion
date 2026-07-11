@@ -2,7 +2,7 @@ from db.database import Session
 from db.models import User
 
 
-def create(name: str, email: str):
+def create_user(name: str, email: str):
     with Session() as session:
         user = User(name=name, email=email)
 
@@ -13,7 +13,7 @@ def create(name: str, email: str):
         return user
 
 
-def delete(id):
+def delete_user(id):
     with Session() as session:
         user = session.get(User, id)
         if user:
@@ -24,18 +24,18 @@ def delete(id):
             return None
 
 
-def get(id):
+def get_user(id):
     with Session() as session:
         user = session.get(User, id)
         return user
 
 
-def get_all():
+def get_all_users():
     with Session() as session:
         return session.query(User).all()
 
 
-def rename(id, name: str):
+def rename_user(id, name: str):
     with Session() as session:
         user = session.get(User, id)
 
@@ -50,7 +50,7 @@ def rename(id, name: str):
         return user
 
 
-def get_classes(id):
+def get_user_classes(id):
     with Session() as session:
         user = session.get(User, id)
         if user:
