@@ -36,7 +36,7 @@ def rename(id, name: str):
         if document is None:
             return None
 
-        document.name = name
+        document.file_name = name
 
         session.commit()
         session.refresh(document)
@@ -47,10 +47,14 @@ def rename(id, name: str):
 def get_class(id):
     with Session() as session:
         document = session.get(Document, id)
-        return document.class_
+        if document is None:
+            raise Exception
+        return document.classroom
 
 
 def get_documents(class_id: UUID):
     with Session() as session:
         class_obj = session.get(Class, class_id)
+        if class_obj is None:
+            raise Exception
         return class_obj.documents

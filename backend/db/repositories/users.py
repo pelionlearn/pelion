@@ -54,6 +54,6 @@ def get_classes(id):
     with Session() as session:
         user = session.get(User, id)
         if user:
-            return user.classes
+            return user.classrooms
         else:
             return None

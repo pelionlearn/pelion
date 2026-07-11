@@ -6,6 +6,8 @@ from uuid import UUID
 def get_members(class_id: UUID):
     with Session() as session:
         class_obj = session.get(Class, class_id)
+        if class_obj is None:
+            raise Exception
         return class_obj.members
 
 
