@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from uuid import UUID
 from db import repositories
-from api.schemas.classrooms import ClassroomCreate, ClassroomResponse
+from api.schemas.classrooms import ClassroomCreateRequest, ClassroomResponse
 
 router = APIRouter(prefix="/classes", tags=["Classes"])
 
@@ -12,7 +12,7 @@ async def get_classroom(class_id: UUID):
 
 
 @router.post("/", response_model=ClassroomResponse)
-async def create_classroom(class_: ClassroomCreate):
+async def create_classroom(class_: ClassroomCreateRequest):
     return repositories.classrooms.create_classroom(class_.name)
 
 

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from uuid import UUID
 
 
-class ClassroomCreate(BaseModel):
+class ClassroomCreateRequest(BaseModel):
     name: str
 
 

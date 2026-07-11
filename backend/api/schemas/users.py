@@ -2,12 +2,12 @@ from pydantic import BaseModel
 from uuid import UUID
 
 
-class UserCreate(BaseModel):
+class UserCreateRequest(BaseModel):
     name: str
     email: str
 
 
-class UserResponse(BaseModel):
+class UserCreateResponse(BaseModel):
     id: UUID
     name: str
     email: str
