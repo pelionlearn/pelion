@@ -6,6 +6,6 @@ class ClassroomCreateRequest(BaseModel):
     name: str
 
 
-class ClassroomResponse(BaseModel):
+class ClassroomCreateResponse(BaseModel):
     id: UUID
     name: str
