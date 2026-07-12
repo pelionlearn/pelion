@@ -1,8 +1,8 @@
 import { useState } from "react";
-import "./App.css";
-import { motion } from "motion/react"
+import "./Demo.css";
+import { motion } from "motion/react";
 
-function App() {
+function Demo() {
     const [active, setActive] = useState("Home");
 
     const items: [string, string][] = [
@@ -11,7 +11,7 @@ function App() {
         ["question", "Quizzes"],
         ["magnifying-glass", "Search"],
     ];
-    
+
     return (
         <div className="flex h-screen bg-(--bg-950) text-(--text)">
             {/* sidebar */}
@@ -28,9 +28,9 @@ function App() {
                         hidden: {},
                         show: {
                             transition: {
-                                staggerChildren: 0.08
-                            }
-                        }
+                                staggerChildren: 0.08,
+                            },
+                        },
                     }}
                 >
                     {items.map(([icon, name]) => (
@@ -39,15 +39,15 @@ function App() {
                             variants={{
                                 hidden: {
                                     opacity: 0,
-                                    x: -20
+                                    x: -20,
                                 },
                                 show: {
                                     opacity: 1,
-                                    x: 0
-                                }
+                                    x: 0,
+                                },
                             }}
                             transition={{
-                                duration: .3
+                                duration: 0.3,
                             }}
                             className={`button-text rounded-xl px-4 py-1.5 text-left hover:bg-white/5 ${active === name ? "glass text-(--green-400)" : ""}`}
                         >
@@ -83,7 +83,11 @@ function App() {
                 </header>
 
                 {/* content */}
-                <motion.main className="flex-1 overflow-auto p-8" animate={{ opacity: [0, 1], y: [-20, 0] }} transition={{ duration: 0.5 }}>
+                <motion.main
+                    className="flex-1 overflow-auto p-8"
+                    animate={{ opacity: [0, 1], y: [-20, 0] }}
+                    transition={{ duration: 0.5 }}
+                >
                     <div className="mb-6">
                         <h1 className="text-4xl font-bold text-(--text)">Good evening, Jeremy.</h1>
 
@@ -104,9 +108,13 @@ function App() {
                     {/* classes */}
                     <section className="mt-12">
                         <div className="mb-4 flex justify-between">
-                            <h2 className="text-xl font-semibold text-(--green-400)">Your Classes</h2>
+                            <h2 className="text-xl font-semibold text-(--green-400)">
+                                Your Classes
+                            </h2>
 
-                            <button className="button-text text-(--green-400)">+ Create Class</button>
+                            <button className="button-text text-(--green-400)">
+                                + Create Class
+                            </button>
                         </div>
 
                         <div className="cursor-pointer grid grid-cols-3 gap-5">
@@ -125,4 +133,4 @@ function App() {
     );
 }
 
-export default App;
+export default Demo;
