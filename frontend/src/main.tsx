@@ -6,6 +6,7 @@ import "./index.css";
 import Home from "./Home.tsx";
 import About from "./About.tsx";
 import Contact from "./Contact.tsx";
+import NotFound from "./NotFound.tsx";
 
 const router = createBrowserRouter([
     {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
     {
         path: "/contact",
         element: <Contact />,
+    },
+    {
+        path: "*",
+        element: <NotFound />,
     },
 ]);
 

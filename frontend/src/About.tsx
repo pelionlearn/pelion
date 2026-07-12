@@ -7,7 +7,7 @@ function About() {
             <div className="relative z-10">
                 <Navbar />
                 <h1 className="text-text font-arvo text-3xl md:text-5xl p-10 md:pt-25 md:pb-25 md:mr-25 md:ml-25 leading-tight text-center border-b ">
-                    Meet the team <span className="text-primary">:)</span>
+                    Meet the <span className="text-primary">team :)</span>
                 </h1>
                 <div className="flex flex-col md:flex-row">
                     <p className="text-text text-md font-arvo p-8 md:pl-20 md:pt-25 leading-relaxed">
