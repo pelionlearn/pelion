@@ -12,12 +12,12 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), nullable=False)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
 
-    classrooms: Mapped[list["Class"]] = relationship(
+    classrooms: Mapped[list["Classroom"]] = relationship(
         secondary="classroom_members", back_populates="members"
     )
 
 
-class Class(Base):
+class Classroom(Base):
     __tablename__ = "classrooms"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
@@ -39,7 +39,7 @@ class Document(Base):
     classroom_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("classrooms.id"))
 
     # weird name bc i cant use class keyword, prob should rename to classroom
-    classroom: Mapped["Class"] = relationship(back_populates="documents")
+    classroom: Mapped["Classroom"] = relationship(back_populates="documents")
 
 
 # join table between classrooms and users

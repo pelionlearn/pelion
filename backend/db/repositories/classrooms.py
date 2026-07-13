@@ -1,11 +1,11 @@
 from db.database import Session
-from db.models import Class, ClassroomMember
+from db.models import Classroom, ClassroomMember
 from uuid import UUID
 
 
 def create_classroom(name: str):
     with Session() as session:
-        obj = Class(name=name)
+        obj = Classroom(name=name)
         session.add(obj)
         session.commit()
         session.refresh(obj)
@@ -14,7 +14,7 @@ def create_classroom(name: str):
 
 def delete_classroom(id: UUID):
     with Session() as session:
-        obj = session.get(Class, id)
+        obj = session.get(Classroom, id)
         if obj:
             session.delete(obj)
             session.commit()
@@ -25,13 +25,13 @@ def delete_classroom(id: UUID):
 
 def get_classroom(id: UUID):
     with Session() as session:
-        obj = session.get(Class, id)
+        obj = session.get(Classroom, id)
         return obj
 
 
 def rename_classroom(id: UUID, name: str):
     with Session() as session:
-        class_obj = session.get(Class, id)
+        class_obj = session.get(Classroom, id)
 
         if class_obj is None:
             return None

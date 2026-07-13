@@ -1,11 +1,13 @@
 from db.database import Session
-from db.models import Document, Class
+from db.models import Document, Classroom
 from uuid import UUID
 
 
-def create_document(file_name: str, file_url: str, class_id: UUID):
+def create_document(file_name: str, file_url: str, classroom_id: UUID):
     with Session() as session:
-        obj = Document(file_name=file_name, file_url=file_url, class_id=class_id)
+        obj = Document(
+            file_name=file_name, file_url=file_url, classroom_id=classroom_id
+        )
         session.add(obj)
         session.commit()
         session.refresh(obj)
@@ -52,9 +54,9 @@ def get_document_class(id):
         return document.classroom
 
 
-def get_class_documents(class_id: UUID):
+def get_class_documents(classroom_id: UUID):
     with Session() as session:
-        class_obj = session.get(Class, class_id)
+        class_obj = session.get(Classroom, classroom_id)
         if class_obj is None:
             raise Exception
         return class_obj.documents

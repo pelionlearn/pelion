@@ -8,6 +8,6 @@ class DocumentCreateRequest(BaseModel):
 
 
 class DocumentCreateResponse(BaseModel):
-    id: str
+    id: UUID
     file_name: str
     file_url: str
