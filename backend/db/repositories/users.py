@@ -1,5 +1,6 @@
 from db.database import Session
 from db.models import User
+from api.exceptions import errors
 
 
 def create_user(name: str, email: str):
@@ -16,17 +17,18 @@ def create_user(name: str, email: str):
 def delete_user(id):
     with Session() as session:
         user = session.get(User, id)
-        if user:
-            session.delete(user)
-            session.commit()
-            return user
-        else:
-            return None
+        if user is None:
+            raise errors.NotFoundError(f"User {id} not found")
+        session.delete(user)
+        session.commit()
+        return user
 
 
 def get_user(id):
     with Session() as session:
         user = session.get(User, id)
+        if user is None:
+            raise errors.NotFoundError(f"User {id} not found")
         return user
 
 
@@ -40,7 +42,7 @@ def rename_user(id, name: str):
         user = session.get(User, id)
 
         if user is None:
-            return None
+            raise errors.NotFoundError(f"User {id} not found")
 
         user.name = name
 
@@ -53,7 +55,6 @@ def rename_user(id, name: str):
 def get_user_classes(id):
     with Session() as session:
         user = session.get(User, id)
-        if user:
-            return user.classrooms
-        else:
-            return None
+        if user is None:
+            raise errors.NotFoundError(f"User {id} not found")
+        return user.classrooms

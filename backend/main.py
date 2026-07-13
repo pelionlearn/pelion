@@ -5,6 +5,7 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.routers import users, documents, classroom_members, classrooms
+from api.exceptions import errors, handlers
 
 app = FastAPI()
 
@@ -20,6 +21,17 @@ app.add_middleware(
 
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
+
+
+app.add_exception_handler(errors.NotFoundError, handlers.not_found_handler)
+app.add_exception_handler(errors.ConflictError, handlers.conflict_handler)
+app.add_exception_handler(errors.ValidationError, handlers.validation_handler)
+app.add_exception_handler(errors.AuthenticationError, handlers.authentication_handler)
+app.add_exception_handler(errors.AuthorizationError, handlers.authorization_handler)
+app.add_exception_handler(errors.NotFoundError, handlers.not_found_handler)
+app.add_exception_handler(
+    errors.ExternalServiceError, handlers.external_service_handler
+)
 
 app.include_router(users.router)
 app.include_router(classrooms.router)
