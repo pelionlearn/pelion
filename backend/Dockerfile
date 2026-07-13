@@ -42,5 +42,8 @@ ENV PATH="/home/myuser/.venv/bin:$PATH"
 
 COPY --chown=myuser:myuser . .
 
-RUN chmod +x /home/myuser/entrypoint.sh
-ENTRYPOINT [ "/home/myuser/entrypoint.sh" ]
+# use this for alembic migrations
+# RUN chmod +x /home/myuser/entrypoint.sh
+# ENTRYPOINT [ "/home/myuser/entrypoint.sh" ]
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
