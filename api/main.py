@@ -4,8 +4,8 @@ import shutil
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routers import users, documents, classroom_members, classrooms
-from api.exceptions import errors, handlers
+from routers import users, documents, classroom_members, classrooms
+from exceptions import errors, handlers
 
 app = FastAPI()
 

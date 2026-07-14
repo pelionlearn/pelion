@@ -1,7 +1,7 @@
 from db.database import Session
 from db.models import Classroom, ClassroomMember
 from uuid import UUID
-from api.exceptions import errors
+from exceptions import errors
 
 
 def get_classroom_members(classroom_id: UUID):

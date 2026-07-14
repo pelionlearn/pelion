@@ -1,6 +1,6 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
-from api.exceptions.errors import (
+from exceptions.errors import (
     NotFoundError,
     ConflictError,
     ValidationError,

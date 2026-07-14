@@ -1,8 +1,8 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from api.db.base import Base
-import api.db.models  # registers models with Base
+from db.base import Base
+import db.models  # registers models with Base
 
 
 DB_NAME = os.environ["POSTGRES_DB"]

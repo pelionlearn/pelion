@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from uuid import UUID
-from api.db import repositories
-from api.schemas.classrooms import ClassroomCreateRequest, ClassroomCreateResponse
+from db import repositories
+from schemas.classrooms import ClassroomCreateRequest, ClassroomCreateResponse
 
 router = APIRouter(prefix="/classrooms", tags=["Classrooms"])
 

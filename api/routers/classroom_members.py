@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from uuid import UUID
-from api.db import repositories
-from api.schemas.users import UserCreateResponse
+from db import repositories
+from schemas.users import UserCreateResponse
 
 router = APIRouter(prefix="/classrooms/{classroom_id}/users", tags=["ClassMembers"])
 

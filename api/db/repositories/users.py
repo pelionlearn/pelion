@@ -1,6 +1,6 @@
 from db.database import Session
 from db.models import User
-from api.exceptions import errors
+from exceptions import errors
 
 
 def create_user(name: str, email: str):

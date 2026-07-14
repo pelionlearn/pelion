@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from uuid import UUID
-from api.db import repositories
-from api.schemas.documents import DocumentCreateRequest, DocumentCreateResponse
+from db import repositories
+from schemas.documents import DocumentCreateRequest, DocumentCreateResponse
 
 router = APIRouter(prefix="/classrooms/{classroom_id}/documents", tags=["Documents"])
 

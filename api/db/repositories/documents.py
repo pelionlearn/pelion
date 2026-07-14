@@ -1,7 +1,7 @@
 from db.database import Session
 from db.models import Document, Classroom
 from uuid import UUID
-from api.exceptions import errors
+from exceptions import errors
 
 
 def create_document(file_name: str, file_url: str, classroom_id: UUID):

@@ -1,7 +1,7 @@
 from db.database import Session
 from db.models import Classroom
 from uuid import UUID
-from api.exceptions import errors
+from exceptions import errors
 
 
 def create_classroom(name: str):

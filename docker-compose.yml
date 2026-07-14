@@ -12,21 +12,17 @@ services:
     env_file:
       - ./.env
     depends_on:
-      # neo4j:
-      #   condition: service_started
-      # chromadb:
-      #   condition: service_started
       postgres:
         condition: service_healthy
     volumes:
       - ./api/migrations:/home/myuser/migrations
 
-  coref:
-    build: coref/
-    ports:
-      - "5001:5001"
-    env_file:
-      - ./.env
+  # coref:
+  #   build: coref/
+  #   ports:
+  #     - "5001:5001"
+  #   env_file:
+  #     - ./.env
 
   neo4j:
     image: neo4j:2026.05.0
