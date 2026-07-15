@@ -4,8 +4,11 @@ import shutil
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import users, documents, classroom_members, classrooms
+from routers import documents, classroom_members, classrooms
 from exceptions import errors, handlers
+
+from auth import fastapi_users, auth_backend
+from schemas.users import UserCreate, UserRead, UserUpdate
 
 app = FastAPI()
 
@@ -33,10 +36,29 @@ app.add_exception_handler(
     errors.ExternalServiceError, handlers.external_service_handler
 )
 
-app.include_router(users.router)
+# users route with fastapi users
+app.include_router(
+    fastapi_users.get_users_router(UserRead, UserUpdate),
+    prefix="/users",
+    tags=["Users"],
+)
+
+# general db routes
 app.include_router(classrooms.router)
 app.include_router(documents.router)
 app.include_router(classroom_members.router)
+
+# /auth/login + logout
+app.include_router(
+    fastapi_users.get_auth_router(auth_backend), prefix="/auth", tags=["Auth"]
+)
+
+# /auth/register
+app.include_router(
+    fastapi_users.get_register_router(UserRead, UserCreate),
+    prefix="/auth",
+    tags=["Auth"],
+)
 
 
 @app.get("/")

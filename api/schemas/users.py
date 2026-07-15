@@ -1,13 +1,15 @@
 from pydantic import BaseModel
 from uuid import UUID
+from fastapi_users import schemas
 
 
-class UserCreateRequest(BaseModel):
+class UserRead(schemas.BaseUser[UUID]):
     name: str
-    email: str
 
 
-class UserCreateResponse(BaseModel):
-    id: UUID
+class UserCreate(schemas.BaseUserCreate):
     name: str
-    email: str
+
+
+class UserUpdate(schemas.BaseUserUpdate):
+    name: str | None = None

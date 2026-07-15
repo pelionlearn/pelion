@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "alembic>=1.18.5",
     "fastapi>=0.139.0",
+    "fastapi-users[oauth,sqlalchemy]>=15.0.5",
     "psycopg[binary]>=3.3.4",
     "python-dotenv>=1.2.2",
     "python-multipart>=0.0.32",

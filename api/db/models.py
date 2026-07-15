@@ -3,17 +3,28 @@ import uuid
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from db.base import Base
+from fastapi_users.db import SQLAlchemyBaseUserTableUUID
+from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyBaseAccessTokenTableUUID
 
 
-class User(Base):
+class AccessToken(SQLAlchemyBaseAccessTokenTableUUID, Base):
+    __tablename__ = "access_token"
+
+    # override the "user.id" foreign key to "users.id"
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+
+
+class User(SQLAlchemyBaseUserTableUUID, Base):
     __tablename__ = "users"
 
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    email: Mapped[str] = mapped_column(String(255), nullable=False)
+    # id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    # email: Mapped[str] = mapped_column(String(255), nullable=False)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
 
     classrooms: Mapped[list["Classroom"]] = relationship(
-        secondary="classroom_members", back_populates="members"
+        secondary="classroom_members", back_populates="members", lazy="selectin"
     )
 
 
@@ -24,9 +35,11 @@ class Classroom(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
 
     members: Mapped[list["User"]] = relationship(
-        secondary="classroom_members", back_populates="classrooms"
+        secondary="classroom_members", back_populates="classrooms", lazy="selectin"
     )
-    documents: Mapped[list["Document"]] = relationship(back_populates="classroom")
+    documents: Mapped[list["Document"]] = relationship(
+        back_populates="classroom", lazy="selectin"
+    )
 
 
 class Document(Base):
@@ -39,7 +52,9 @@ class Document(Base):
     classroom_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("classrooms.id"))
 
     # weird name bc i cant use class keyword, prob should rename to classroom
-    classroom: Mapped["Classroom"] = relationship(back_populates="documents")
+    classroom: Mapped["Classroom"] = relationship(
+        back_populates="documents", lazy="selectin"
+    )
 
 
 # join table between classrooms and users

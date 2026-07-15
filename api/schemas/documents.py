@@ -7,7 +7,7 @@ class DocumentCreateRequest(BaseModel):
     file_url: str
 
 
-class DocumentCreateResponse(BaseModel):
+class DocumentResponse(BaseModel):
     id: UUID
     file_name: str
     file_url: str
