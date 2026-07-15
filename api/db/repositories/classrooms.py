@@ -1,46 +1,42 @@
-from db.database import Session
+from sqlalchemy.orm import Session
 from db.models import Classroom
 from uuid import UUID
 from exceptions import errors
 
 
-def create_classroom(name: str):
-    with Session() as session:
-        obj = Classroom(name=name)
-        session.add(obj)
-        session.commit()
-        session.refresh(obj)
-        return obj
+def create_classroom(db: Session, name: str):
+    obj = Classroom(name=name)
+    db.add(obj)
+    db.commit()
+    db.refresh(obj)
+    return obj
 
 
-def delete_classroom(id: UUID):
-    with Session() as session:
-        obj = session.get(Classroom, id)
-        if obj is None:
-            raise errors.NotFoundError(f"Classroom {id} not found")
-        session.delete(obj)
-        session.commit()
-        return obj
+def delete_classroom(db: Session, id: UUID):
+    obj = db.get(Classroom, id)
+    if obj is None:
+        raise errors.NotFoundError(f"Classroom {id} not found")
+    db.delete(obj)
+    db.commit()
+    return obj
 
 
-def get_classroom(id: UUID):
-    with Session() as session:
-        obj = session.get(Classroom, id)
-        if obj is None:
-            raise errors.NotFoundError(f"Classroom {id} not found")
-        return obj
+def get_classroom(db: Session, id: UUID):
+    obj = db.get(Classroom, id)
+    if obj is None:
+        raise errors.NotFoundError(f"Classroom {id} not found")
+    return obj
 
 
-def rename_classroom(id: UUID, name: str):
-    with Session() as session:
-        class_obj = session.get(Classroom, id)
+def rename_classroom(db: Session, id: UUID, name: str):
+    class_obj = db.get(Classroom, id)
 
-        if class_obj is None:
-            raise errors.NotFoundError(f"Classroom {id} not found")
+    if class_obj is None:
+        raise errors.NotFoundError(f"Classroom {id} not found")
 
-        class_obj.name = name
+    class_obj.name = name
 
-        session.commit()
-        session.refresh(class_obj)
+    db.commit()
+    db.refresh(class_obj)
 
-        return class_obj
+    return class_obj
