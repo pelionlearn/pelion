@@ -1,4 +1,4 @@
-@import url("https://googleapis.com");
+@import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -8,7 +8,13 @@
     --color-secondary: #49A078;
     --color-primary: #9CC5A1;
     --color-text: #DCE1DE;
+    --color-text-secondary: #797d7d;
 
     --font-arvo: "Arvo", serif;
     --text-1-5xl: 1.375rem;
+}
+
+body {
+    background-color: var(--color-background);
+    font-family: Arvo;
 }

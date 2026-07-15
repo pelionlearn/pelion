@@ -7,6 +7,7 @@ import Home from "./Home.tsx";
 import About from "./About.tsx";
 import Contact from "./Contact.tsx";
 import NotFound from "./NotFound.tsx";
+import Login from "./Login.tsx";
 
 const router = createBrowserRouter([
     {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     {
         path: "/contact",
         element: <Contact />,
+    },
+    {
+        path: "/login",
+        element: <Login />
     },
     {
         path: "*",

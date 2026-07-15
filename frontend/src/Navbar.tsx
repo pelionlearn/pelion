@@ -30,12 +30,12 @@ function Navbar() {
                     </Link>
                 </li>
                 <li className="ml-auto">
-                    <Link to="/signin">
-                        <h3 className="pl-5 text-text font-arvo text-xl md:text-xl">Sign in</h3>
+                    <Link to="/login">
+                        <h3 className="pl-5 text-text font-arvo text-xl md:text-xl">Login</h3>
                     </Link>
                 </li>
                 <li>
-                    <Link to="/signup">
+                    <Link to="/register">
                         <h3 className="pl-5 pr-5 text-text font-arvo text-xl md:text-xl">
                             Register
                         </h3>
@@ -74,12 +74,12 @@ function Navbar() {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/signin">
-                            <h3 className="pl-5 text-text font-arvo text-xl">Sign in</h3>
+                        <Link to="/login">
+                            <h3 className="pl-5 text-text font-arvo text-xl">Login</h3>
                         </Link>
                     </li>
                     <li>
-                        <Link to="/signup">
+                        <Link to="/register">
                             <h3 className="pl-5 pr-5 pb-5 text-text font-arvo text-xl">Register</h3>
                         </Link>
                     </li>
