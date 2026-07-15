@@ -9,6 +9,8 @@ from exceptions import errors, handlers
 
 from auth import fastapi_users, auth_backend
 from schemas.users import UserCreate, UserRead, UserUpdate
+from auth import google_client, OAUTH_SECRET
+
 
 app = FastAPI()
 
@@ -58,6 +60,17 @@ app.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
     prefix="/auth",
     tags=["Auth"],
+)
+
+app.include_router(
+    fastapi_users.get_oauth_router(
+        oauth_client=google_client,
+        backend=auth_backend,
+        state_secret=OAUTH_SECRET,
+        associate_by_email=True,
+    ),
+    prefix="/auth/google",
+    tags=["auth"],
 )
 
 

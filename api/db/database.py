@@ -20,7 +20,7 @@ async def create_tables():
 
 asyncio.run(create_tables())
 
-Session = async_sessionmaker(bind=engine, autoflush=True)
+Session = async_sessionmaker(bind=engine, autoflush=True, expire_on_commit=False)
 
 
 async def get_db():

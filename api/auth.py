@@ -1,3 +1,4 @@
+import os
 from uuid import UUID
 from fastapi import Depends
 from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
@@ -8,13 +9,30 @@ from fastapi_users.authentication.strategy.db import (
 from fastapi_users.db import SQLAlchemyUserDatabase
 from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyAccessTokenDatabase
 from db.database import get_db
-from db.models import User, AccessToken
+from db.models import User, AccessToken, OAuthAccount
+from httpx_oauth.clients.google import GoogleOAuth2
 
-JWT_SECRET = "YOUR_SUPER_SECRET_KEY"
+# only used for reset password and verification email tokens, not main authentication method
+JWT_SECRET = os.getenv("JWT_SECRET", "SECRETEST_KEY")
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "GOOGLE_CLIENT_SECRET")
+
+OAUTH_SECRET = os.getenv("OAUTH_SECRET", "OAUTH_SECRET")
+
+google_client = GoogleOAuth2(
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
+    # scopes=[
+    #     "openid",
+    #     "https://www.googleapis.com/auth/userinfo.profile",
+    #     "https://www.googleapis.com/auth/userinfo.email",
+    # ],
+)
 
 
 async def get_user_db(session=Depends(get_db)):
-    yield SQLAlchemyUserDatabase(session, User)
+    yield SQLAlchemyUserDatabase(session, User, OAuthAccount)
 
 
 async def get_access_token_db(session=Depends(get_db)):

@@ -1,12 +1,25 @@
 import uuid
-
+from typing import List
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from db.base import Base
-from fastapi_users.db import SQLAlchemyBaseUserTableUUID
+from fastapi_users.db import (
+    SQLAlchemyBaseUserTableUUID,
+    SQLAlchemyBaseOAuthAccountTableUUID,
+)
 from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyBaseAccessTokenTableUUID
 
 
+class OAuthAccount(SQLAlchemyBaseOAuthAccountTableUUID, Base):
+    __tablename__ = "oauth_account"
+
+    # override the "user.id" foreign key to "users.id"
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+
+
+# stores server side session tokens
 class AccessToken(SQLAlchemyBaseAccessTokenTableUUID, Base):
     __tablename__ = "access_token"
 
@@ -21,10 +34,15 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
 
     # id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     # email: Mapped[str] = mapped_column(String(255), nullable=False)
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    name: Mapped[str] = mapped_column(String(255), nullable=False, default="")
 
     classrooms: Mapped[list["Classroom"]] = relationship(
         secondary="classroom_members", back_populates="members", lazy="selectin"
+    )
+
+    oauth_accounts: Mapped[List[OAuthAccount]] = relationship(
+        "OAuthAccount",
+        lazy="selectin",
     )
 
 
