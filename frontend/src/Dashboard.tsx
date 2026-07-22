@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./Demo.css";
 import { motion } from "motion/react";
 
 function Demo() {
