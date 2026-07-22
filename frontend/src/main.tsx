@@ -8,6 +8,8 @@ import About from "./About.tsx";
 import Contact from "./Contact.tsx";
 import NotFound from "./NotFound.tsx";
 import Login from "./Login.tsx";
+import Dashboard from "./Dashboard.tsx";
+import Classroom from "./Classroom.tsx";
 
 const router = createBrowserRouter([
     {
@@ -27,8 +29,16 @@ const router = createBrowserRouter([
         element: <Login />
     },
     {
+        path: "/dashboard",
+        element: <Dashboard />
+    },
+    {
         path: "*",
         element: <NotFound />,
+    },
+    {
+        path: "/dashboard/classroom",
+        element: <Classroom />,
     },
 ]);
 
