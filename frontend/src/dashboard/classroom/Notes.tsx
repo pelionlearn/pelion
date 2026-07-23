@@ -39,8 +39,8 @@ function Notes() {
                     rounded-2xl border-2 border-dashed transition
                     ${
                         dragging
-                            ? "border-primary bg-primary/10"
-                            : "border-dark hover:border-primary/50"
+                            ? "border-primary bg-tertiary/10"
+                            : "border-dark hover:border-tertiary/50"
                     }
                 `}
                 onDragOver={(e) => {
@@ -99,7 +99,7 @@ function Notes() {
                         >
                             <div className="flex flex-1 min-w-0 items-center justify-between">
                                 <div className="flex items-center gap-3 min-w-0">
-                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/20 text-secondary">
                                         <i className="fa-solid fa-file" />
                                     </div>
 
