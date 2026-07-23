@@ -1,6 +1,8 @@
 FROM ghcr.io/astral-sh/uv:trixie-slim AS builder
 
-ENV UV_COMPILE_BYTECODE=1 
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+
+ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
 ENV UV_NO_DEV=1
 ENV UV_PYTHON_INSTALL_DIR=/python
@@ -14,6 +16,10 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --locked --no-install-project
+
+RUN mkdir -p "./model"
+RUN uvx hf download biu-nlp/f-coref --local-dir ./model
+# RUN uv python -m spacy download en_core_web_sm
 
 COPY . /app
 
@@ -33,4 +39,5 @@ ENV PYTHONUNBUFFERED=1
 
 USER nonroot
 WORKDIR /app
-CMD ["fastapi", "run", "--host", "0.0.0.0", "src/main.py"]
+# CMD ["fastapi", "run", "--host", "0.0.0.0", "src/main.py"]
+CMD ["celery", "-A", "app.main", "worker", "--loglevel=info", "--concurrency=1"]

@@ -4,7 +4,7 @@ import shutil
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import documents, classroom_members, classrooms
+from routers import documents, classroom_members, classrooms, coref
 from exceptions import errors, handlers
 
 from auth import fastapi_users, auth_backend
@@ -72,6 +72,9 @@ app.include_router(
     prefix="/auth/google",
     tags=["auth"],
 )
+
+# coreference resolution api
+app.include_router(coref.router)
 
 
 @app.get("/")
