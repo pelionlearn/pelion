@@ -1,13 +1,13 @@
 services:
   frontend:
-    image: pelion-frontend:latest
+    build: frontend/
     ports:
       - "8080:8080"
     depends_on: [api]
     restart: unless-stopped
 
   api:
-    image: pelion-api:latest
+    build: api/
     ports:
       - "5000:5000"
     env_file:
@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
 
   celery:
-    image: pelion-celery:latest
+    build: coref/
     volumes:
       - ./model:/app/model:ro
     environment:

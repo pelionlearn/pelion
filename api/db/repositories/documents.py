@@ -18,7 +18,7 @@ async def delete_document(db: AsyncSession, id):
     obj = await db.get(Document, id)
     if obj is None:
         raise errors.NotFoundError(f"Document {id} not found")
-    db.delete(obj)
+    await db.delete(obj)
     await db.commit()
     return obj
 

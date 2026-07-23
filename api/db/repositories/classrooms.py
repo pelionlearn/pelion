@@ -16,7 +16,7 @@ async def delete_classroom(db: AsyncSession, id: UUID):
     obj = await db.get(Classroom, id)
     if obj is None:
         raise errors.NotFoundError(f"Classroom {id} not found")
-    db.delete(obj)
+    await db.delete(obj)
     await db.commit()
     return obj
 
