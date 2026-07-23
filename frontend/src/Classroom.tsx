@@ -49,7 +49,7 @@ function Classroom() {
                             transition={{
                                 duration: 0.3,
                             }}
-                            className={`button-text rounded-xl px-4 py-1.5 text-left hover:text-primary ${active === name ? "text-primary" : ""}`}
+                            className={`button-text cursor-pointer rounded-xl px-3 py-1.5 text-left hover:text-primary hover:bg-dark ${active === name ? "text-primary bg-dark" : ""}`}
                         >
                             <i className={`fa-solid fa-${icon} mr-3`}></i>
                             {name}

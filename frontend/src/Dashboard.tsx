@@ -16,7 +16,10 @@ function Demo() {
             <div className="flex flex-1 flex-col overflow-hidden">
                 {/* top bar */}
                 <header className="flex h-18 items-center justify-between border-b border-dark px-8">
-                    <h2 className="text-xl">Home</h2>
+                    <div className="flex items-center">
+                        <img src="/pelion_alt_nobg.svg" alt="Pelion" className="h-10 scale-200" />
+                        <h3 className="text-text font-arvo text-2xl ml-3">Pelion</h3>
+                    </div>
 
                     <div className="flex items-center gap-4">
                         <button className="rounded-xl p-2 transition hover:bg-white/5 cursor-pointer">
