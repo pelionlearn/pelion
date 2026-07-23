@@ -4,16 +4,19 @@ import { motion } from "motion/react";
 function Notes() {
     const [dragging, setDragging] = useState(false);
 
-    const [files, setFiles] = useState<[string, Date][] | null>(null);
+    const [files, setFiles] = useState<[string, Date, number][] | null>(null);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
             setFiles([
-                ["Unit_1_Notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
-                ["Unit_2_Notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
-                ["Unit_3_Notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
-                ["midterm study guide.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
-                ["carsons_trash_notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)]
+                ["Syllabus_and_Course_Overview.pdf", new Date(2026, 5, 22, 17, 20, 1, 20), 2.4],
+                ["Lecture_Notes_Week_2.pdf", new Date(2026, 5, 29, 16, 45, 12, 10), 18.7],
+                ["Homework_1_Solutions.pdf", new Date(2026, 6, 6, 19, 10, 5, 30), 6.8],
+                ["Unit_2_Review_Guide.pdf", new Date(2026, 6, 15, 14, 30, 20, 15), 12.3],
+                ["Unit_3_Notes.pdf", new Date(2026, 6, 24, 18, 5, 40, 25), 27.9],
+                ["midterm study guide.pdf", new Date(2026, 7, 2, 17, 20, 1, 20), 4.5],
+                ["Final_Exam_Review_Notes.pdf", new Date(2026, 7, 12, 20, 15, 8, 5), 15.6],
+                ["carsons_trash_notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20), 1.2]
             ]);
         }, 400);
 
@@ -84,7 +87,7 @@ function Notes() {
                             <i className="fa-solid fa-spinner animate-spin text-4xl mr-4"/>
                             <span className="text-lg">Loading...</span>
                         </div>
-                    ) : (files.map(([filename, date_added], index) => (
+                    ) : (files.sort((a, b) => b[1].getTime() - a[1].getTime()).map(([filename, date_added, size_mb], index) => (
                         <motion.div
                             key={filename}
                             initial={{ opacity: 0 }}
@@ -94,22 +97,34 @@ function Notes() {
                             }}
                             className="flex items-center justify-between rounded-xl border border-dark bg-white/5 px-3 py-2 transition hover:bg-white/10"
                         >
-                            <div className="flex items-center gap-3">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 text-primary">
-                                    <i className="fa-solid fa-file"/>
-                                </div>
+                            <div className="flex flex-1 min-w-0 items-center justify-between">
+                                <div className="flex items-center gap-3 min-w-0">
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+                                        <i className="fa-solid fa-file" />
+                                    </div>
 
-                                <div>
-                                    <p className="text-md">
+                                    <p className="truncate text-md">
                                         {filename}
                                     </p>
-                                    <p className="text-sm text-text-secondary">
-                                        Uploaded {date_added.toLocaleTimeString()}, {date_added.toLocaleDateString()}
+                                </div>
+
+                                <div className="hidden xl:flex items-center gap-4 text-sm text-text-secondary ml-3">
+                                    <p>
+                                        added {date_added.toLocaleTimeString()}, {date_added.toLocaleDateString()}
+                                    </p>
+
+                                    <p className="w-20 text-right">
+                                        {size_mb} MB
                                     </p>
                                 </div>
+
+                                {/* smaller screen widths */}
+                                <p className="text-sm text-text-secondary ml-3 xl:hidden">
+                                    {date_added.toLocaleDateString()}
+                                </p>
                             </div>
 
-                            <button className="rounded-lg p-2 text-text-secondary transition hover:bg-white/10 hover:text-primary">
+                            <button className="rounded-lg p-2 ml-3 text-text-secondary transition hover:bg-white/10 hover:text-primary">
                                 <i className="fa-solid fa-ellipsis"/>
                             </button>
                         </motion.div>
