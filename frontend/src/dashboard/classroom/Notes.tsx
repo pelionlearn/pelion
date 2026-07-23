@@ -1,16 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 
 function Notes() {
     const [dragging, setDragging] = useState(false);
 
-    const files: [string, Date][] = [
-        ["Unit_1_Notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
-        ["Unit_2_Notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
-        ["Unit_3_Notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
-        ["midterm study guide.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
-        ["carsons_trash_notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)]
-    ]
+    const [files, setFiles] = useState<[string, Date][] | null>(null);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setFiles([
+                ["Unit_1_Notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
+                ["Unit_2_Notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
+                ["Unit_3_Notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
+                ["midterm study guide.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)],
+                ["carsons_trash_notes.pdf", new Date(2026, 7, 22, 17, 20, 1, 20)]
+            ]);
+        }, 400);
+
+        return () => clearTimeout(timeout);
+    }, []);
 
     return (
         <motion.main
@@ -71,9 +79,19 @@ function Notes() {
                 </h2>
 
                 <div className="flex flex-col gap-3">
-                    {files.map(([filename, date_added]) => (
-                        <div
+                    {files === null ? (
+                        <div className="flex items-center justify-center py-10 text-text-secondary">
+                            <i className="fa-solid fa-spinner animate-spin text-4xl mr-4"/>
+                            <span className="text-lg">Loading...</span>
+                        </div>
+                    ) : (files.map(([filename, date_added], index) => (
+                        <motion.div
                             key={filename}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{
+                                delay: index * 0.05,
+                            }}
                             className="flex items-center justify-between rounded-xl border border-dark bg-white/5 px-3 py-2 transition hover:bg-white/10"
                         >
                             <div className="flex items-center gap-3">
@@ -94,8 +112,8 @@ function Notes() {
                             <button className="rounded-lg p-2 text-text-secondary transition hover:bg-white/10 hover:text-primary">
                                 <i className="fa-solid fa-ellipsis"/>
                             </button>
-                        </div>
-                    ))}
+                        </motion.div>
+                    )))}
                 </div>
             </div>
         </motion.main>
