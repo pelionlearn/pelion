@@ -1,15 +1,6 @@
-import { useState } from "react";
 import { motion } from "motion/react";
 
-function Demo() {
-    const [active, setActive] = useState("Home");
-
-    const items: [string, string][] = [
-        ["house", "Home"],
-        ["comment", "Tutor"],
-        ["question", "Quizzes"],
-        ["magnifying-glass", "Search"],
-    ];
+function Dashboard() {
 
     return (
         <div className="flex h-screen bg-(--bg-950) text-text">
@@ -96,4 +87,4 @@ function Demo() {
     );
 }
 
-export default Demo;
+export default Dashboard;
