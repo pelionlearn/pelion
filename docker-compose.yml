@@ -1,5 +1,6 @@
 services:
   frontend:
+    build: frontend/
     image: pelion-frontend:latest
     ports:
       - "8080:8080"
@@ -7,6 +8,7 @@ services:
     restart: unless-stopped
 
   api:
+    build: api/
     image: pelion-api:latest
     ports:
       - "5000:5000"
@@ -20,9 +22,8 @@ services:
     restart: unless-stopped
 
   celery:
+    build: coref/
     image: pelion-celery:latest
-    volumes:
-      - ./model:/app/model:ro
     environment:
       - MODEL_PATH=/app/model
     env_file:
