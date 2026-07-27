@@ -1,6 +1,6 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['compose', '-f', 'docker-compose.yml', 'build', 'celery']
+    args: ['compose', '-f', 'docker-compose.yml', 'build', 'api']
 
   # - name: 'gcr.io/cloud-builders/docker'
   #   args: ['tag', 'pelion-frontend:latest', 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest']
