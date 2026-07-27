@@ -4,8 +4,6 @@ services:
     command: pytest
     ports:
       - "5000:5000"
-    environment:
-      PYTHONPATH: /home/myuser # for pytest; otherwise fails to import fastapi app from main.py
     env_file:
       - ./.env.test
     depends_on:
