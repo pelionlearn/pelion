@@ -1,7 +1,8 @@
 services:
   frontend:
     build: frontend/
-    image: pelion-frontend:latest
+#    image: pelion-frontend:latest
+    image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest
     ports:
       - "8080:8080"
     depends_on: [api]
@@ -9,7 +10,8 @@ services:
 
   api:
     build: api/
-    image: pelion-api:latest
+#    image: pelion-api:latest
+    image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest
     ports:
       - "5000:5000"
     env_file:
@@ -23,7 +25,8 @@ services:
 
   celery:
     build: coref/
-    image: pelion-celery:latest
+#    image: pelion-celery:latest
+    image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-celery:latest
     environment:
       - MODEL_PATH=/app/model
     env_file:
