@@ -1,9 +1,9 @@
 from uuid import UUID
 
 
-def create_classroom(client):
+async def create_classroom(client):
 
-    response = client.post("/classrooms/", json={"name": "Computer Science"})
+    response = await client.post("/classrooms/", json={"name": "Computer Science"})
 
     assert response.status_code == 200
     assert "id" in response.json()
@@ -11,11 +11,11 @@ def create_classroom(client):
     return response.json()["id"]
 
 
-def test_create_document(client):
+async def test_create_document(client):
 
-    classroom_id = create_classroom(client)
+    classroom_id = await create_classroom(client)
 
-    response = client.post(
+    response = await client.post(
         f"/classrooms/{classroom_id}/documents/",
         json={
             "file_name": "lecture1.pdf",
@@ -33,11 +33,11 @@ def test_create_document(client):
     UUID(body["id"])
 
 
-def test_get_document(client):
+async def test_get_document(client):
 
-    classroom_id = create_classroom(client)
+    classroom_id = await create_classroom(client)
 
-    create_response = client.post(
+    create_response = await client.post(
         f"/classrooms/{classroom_id}/documents/",
         json={
             "file_name": "notes.pdf",
@@ -47,7 +47,7 @@ def test_get_document(client):
 
     document_id = create_response.json()["id"]
 
-    response = client.get(f"/classrooms/{classroom_id}/documents/{document_id}")
+    response = await client.get(f"/classrooms/{classroom_id}/documents/{document_id}")
 
     assert response.status_code == 200
 
@@ -57,11 +57,11 @@ def test_get_document(client):
     assert body["file_name"] == "notes.pdf"
 
 
-def test_get_class_documents(client):
+async def test_get_class_documents(client):
 
-    classroom_id = create_classroom(client)
+    classroom_id = await create_classroom(client)
 
-    client.post(
+    await client.post(
         f"/classrooms/{classroom_id}/documents/",
         json={
             "file_name": "chapter1.pdf",
@@ -69,7 +69,7 @@ def test_get_class_documents(client):
         },
     )
 
-    client.post(
+    await client.post(
         f"/classrooms/{classroom_id}/documents/",
         json={
             "file_name": "chapter2.pdf",
@@ -77,7 +77,7 @@ def test_get_class_documents(client):
         },
     )
 
-    response = client.get(f"/classrooms/{classroom_id}/documents/")
+    response = await client.get(f"/classrooms/{classroom_id}/documents/")
 
     assert response.status_code == 200
 
@@ -86,11 +86,11 @@ def test_get_class_documents(client):
     assert len(documents) == 2
 
 
-def test_delete_document(client):
+async def test_delete_document(client):
 
-    classroom_id = create_classroom(client)
+    classroom_id = await create_classroom(client)
 
-    create_response = client.post(
+    create_response = await client.post(
         f"/classrooms/{classroom_id}/documents/",
         json={
             "file_name": "delete_me.pdf",
@@ -100,16 +100,18 @@ def test_delete_document(client):
 
     document_id = create_response.json()["id"]
 
-    response = client.delete(f"/classrooms/{classroom_id}/documents/{document_id}")
+    response = await client.delete(
+        f"/classrooms/{classroom_id}/documents/{document_id}"
+    )
 
     assert response.status_code == 200
 
     assert response.json()["id"] == document_id
 
 
-def test_add_missing_class_documents(client):
+async def test_add_missing_class_documents(client):
 
-    response = client.post(
+    response = await client.post(
         "/classrooms/00000000-0000-0000-0000-000000000000/documents/",
         json={
             "file_name": "chapter1.pdf",
@@ -120,18 +122,38 @@ def test_add_missing_class_documents(client):
     assert response.status_code == 404
 
 
-def test_get_missing_class_documents(client):
+async def test_get_missing_class_documents(client):
 
-    response = client.get("/classrooms/00000000-0000-0000-0000-000000000000/documents/")
+    response = await client.get(
+        "/classrooms/00000000-0000-0000-0000-000000000000/documents/"
+    )
 
     assert response.status_code == 404
 
 
-def test_delete_missing_class_documents(client):
-    classroom_id = create_classroom(client)
+async def test_delete_missing_class_documents(client):
+    classroom_id = await create_classroom(client)
 
-    response = client.delete(
+    response = await client.delete(
         f"/classrooms/{classroom_id}/documents/00000000-0000-0000-0000-000000000000"
     )
 
     assert response.status_code == 404
+
+
+async def test_invalid_uuid(client):
+    classroom_id = await create_classroom(client)
+
+    response = await client.get(f"/classrooms/{classroom_id}/documents/asdfj12345")
+
+    assert response.status_code == 422  # unproccesable entity
+
+
+async def test_invalid_schema(client):
+    classroom_id = await create_classroom(client)
+
+    response = await client.post(
+        f"/classrooms/{classroom_id}/documents", json={"file_name": "amogus"}
+    )
+
+    assert response.status_code == 422
