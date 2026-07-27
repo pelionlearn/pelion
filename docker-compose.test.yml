@@ -1,7 +1,7 @@
 services:
   api-test:
     build: api/
-    command: pytest
+    command: pytest --cov # --cov-report=term-missing --cov-fail-under=50
     ports:
       - "5000:5000"
     env_file:

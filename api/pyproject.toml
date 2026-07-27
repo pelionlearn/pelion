@@ -25,3 +25,16 @@ pythonpath = [
     "."
 ]
 asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = [
+    "auth",
+    "db",
+    "routers",
+    "exceptions",
+    "main",
+]
+omit = [
+    "tests/*",
+    "*/__init__.py",
+]
