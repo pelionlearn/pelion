@@ -7,6 +7,9 @@ from exceptions import errors
 async def create_document(
     db: AsyncSession, file_name: str, file_url: str, classroom_id: UUID
 ):
+    classroom = await db.get(Classroom, classroom_id)
+    if classroom is None:
+        raise errors.NotFoundError(f"Classroom {classroom_id} not found")
     obj = Document(file_name=file_name, file_url=file_url, classroom_id=classroom_id)
     db.add(obj)
     await db.commit()
