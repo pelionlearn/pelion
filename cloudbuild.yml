@@ -1,27 +1,29 @@
 steps:
-  # - name: 'gcr.io/kaniko-project/executor:latest'
-  #   # id: build-frontend
-  #   # waitFor: ['-']
-  #   args:
-  #     - '--context=dir://frontend'
-  #     - '--dockerfile=frontend/Dockerfile'
-  #     - '--destination=us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest'
-  #     - '--cache=true'
-  #     - '--cache-ttl=72h'
-      
-  # - name: 'gcr.io/kaniko-project/executor:latest'
-  #   # id: build-api
-  #   # waitFor: ['-']
-  #   args:
-  #     - '--context=dir://api'
-  #     - '--dockerfile=api/Dockerfile'
-  #     - '--destination=us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest'
-  #     - '--cache=true'
-  #     - '--cache-ttl=72h'
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    id: build-frontend
+    waitFor: ['-']
+    args:
+      - '--context=dir://frontend'
+      - '--dockerfile=frontend/Dockerfile'
+      - '--destination=us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest'
+      - '--cache=true'
+      - '--cache-ttl=72h'
+      - '--use-new-run'
       
   - name: 'gcr.io/kaniko-project/executor:latest'
-    # id: build-celery
-    # waitFor: ['-']
+    id: build-api
+    waitFor: ['-']
+    args:
+      - '--context=dir://api'
+      - '--dockerfile=api/Dockerfile'
+      - '--destination=us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest'
+      - '--cache=true'
+      - '--cache-ttl=72h'
+      - '--use-new-run'
+      
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    id: build-celery
+    waitFor: ['-']
     args:
       - '--context=dir://coref'
       - '--dockerfile=coref/Dockerfile'
@@ -29,6 +31,7 @@ steps:
       - '--cache=true'
       - '--cache-ttl=72h'
       - '--compressed-caching=false'
+      - '--use-new-run'
 
 options:
   logging: CLOUD_LOGGING_ONLY
