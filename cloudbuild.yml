@@ -1,9 +1,25 @@
 steps:
   - name: 'gcr.io/kaniko-project/executor:latest'
     args:
+      - '--context=dir://frontend'
+      - '--dockerfile=frontend/Dockerfile'
+      - '--destination=us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest'
+      - '--cache=true'
+      - '--cache-ttl=72h'
+      
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    args:
       - '--context=dir://api'
       - '--dockerfile=api/Dockerfile'
       - '--destination=us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest'
+      - '--cache=true'
+      - '--cache-ttl=72h'
+      
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    args:
+      - '--context=dir://coref'
+      - '--dockerfile=coref/Dockerfile'
+      - '--destination=us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-celery:latest'
       - '--cache=true'
       - '--cache-ttl=72h'
 
