@@ -10,7 +10,7 @@ services:
 
   api:
     build: api/
-#    image: pelion-api:latest
+    # image: pelion-api:latest
     image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest
     ports:
       - "5000:5000"
