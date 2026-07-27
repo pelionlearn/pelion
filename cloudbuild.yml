@@ -1,11 +1,11 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['compose', '-f', 'docker-compose.yml', 'build']
-    
-images:
-  - 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest'
-  - 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest'
-  - 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-celery:latest'
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    args:
+      - '--context=dir://api'
+      - '--dockerfile=api/Dockerfile'
+      - '--destination=us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest'
+      - '--cache=true'
+      - '--cache-ttl=48h'
 
 options:
   logging: CLOUD_LOGGING_ONLY
