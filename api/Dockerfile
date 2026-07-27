@@ -24,7 +24,7 @@ COPY .python-version .
 COPY uv.lock .
 COPY pyproject.toml .
 
-RUN uv sync --frozen --no-dev
+RUN uv sync --frozen
 
 FROM ubuntu:26.10 AS runner-image
 

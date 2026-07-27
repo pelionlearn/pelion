@@ -10,6 +10,7 @@ dependencies = [
     "fastapi>=0.139.0",
     "fastapi-users[oauth,sqlalchemy]>=15.0.5",
     "psycopg[binary]>=3.3.4",
+    "pytest>=9.1.1",
     "python-dotenv>=1.2.2",
     "python-multipart>=0.0.32",
     "redis>=8.0.1",
