@@ -5,7 +5,7 @@ steps:
       - '--dockerfile=api/Dockerfile'
       - '--destination=us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest'
       - '--cache=true'
-      - '--cache-ttl=48h'
+      - '--cache-ttl=72h'
 
 options:
   logging: CLOUD_LOGGING_ONLY
