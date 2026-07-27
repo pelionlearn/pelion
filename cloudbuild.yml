@@ -1,20 +1,11 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['compose', '-f', 'docker-compose.yml', 'build', 'api']
-
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['tag', 'pelion-frontend:latest', 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest']
-
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['tag', 'pelion-api:latest', 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest']
+    args: ['compose', '-f', 'docker-compose.yml', 'build']
     
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['tag', 'pelion-celery:latest', 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-celery:latest']
-
 images:
-  # - 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest'
+  - 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest'
   - 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest'
-  # - 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-celery:latest'
+  - 'us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-celery:latest'
 
 options:
   logging: CLOUD_LOGGING_ONLY
