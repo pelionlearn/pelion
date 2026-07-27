@@ -1,7 +1,7 @@
 steps:
   - name: 'gcr.io/kaniko-project/executor:latest'
-    # id: build-frontend
-    # waitFor: ['-']
+    id: build-frontend
+    waitFor: ['-']
     args:
       - '--context=dir://frontend'
       - '--dockerfile=frontend/Dockerfile'
@@ -11,8 +11,8 @@ steps:
       - '--use-new-run'
       
   - name: 'gcr.io/kaniko-project/executor:latest'
-    # id: build-api
-    # waitFor: ['-']
+    id: build-api
+    waitFor: ['-']
     args:
       - '--context=dir://api'
       - '--dockerfile=api/Dockerfile'
@@ -22,8 +22,8 @@ steps:
       - '--use-new-run'
       
   - name: 'gcr.io/kaniko-project/executor:latest'
-    # id: build-celery
-    # waitFor: ['-']
+    id: build-celery
+    waitFor: ['-']
     args:
       - '--context=dir://coref'
       - '--dockerfile=coref/Dockerfile'
