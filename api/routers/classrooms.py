@@ -22,5 +22,5 @@ async def create_classroom(
 
 
 @router.delete("/{classroom_id}", response_model=ClassroomResponse)
-async def delete_classroom(user_id: UUID, db: AsyncSession = Depends(get_db)):
-    return await repositories.classrooms.delete_classroom(db, user_id)
+async def delete_classroom(classroom_id: UUID, db: AsyncSession = Depends(get_db)):
+    return await repositories.classrooms.delete_classroom(db, classroom_id)
