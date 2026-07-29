@@ -1,0 +1,55 @@
+name: build docker images
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build ${{ matrix.name }}
+    runs-on: ubuntu-latest
+  
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: frontend
+            context: frontend
+            dockerfile: frontend/Dockerfile
+            image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest
+          - name: api
+            context: api
+            dockerfile: api/Dockerfile
+            image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest
+          - name: celery
+            context: coref
+            dockerfile: coref/Dockerfile
+            image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-celery:latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: auth google cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/123456789012/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          service_account: 'cicd-serviceacc@pelion-503219.iam.gserviceaccount.com'
+      - name: set up docker buildx
+        uses: docker/setup-buildx-action@v3
+      - name: auth google artiface registry
+        uses: docker/login-action@v3
+        with:
+          registry: us-central1-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+      - name: build images
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          tags: ${{ matrix.image }}
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
