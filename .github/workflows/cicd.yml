@@ -1,4 +1,4 @@
-name: build docker images
+name: test, build, and push
 
 on:
   push:
@@ -7,8 +7,50 @@ on:
   workflow_dispatch:
 
 jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: app
+          POSTGRES_USER: appuser
+          POSTGRES_PASSWORD: password
+        ports:
+          - "5432:5432"
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+      
+      - name: set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: "3.13"
+      
+      - name: install dependencies
+        run: uv sync --frozen --dev
+      
+      - name: run pytest
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_DB: app
+          POSTGRES_USER: appuser
+          POSTGRES_PASSWORD: password
+        run: uv run pytest
+
   build:
     name: build ${{ matrix.name }}
+    needs: test
     runs-on: ubuntu-latest
 
     permissions:
