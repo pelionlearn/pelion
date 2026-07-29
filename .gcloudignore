@@ -6,6 +6,8 @@ node_modules
 
 model
 
+.pytest_cache
+
 # this techincally isn't great... but its hard to set the other stuff up
 # we'll leave this until we want to build a more fully-fledged CI/CD pipeline
 !.env
