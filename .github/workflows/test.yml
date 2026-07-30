@@ -64,7 +64,4 @@ jobs:
 
       - name: Push Images
         run: |
-          docker compose -f docker-compose.test.yml config \
-            | grep 'image:' \
-            | awk '{print $2}' \
-            | xargs -n1 docker push
+          docker compose -f docker-compose.test.yml --profile gcr push

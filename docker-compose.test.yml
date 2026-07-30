@@ -2,6 +2,8 @@ services:
   api:
     build: api/
     image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest
+    profiles:
+      - gcr
     command: pytest --cov # --cov-report=term-missing --cov-fail-under=50
     ports:
       - "5000:5000"
