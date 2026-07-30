@@ -1,5 +1,5 @@
 services:
-  api-test:
+  api:
     build: api/
     command: pytest --cov # --cov-report=term-missing --cov-fail-under=50
     ports:
