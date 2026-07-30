@@ -1,4 +1,4 @@
-name: ${{ github.workflow }} | ${{ github.ref_name }} | ${{ github.actor }} | ${{ github.event_name }} | ${{ github.sha }}
+name: Docker Compose Build, Test, Push
 
 on:
   push:
