@@ -2,8 +2,6 @@ services:
   api:
     build: api/
     image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest
-    profiles:
-      - gcr
     command: pytest --cov # --cov-report=term-missing --cov-fail-under=50
     ports:
       - "5000:5000"
@@ -17,17 +15,15 @@ services:
     volumes:
       - ./api/migrations:/home/myuser/migrations
 
-  # celery:
-  #   build: coref/
-  #   environment:
-  #     - MODEL_PATH=/app/model
-  #   env_file:
-  #     - ./.env.test
+  celery:
+    build: coref/
+    environment:
+      - MODEL_PATH=/app/model
+    env_file:
+      - ./.env.test
 
   redis:
     image: redis:latest
-    profiles:
-      - dependency
     ports:
       - "6379:6379"
     env_file:
@@ -58,8 +54,6 @@ services:
 
   postgres-test:
     image: postgres:17
-    profiles:
-      - dependency
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
