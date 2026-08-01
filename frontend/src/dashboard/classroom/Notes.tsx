@@ -36,7 +36,7 @@ function Notes() {
             <div
                 className={`
                     mt-8 flex h-64 w-full flex-col items-center justify-center
-                    rounded-2xl border-2 border-dashed transition
+                    rounded-xl border-2 border-dashed transition
                     ${
                         dragging
                             ? "border-primary bg-tertiary/10"
@@ -124,7 +124,7 @@ function Notes() {
                                 </p>
                             </div>
 
-                            <button className="rounded-lg p-2 ml-3 text-text-secondary transition hover:bg-white/10 hover:text-primary">
+                            <button className="rounded-xl p-2 ml-3 text-text-secondary transition hover:bg-white/10 hover:text-primary">
                                 <i className="fa-solid fa-ellipsis"/>
                             </button>
                         </motion.div>

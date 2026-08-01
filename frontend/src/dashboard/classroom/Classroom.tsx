@@ -8,9 +8,22 @@ function Classroom() {
     const items: [string, string, string][] = [
         ["user-tie", "Tutor", "tutor"],
         ["note-sticky", "Notes", "notes"],
-        ["question", "Quizzes", "quizzes"],
-        ["comment", "Chat", "chat"],
+        ["question", "Quizzes", "quizzes"]
     ];
+
+    const tutor: [string, string][] = [
+        ["Circuit Calculations", "Chat link"],
+        ["Exam Prep", "Chat link"]
+    ]
+
+    const groups: [string, string][] = [
+        ["Riverbot Team", "Chat link"],
+        ["Study peeps", "Chat link"]
+    ]
+
+    const dms: [string, string][] = [
+        ["Carson's Mom", "Chat link"]
+    ]
 
     return (
         <div className="flex h-screen bg-(--bg-950) text-text">
@@ -46,6 +59,67 @@ function Classroom() {
                             {name}
                         </motion.button>
                     ))}
+
+                    <p className="mt-6 ml-2 mb-2 text-primary">Groups</p>
+
+                    {groups.map(([name, route]) => (
+                        <motion.button
+                            key={name}
+                            onClick={() => navigate(route)}
+                            className={`
+                                button-text cursor-pointer rounded-xl px-3 py-1.5 text-left
+                                hover:text-primary hover:bg-dark
+                                ${
+                                    location.pathname.endsWith(route)
+                                        ? "text-primary bg-dark"
+                                        : ""
+                                }
+                            `}
+                        >
+                            {name}
+                        </motion.button>
+                    ))}
+
+                    <p className="mt-6 ml-2 mb-2 text-primary">Tutor</p>
+
+                    {tutor.map(([name, route]) => (
+                        <motion.button
+                            key={name}
+                            onClick={() => navigate(route)}
+                            className={`
+                                button-text cursor-pointer rounded-xl px-3 py-1.5 text-left
+                                hover:text-primary hover:bg-dark
+                                ${
+                                    location.pathname.endsWith(route)
+                                        ? "text-primary bg-dark"
+                                        : ""
+                                }
+                            `}
+                        >
+                            {name}
+                        </motion.button>
+                    ))}
+                    
+                    <p className="mt-6 ml-2 mb-2 text-primary">DMs</p>
+
+                    {dms.map(([name, route]) => (
+                        <motion.button
+                            key={name}
+                            onClick={() => navigate(route)}
+                            className={`
+                                button-text cursor-pointer rounded-xl px-3 py-1.5 text-left
+                                hover:text-primary hover:bg-dark
+                                ${
+                                    location.pathname.endsWith(route)
+                                        ? "text-primary bg-dark"
+                                        : ""
+                                }
+                            `}
+                        >
+                            {name}
+                        </motion.button>
+                    ))}
+
                 </motion.nav>
             </aside>
 
@@ -55,7 +129,7 @@ function Classroom() {
                 {/* top bar */}
                 <header className="flex h-18 items-center justify-between border-b border-dark px-8">
                     <h2 className="text-xl">
-                        Discrete Math
+                        Intro to Engineering
                     </h2>
                 </header>
                 
