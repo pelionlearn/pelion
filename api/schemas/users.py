@@ -8,9 +8,7 @@ class UserRead(schemas.BaseUser[UUID]):
     name: str
 
 
-class UserCreate(BaseModel):
-    email: EmailStr
-    password: str
+class UserCreate(schemas.BaseUserCreate):
     name: str
 
 

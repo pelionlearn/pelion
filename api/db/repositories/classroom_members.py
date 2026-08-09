@@ -26,4 +26,3 @@ async def remove_classroom_member(db: AsyncSession, classroom_id: UUID, user_id:
             f"User {user_id} not found in classroom {classroom_id}"
         )
     await db.delete(class_member)
-    return class_member

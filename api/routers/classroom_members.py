@@ -20,8 +20,8 @@ async def add_member(classroom_id, user_id, db: AsyncSession = Depends(get_db)):
     return await repositories.users.get_user(db, user_id)
 
 
-@router.delete("/{user_id}", response_model=UserRead)
+@router.delete("/{user_id}")
 async def delete_user(classroom_id, user_id: UUID, db: AsyncSession = Depends(get_db)):
-    return await repositories.classroom_members.remove_classroom_member(
+    await repositories.classroom_members.remove_classroom_member(
         db, classroom_id, user_id
     )
