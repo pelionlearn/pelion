@@ -37,7 +37,7 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False, default="")
 
     classrooms: Mapped[list["Classroom"]] = relationship(
-        secondary="classroom_members", back_populates="members", lazy="selectin"
+        secondary="classroom_members", back_populates="members", lazy="raise"
     )
 
     oauth_accounts: Mapped[List[OAuthAccount]] = relationship(
@@ -53,10 +53,10 @@ class Classroom(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
 
     members: Mapped[list["User"]] = relationship(
-        secondary="classroom_members", back_populates="classrooms", lazy="selectin"
+        secondary="classroom_members", back_populates="classrooms", lazy="raise"
     )
     documents: Mapped[list["Document"]] = relationship(
-        back_populates="classroom", lazy="selectin"
+        back_populates="classroom", lazy="raise"
     )
 
 
@@ -71,7 +71,7 @@ class Document(Base):
 
     # weird name bc i cant use class keyword, prob should rename to classroom
     classroom: Mapped["Classroom"] = relationship(
-        back_populates="documents", lazy="selectin"
+        back_populates="documents", lazy="raise"
     )
 
 

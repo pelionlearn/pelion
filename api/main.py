@@ -7,9 +7,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers import documents, classroom_members, classrooms, coref
 from exceptions import errors, handlers
 
-from auth import fastapi_users, auth_backend
+from auth.authentication import fastapi_users, auth_backend
 from schemas.users import UserCreate, UserRead, UserUpdate
-from auth import google_client, OAUTH_SECRET
+from auth.authentication import google_client, OAUTH_SECRET
 
 
 app = FastAPI()

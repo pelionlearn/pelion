@@ -1,14 +1,19 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from db.models import Classroom
 from uuid import UUID
+from db.repositories.classroom_members import add_classroom_member
 from exceptions import errors
 
 
-async def create_classroom(db: AsyncSession, name: str):
+async def create_classroom(db: AsyncSession, name: str, user_id: UUID):
     obj = Classroom(name=name)
     db.add(obj)
     await db.commit()
     await db.refresh(obj)
+
+    # add first user to classroom
+    await add_classroom_member(db, obj.id, user_id)
+
     return obj
 
 

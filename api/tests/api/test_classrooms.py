@@ -1,9 +1,11 @@
 from uuid import UUID
 
 
-async def test_create_classroom(client):
+async def test_create_classroom(authenticated_client):
 
-    response = await client.post("/classrooms/", json={"name": "Calculus 1"})
+    response = await authenticated_client.post(
+        "/classrooms/", json={"name": "Calculus 1"}
+    )
 
     assert response.status_code == 200
 
@@ -16,17 +18,19 @@ async def test_create_classroom(client):
     UUID(body["id"])
 
 
-async def test_get_classroom(client):
+async def test_get_classroom(authenticated_client):
 
     # create classroom first
-    create_response = await client.post("/classrooms/", json={"name": "Physics"})
+    create_response = await authenticated_client.post(
+        "/classrooms/", json={"name": "Physics"}
+    )
 
     assert create_response.status_code == 200
 
     classroom_id = create_response.json()["id"]
 
     # retrieve classroom
-    response = await client.get(f"/classrooms/{classroom_id}")
+    response = await authenticated_client.get(f"/classrooms/{classroom_id}")
 
     assert response.status_code == 200
 
@@ -36,13 +40,15 @@ async def test_get_classroom(client):
     assert body["name"] == "Physics"
 
 
-async def test_delete_classroom(client):
+async def test_delete_classroom(authenticated_client):
 
-    create_response = await client.post("/classrooms/", json={"name": "Drama"})
+    create_response = await authenticated_client.post(
+        "/classrooms/", json={"name": "Drama"}
+    )
 
     classroom_id = create_response.json()["id"]
 
-    response = await client.delete(f"/classrooms/{classroom_id}")
+    response = await authenticated_client.delete(f"/classrooms/{classroom_id}")
 
     assert response.status_code == 200
 
@@ -51,21 +57,24 @@ async def test_delete_classroom(client):
     assert body["id"] == classroom_id
 
 
-async def test_get_missing_classroom(client):
+async def test_get_missing_classroom(authenticated_client):
 
-    response = await client.get("/classrooms/00000000-0000-0000-0000-000000000000")
+    response = await authenticated_client.get(
+        "/classrooms/00000000-0000-0000-0000-000000000000"
+    )
 
-    assert response.status_code == 404
+    # the user shouldnt get 404 bc that implies that the room exists
+    assert response.status_code == 403
 
 
-async def test_invalid_uuid(client):
+async def test_invalid_uuid(authenticated_client):
 
-    response = await client.get("/classrooms/asdfj12345")
+    response = await authenticated_client.get("/classrooms/asdfj12345")
 
     assert response.status_code == 422  # unproccesable entity
 
 
-async def test_invalid_schema(client):
-    response = await client.post("/classrooms/", json={"member": "Jawsh"})
+async def test_invalid_schema(authenticated_client):
+    response = await authenticated_client.post("/classrooms/", json={"member": "Jawsh"})
 
     assert response.status_code == 422

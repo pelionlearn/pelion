@@ -1,11 +1,18 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, exists
+from sqlalchemy.orm import selectinload
 from db.models import Classroom, ClassroomMember
 from uuid import UUID
 from exceptions import errors
 
 
 async def get_classroom_members(db: AsyncSession, classroom_id: UUID):
-    class_obj = await db.get(Classroom, classroom_id)
+    stmt = (
+        select(Classroom)
+        .where(Classroom.id == classroom_id)
+        .options(selectinload(Classroom.members))
+    )
+    class_obj = (await db.scalars(stmt)).one_or_none()
     if class_obj is None:
         raise errors.NotFoundError(f"Classroom {classroom_id} found")
     return class_obj.members
@@ -26,3 +33,20 @@ async def remove_classroom_member(db: AsyncSession, classroom_id: UUID, user_id:
             f"User {user_id} not found in classroom {classroom_id}"
         )
     await db.delete(class_member)
+    await db.commit()
+
+
+async def is_classroom_member(
+    db: AsyncSession,
+    classroom_id: UUID,
+    user_id: UUID,
+) -> bool:
+    stmt = select(
+        exists().where(
+            ClassroomMember.classroom_id == classroom_id,
+            ClassroomMember.user_id == user_id,
+        )
+    )
+
+    result = await db.execute(stmt)
+    return result.scalar_one()

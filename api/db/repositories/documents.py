@@ -1,4 +1,6 @@
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from db.models import Document, Classroom
 from uuid import UUID
 from exceptions import errors
@@ -26,10 +28,11 @@ async def delete_document(db: AsyncSession, id):
     return obj
 
 
-async def get_document(db: AsyncSession, id):
-    obj = await db.get(Document, id)
+async def get_document(db: AsyncSession, document_id):
+    obj = await db.get(Document, document_id)
     if obj is None:
-        raise errors.NotFoundError(f"Document {id} not found")
+        raise errors.NotFoundError(f"Document {document_id} not found")
+
     return obj
 
 
@@ -55,7 +58,12 @@ async def get_document_class(db: AsyncSession, id):
 
 
 async def get_class_documents(db: AsyncSession, classroom_id: UUID):
-    class_obj = await db.get(Classroom, classroom_id)
+    stmt = (
+        select(Classroom)
+        .where(Classroom.id == classroom_id)
+        .options(selectinload(Classroom.documents))
+    )
+    class_obj = (await db.scalars(stmt)).one_or_none()
     if class_obj is None:
         raise errors.NotFoundError(f"Classroom {classroom_id} not found")
     return class_obj.documents

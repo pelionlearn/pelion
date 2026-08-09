@@ -1,21 +1,32 @@
 from uuid import UUID
 
 
-async def create_classroom(client):
+async def create_classroom(authenticated_client):
 
-    response = await client.post("/classrooms/", json={"name": "Computer Science"})
+    response = await authenticated_client.post(
+        "/classrooms/", json={"name": "Computer Science"}
+    )
 
     assert response.status_code == 200
     assert "id" in response.json()
 
-    return response.json()["id"]
+    classroom_id = response.json()["id"]
+
+    members_response = await authenticated_client.get(
+        f"/classrooms/{classroom_id}/users"
+    )
+
+    assert members_response.status_code == 200
+    assert len(members_response.json()) == 1
+
+    return classroom_id
 
 
-async def test_create_document(client):
+async def test_create_document(authenticated_client):
 
-    classroom_id = await create_classroom(client)
+    classroom_id = await create_classroom(authenticated_client)
 
-    response = await client.post(
+    response = await authenticated_client.post(
         f"/classrooms/{classroom_id}/documents/",
         json={
             "file_name": "lecture1.pdf",
@@ -33,11 +44,11 @@ async def test_create_document(client):
     UUID(body["id"])
 
 
-async def test_get_document(client):
+async def test_get_document(authenticated_client):
 
-    classroom_id = await create_classroom(client)
+    classroom_id = await create_classroom(authenticated_client)
 
-    create_response = await client.post(
+    create_response = await authenticated_client.post(
         f"/classrooms/{classroom_id}/documents/",
         json={
             "file_name": "notes.pdf",
@@ -47,7 +58,9 @@ async def test_get_document(client):
 
     document_id = create_response.json()["id"]
 
-    response = await client.get(f"/classrooms/{classroom_id}/documents/{document_id}")
+    response = await authenticated_client.get(
+        f"/classrooms/{classroom_id}/documents/{document_id}"
+    )
 
     assert response.status_code == 200
 
@@ -57,11 +70,11 @@ async def test_get_document(client):
     assert body["file_name"] == "notes.pdf"
 
 
-async def test_get_class_documents(client):
+async def test_get_class_documents(authenticated_client):
 
-    classroom_id = await create_classroom(client)
+    classroom_id = await create_classroom(authenticated_client)
 
-    await client.post(
+    await authenticated_client.post(
         f"/classrooms/{classroom_id}/documents/",
         json={
             "file_name": "chapter1.pdf",
@@ -69,7 +82,7 @@ async def test_get_class_documents(client):
         },
     )
 
-    await client.post(
+    await authenticated_client.post(
         f"/classrooms/{classroom_id}/documents/",
         json={
             "file_name": "chapter2.pdf",
@@ -77,7 +90,7 @@ async def test_get_class_documents(client):
         },
     )
 
-    response = await client.get(f"/classrooms/{classroom_id}/documents/")
+    response = await authenticated_client.get(f"/classrooms/{classroom_id}/documents/")
 
     assert response.status_code == 200
 
@@ -86,11 +99,11 @@ async def test_get_class_documents(client):
     assert len(documents) == 2
 
 
-async def test_delete_document(client):
+async def test_delete_document(authenticated_client):
 
-    classroom_id = await create_classroom(client)
+    classroom_id = await create_classroom(authenticated_client)
 
-    create_response = await client.post(
+    create_response = await authenticated_client.post(
         f"/classrooms/{classroom_id}/documents/",
         json={
             "file_name": "delete_me.pdf",
@@ -100,7 +113,7 @@ async def test_delete_document(client):
 
     document_id = create_response.json()["id"]
 
-    response = await client.delete(
+    response = await authenticated_client.delete(
         f"/classrooms/{classroom_id}/documents/{document_id}"
     )
 
@@ -109,9 +122,9 @@ async def test_delete_document(client):
     assert response.json()["id"] == document_id
 
 
-async def test_add_missing_class_documents(client):
+async def test_add_missing_class_documents(authenticated_client):
 
-    response = await client.post(
+    response = await authenticated_client.post(
         "/classrooms/00000000-0000-0000-0000-000000000000/documents/",
         json={
             "file_name": "chapter1.pdf",
@@ -119,40 +132,42 @@ async def test_add_missing_class_documents(client):
         },
     )
 
-    assert response.status_code == 404
+    assert response.status_code == 403
 
 
-async def test_get_missing_class_documents(client):
+async def test_get_missing_class_documents(authenticated_client):
 
-    response = await client.get(
+    response = await authenticated_client.get(
         "/classrooms/00000000-0000-0000-0000-000000000000/documents/"
     )
 
-    assert response.status_code == 404
+    assert response.status_code == 403
 
 
-async def test_delete_missing_class_documents(client):
-    classroom_id = await create_classroom(client)
+async def test_delete_missing_class_documents(authenticated_client):
+    classroom_id = await create_classroom(authenticated_client)
 
-    response = await client.delete(
+    response = await authenticated_client.delete(
         f"/classrooms/{classroom_id}/documents/00000000-0000-0000-0000-000000000000"
     )
 
     assert response.status_code == 404
 
 
-async def test_invalid_uuid(client):
-    classroom_id = await create_classroom(client)
+async def test_invalid_uuid(authenticated_client):
+    classroom_id = await create_classroom(authenticated_client)
 
-    response = await client.get(f"/classrooms/{classroom_id}/documents/asdfj12345")
+    response = await authenticated_client.get(
+        f"/classrooms/{classroom_id}/documents/asdfj12345"
+    )
 
     assert response.status_code == 422  # unproccesable entity
 
 
-async def test_invalid_schema(client):
-    classroom_id = await create_classroom(client)
+async def test_invalid_schema(authenticated_client):
+    classroom_id = await create_classroom(authenticated_client)
 
-    response = await client.post(
+    response = await authenticated_client.post(
         f"/classrooms/{classroom_id}/documents", json={"file_name": "amogus"}
     )
 

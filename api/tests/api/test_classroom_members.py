@@ -1,14 +1,26 @@
-async def create_classroom(client):
-    response = await client.post("/classrooms/", json={"name": "Calculus 1"})
+async def create_classroom(authenticated_client):
+
+    response = await authenticated_client.post(
+        "/classrooms/", json={"name": "Computer Science"}
+    )
 
     assert response.status_code == 200
     assert "id" in response.json()
 
-    return response.json()["id"]
+    classroom_id = response.json()["id"]
+
+    members_response = await authenticated_client.get(
+        f"/classrooms/{classroom_id}/users"
+    )
+
+    assert members_response.status_code == 200
+    assert len(members_response.json()) == 1
+
+    return classroom_id
 
 
-async def create_user(client):
-    response = await client.post(
+async def create_user(authenticated_client):
+    response = await authenticated_client.post(
         "/auth/register/",
         json={
             "email": "jane@example.com",
@@ -22,11 +34,13 @@ async def create_user(client):
     return response.json()["id"]
 
 
-async def test_add_member(client):
-    classroom_id = await create_classroom(client)
-    user_id = await create_user(client)
+async def test_add_member(authenticated_client):
+    classroom_id = await create_classroom(authenticated_client)
+    user_id = await create_user(authenticated_client)
 
-    response = await client.post(f"/classrooms/{classroom_id}/users/{user_id}")
+    response = await authenticated_client.post(
+        f"/classrooms/{classroom_id}/users/{user_id}"
+    )
 
     assert response.status_code == 200
 
@@ -37,60 +51,65 @@ async def test_add_member(client):
     assert body["email"] == "jane@example.com"
 
 
-async def test_get_classroom_members(client):
-    classroom_id = await create_classroom(client)
-    user_id = await create_user(client)
+async def test_get_classroom_members(authenticated_client):
+    classroom_id = await create_classroom(authenticated_client)
+    user_id = await create_user(authenticated_client)
 
-    await client.post(f"/classrooms/{classroom_id}/users/{user_id}")
+    await authenticated_client.post(f"/classrooms/{classroom_id}/users/{user_id}")
 
-    response = await client.get(f"/classrooms/{classroom_id}/users/")
+    response = await authenticated_client.get(f"/classrooms/{classroom_id}/users/")
 
     assert response.status_code == 200
 
     members = response.json()
 
-    assert len(members) == 1
-    assert members[0]["id"] == user_id
+    # 2 members bc creator is automatically a member
+    assert len(members) == 2
+    assert members[1]["id"] == user_id
 
 
-async def test_get_empty_classroom_members(client):
-    classroom_id = await create_classroom(client)
+async def test_remove_member(authenticated_client):
+    classroom_id = await create_classroom(authenticated_client)
+    user_id = await create_user(authenticated_client)
 
-    response = await client.get(f"/classrooms/{classroom_id}/users/")
+    add_response = await authenticated_client.post(
+        f"/classrooms/{classroom_id}/users/{user_id}"
+    )
+    assert add_response.status_code == 200
 
-    assert response.status_code == 200
-    assert response.json() == []
-
-
-async def test_remove_member(client):
-    classroom_id = await create_classroom(client)
-    user_id = await create_user(client)
-
-    await client.post(f"/classrooms/{classroom_id}/users/{user_id}")
-
-    response = await client.delete(f"/classrooms/{classroom_id}/users/{user_id}")
-
-    assert response.status_code == 200
-
-    # member removed from classroom
-    members_response = await client.get(f"/classrooms/{classroom_id}/users/")
-
+    members_response = await authenticated_client.get(
+        f"/classrooms/{classroom_id}/users/"
+    )
     assert members_response.status_code == 200
-    assert members_response.json() == []
+    assert len(members_response.json()) == 2  # now 2 members, including creator
+
+    delete_response = await authenticated_client.delete(
+        f"/classrooms/{classroom_id}/users/{user_id}"
+    )
+    assert delete_response.status_code == 200
+
+    members_response = await authenticated_client.get(
+        f"/classrooms/{classroom_id}/users/"
+    )
+    assert members_response.status_code == 200
+    assert len(members_response.json()) == 1  # back to just the creator
 
 
-async def test_get_members_missing_classroom(client):
-    response = await client.get(
+async def test_get_members_missing_classroom(authenticated_client):
+    response = await authenticated_client.get(
         "/classrooms/00000000-0000-0000-0000-000000000000/users/"
     )
 
-    assert response.status_code == 404
+    # client shouldnt know whether classroom exists or not if they arent in it
+    assert response.status_code == 403
 
 
-async def test_remove_missing_member(client):
-    classroom_id = await create_classroom(client)
-    user_id = await create_user(client)
+async def test_remove_missing_member(authenticated_client):
+    classroom_id = await create_classroom(authenticated_client)
+    user_id = await create_user(authenticated_client)
 
-    response = await client.delete(f"/classrooms/{classroom_id}/users/{user_id}")
+    response = await authenticated_client.delete(
+        f"/classrooms/{classroom_id}/users/{user_id}"
+    )
 
     assert response.status_code == 404
