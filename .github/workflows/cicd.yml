@@ -79,6 +79,9 @@ jobs:
             image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-celery:latest
 
     steps:
+      - name: free space
+        run: sudo rm -rf /usr/local/lib/android
+
       - name: checkout repo
         uses: actions/checkout@v4
 
