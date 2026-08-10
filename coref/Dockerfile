@@ -18,7 +18,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-install-project
 
 RUN mkdir -p "./model"
-RUN uvx hf download biu-nlp/f-coref --local-dir ./model
+# RUN uvx hf download biu-nlp/f-coref --local-dir ./model
+RUN uvx hf download biu-nlp/lingmess-coref --local-dir ./model
 # RUN uv python -m spacy download en_core_web_sm
 
 COPY . /app

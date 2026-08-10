@@ -1,7 +1,7 @@
 services:
   api-test:
     build: api/
-    command: pytest --cov # --cov-report=term-missing --cov-fail-under=50
+    command: pytest --cov
     ports:
       - "5000:5000"
     env_file:
@@ -12,13 +12,6 @@ services:
     volumes:
       - ./api/migrations:/home/myuser/migrations
 
-  # celery:
-  #   build: coref/
-  #   environment:
-  #     - MODEL_PATH=/app/model
-  #   env_file:
-  #     - ./.env.test
-
   redis:
     image: redis:latest
     ports:
@@ -26,28 +19,6 @@ services:
     env_file:
       - ./.env.test
     command: redis-server --requirepass ${REDIS_PASSWORD}
-
-  # neo4j:
-  #   image: neo4j:latest
-  #   ports:
-  #     - "6868:7474"
-  #     - "6969:7687"
-  #   env_file:
-  #     - ./.env.test
-  #   volumes:
-  #     - neo4j:/etc/neo4j
-
-  # chromadb:
-  #   image: chromadb/chroma
-  #   env_file:
-  #     - ./.env.test
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - chromadb:/chroma/chroma
-  #   environment:
-  #     - IS_PERSISTENT=TRUE
-  #     - PERSIST_DIRECTORY=/chroma/chroma
 
   postgres-test:
     image: postgres:17

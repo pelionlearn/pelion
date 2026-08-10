@@ -17,6 +17,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - ./api/migrations:/home/myuser/migrations
     restart: unless-stopped
@@ -32,6 +34,11 @@ services:
 
   redis:
     image: redis:latest
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $${REDIS_PASSWORD} ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
       - "6379:6379"
     env_file:
@@ -49,18 +56,6 @@ services:
     volumes:
       - neo4j:/etc/neo4j
     restart: unless-stopped
-
-  # chromadb:
-  #   image: chromadb/chroma
-  #   env_file:
-  #     - ./.env
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - chromadb:/chroma/chroma
-  #   environment:
-  #     - IS_PERSISTENT=TRUE
-  #     - PERSIST_DIRECTORY=/chroma/chroma
 
   postgres:
     image: postgres:17
