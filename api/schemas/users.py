@@ -12,5 +12,5 @@ class UserCreate(schemas.BaseUserCreate):
     name: str
 
 
-class UserUpdate(schemas.BaseUserUpdate):
+class UserUpdate(BaseModel):
     name: str | None = None

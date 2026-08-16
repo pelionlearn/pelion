@@ -4,11 +4,11 @@ import shutil
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import documents, classroom_members, classrooms, coref
+from routers import users, documents, classroom_members, classrooms, coref
 from exceptions import errors, handlers
 
 from auth.authentication import fastapi_users, auth_backend
-from schemas.users import UserCreate, UserRead, UserUpdate
+from schemas.users import UserCreate, UserRead
 from auth.authentication import google_client, OAUTH_SECRET
 
 
@@ -39,13 +39,14 @@ app.add_exception_handler(
 )
 
 # users route with fastapi users
-app.include_router(
-    fastapi_users.get_users_router(UserRead, UserUpdate),
-    prefix="/users",
-    tags=["Users"],
-)
+# app.include_router(
+#     fastapi_users.get_users_router(UserRead, UserUpdate),
+#     prefix="/users",
+#     tags=["Users"],
+# )
 
 # general db routes
+app.include_router(users.router)
 app.include_router(classrooms.router)
 app.include_router(documents.router)
 app.include_router(classroom_members.router)
@@ -62,6 +63,7 @@ app.include_router(
     tags=["Auth"],
 )
 
+# google oauth
 app.include_router(
     fastapi_users.get_oauth_router(
         oauth_client=google_client,
@@ -70,7 +72,11 @@ app.include_router(
         associate_by_email=True,
     ),
     prefix="/auth/google",
-    tags=["auth"],
+    tags=["Google OAuth"],
+)
+
+app.include_router(
+    fastapi_users.get_verify_router(UserRead), prefix="/auth", tags=["Auth"]
 )
 
 # coreference resolution api

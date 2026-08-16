@@ -1,6 +1,6 @@
 import os
 from uuid import UUID
-from fastapi import Depends
+from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
 from fastapi_users.authentication import AuthenticationBackend, CookieTransport
 from fastapi_users.authentication.strategy.db import (
@@ -42,6 +42,12 @@ async def get_access_token_db(session=Depends(get_db)):
 class UserManager(UUIDIDMixin, BaseUserManager[User, UUID]):
     reset_password_token_secret = JWT_SECRET
     verification_token_secret = JWT_SECRET
+
+    async def on_after_request_verify(
+        self, user: User, token: str, request: Request | None = None
+    ) -> None:
+        print(f"Verification requested for user {user.id}. Verification token: {token}")
+        return await super().on_after_request_verify(user, token, request)
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):
