@@ -12,6 +12,7 @@ import Dashboard from "./dashboard/Dashboard.tsx";
 import Classroom from "./dashboard/classroom/Classroom.tsx";
 import Tutor from "./dashboard/classroom/Tutor.tsx";
 import Notes from "./dashboard/classroom/Notes.tsx";
+import Chat from "./dashboard/classroom/Chat.tsx";
 
 const router = createBrowserRouter([
     {
@@ -50,6 +51,14 @@ const router = createBrowserRouter([
                 path: "notes",
                 element: <Notes />,
             },
+            {
+                path: "chat/:chatId",
+                element: <Chat />,
+            },
+            {
+                path: "*",
+                element: "NOT FOUND"
+            }
         ],
     },
 ]);

@@ -12,17 +12,17 @@ function Classroom() {
     ];
 
     const tutor: [string, string][] = [
-        ["Circuit Calculations", "Chat link"],
-        ["Exam Prep", "Chat link"]
+        ["Circuit Calculations", "chat/circuit-calculations"],
+        ["Exam Prep", "chat/exam-prep"]
     ]
 
     const groups: [string, string][] = [
-        ["Riverbot Team", "Chat link"],
-        ["Study peeps", "Chat link"]
+        ["Riverbot Team", "chat/riverbot-team"],
+        ["Study peeps", "chat/study-peeps"]
     ]
 
     const dms: [string, string][] = [
-        ["Carson's Mom", "Chat link"]
+        ["Carson's Mom", "chat/carsons-mom"]
     ]
 
     return (
