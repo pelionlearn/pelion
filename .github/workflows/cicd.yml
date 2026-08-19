@@ -44,7 +44,7 @@ jobs:
         run: uv sync --frozen --dev
 
       - name: make test storage
-        run: mkdir -p ./storage
+        run: mkdir -p ~/work/pelion/pelion/storage
 
       - name: run pytest
         env:
