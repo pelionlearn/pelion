@@ -6,13 +6,14 @@ import "./index.css";
 import Home from "./Home.tsx";
 import About from "./About.tsx";
 import Contact from "./Contact.tsx";
-import NotFound from "./NotFound.tsx";
 import Login from "./Login.tsx";
 import Dashboard from "./dashboard/Dashboard.tsx";
 import Classroom from "./dashboard/classroom/Classroom.tsx";
 import Tutor from "./dashboard/classroom/Tutor.tsx";
 import Notes from "./dashboard/classroom/Notes.tsx";
 import Chat from "./dashboard/classroom/Chat.tsx";
+import ClassroomPageNotFound from "./dashboard/classroom/ClassroomPageNotFound.tsx";
+import NotFound from "./NotFound.tsx";
 
 const router = createBrowserRouter([
     {
@@ -56,8 +57,8 @@ const router = createBrowserRouter([
                 element: <Chat />,
             },
             {
-                path: "*",
-                element: "NOT FOUND"
+                path: "quizzes",
+                element: <ClassroomPageNotFound />,
             }
         ],
     },

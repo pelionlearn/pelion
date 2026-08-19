@@ -12,6 +12,8 @@
 
     --font-arvo: "Arvo", serif;
     --text-1-5xl: 1.375rem;
+
+    --color-error: #FF6B6B;
 }
 
 body {
