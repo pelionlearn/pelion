@@ -17,3 +17,16 @@ async def require_classroom_member(
         db, classroom_id, current_user.id
     ):
         raise errors.AuthorizationError("You are not a member of this classroom")
+
+
+async def require_document_in_class(
+    classroom_id: UUID,
+    document_id: UUID,
+    db: AsyncSession = Depends(get_db),
+):
+    document = await repositories.documents.get_document(db, document_id, classroom_id)
+
+    if document.classroom_id != classroom_id:
+        raise errors.AuthorizationError("Document does not belong to this classroom")
+
+    return document

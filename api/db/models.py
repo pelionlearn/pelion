@@ -64,8 +64,12 @@ class Document(Base):
     __tablename__ = "documents"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+
+    content_type: Mapped[str | None] = mapped_column(nullable=True)
+    size: Mapped[int] = mapped_column()
+
     file_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    file_url: Mapped[str] = mapped_column(String(255), nullable=False)
+    file_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     classroom_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("classrooms.id"))
 

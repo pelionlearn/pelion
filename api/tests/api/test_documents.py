@@ -22,16 +22,29 @@ async def create_classroom(authenticated_client):
     return classroom_id
 
 
+async def create_document(
+    authenticated_client, classroom_id, filename, content=b"test file"
+):
+    response = await authenticated_client.post(
+        f"/classrooms/{classroom_id}/documents/",
+        files={
+            "file": (
+                filename,
+                content,
+                "application/pdf",
+            )
+        },
+    )
+
+    return response
+
+
 async def test_create_document(authenticated_client):
 
     classroom_id = await create_classroom(authenticated_client)
 
-    response = await authenticated_client.post(
-        f"/classrooms/{classroom_id}/documents/",
-        json={
-            "file_name": "lecture1.pdf",
-            "file_url": "https://example.com/lecture1.pdf",
-        },
+    response = await create_document(
+        authenticated_client, classroom_id, "lecture1.pdf", content=b"fake pdf contents"
     )
 
     assert response.status_code == 200
@@ -39,7 +52,8 @@ async def test_create_document(authenticated_client):
     body = response.json()
 
     assert body["file_name"] == "lecture1.pdf"
-    assert body["file_url"] == "https://example.com/lecture1.pdf"
+    assert body["content_type"] == "application/pdf"
+    assert body["size"] == len(b"fake pdf contents")
 
     UUID(body["id"])
 
@@ -48,12 +62,8 @@ async def test_get_document(authenticated_client):
 
     classroom_id = await create_classroom(authenticated_client)
 
-    create_response = await authenticated_client.post(
-        f"/classrooms/{classroom_id}/documents/",
-        json={
-            "file_name": "notes.pdf",
-            "file_url": "https://example.com/notes.pdf",
-        },
+    create_response = await create_document(
+        authenticated_client, classroom_id, "notes.pdf"
     )
 
     document_id = create_response.json()["id"]
@@ -74,20 +84,17 @@ async def test_get_class_documents(authenticated_client):
 
     classroom_id = await create_classroom(authenticated_client)
 
-    await authenticated_client.post(
-        f"/classrooms/{classroom_id}/documents/",
-        json={
-            "file_name": "chapter1.pdf",
-            "file_url": "https://example.com/chapter1.pdf",
-        },
+    await create_document(
+        authenticated_client,
+        classroom_id,
+        "chapter1.pdf",
+        content=b"This is a boring textbook",
     )
-
-    await authenticated_client.post(
-        f"/classrooms/{classroom_id}/documents/",
-        json={
-            "file_name": "chapter2.pdf",
-            "file_url": "https://example.com/chapter2.pdf",
-        },
+    await create_document(
+        authenticated_client,
+        classroom_id,
+        "chapter1.pdf",
+        content=b"This is a boring textbook",
     )
 
     response = await authenticated_client.get(f"/classrooms/{classroom_id}/documents/")
@@ -103,12 +110,11 @@ async def test_delete_document(authenticated_client):
 
     classroom_id = await create_classroom(authenticated_client)
 
-    create_response = await authenticated_client.post(
-        f"/classrooms/{classroom_id}/documents/",
-        json={
-            "file_name": "delete_me.pdf",
-            "file_url": "https://example.com/delete.pdf",
-        },
+    create_response = await create_document(
+        authenticated_client,
+        classroom_id,
+        "delete_me.pdf",
+        content=b"Please delete me. This world is too painful",
     )
 
     document_id = create_response.json()["id"]
@@ -124,12 +130,8 @@ async def test_delete_document(authenticated_client):
 
 async def test_add_missing_class_documents(authenticated_client):
 
-    response = await authenticated_client.post(
-        "/classrooms/00000000-0000-0000-0000-000000000000/documents/",
-        json={
-            "file_name": "chapter1.pdf",
-            "file_url": "https://example.com/chapter1.pdf",
-        },
+    response = await create_document(
+        authenticated_client, "00000000-0000-0000-0000-000000000000", "chapter1.pdf"
     )
 
     assert response.status_code == 403

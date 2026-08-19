@@ -1,7 +1,4 @@
-from pathlib import Path
-import shutil
-
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from routers import users, documents, classroom_members, classrooms, coref
@@ -23,10 +20,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-UPLOAD_DIR = Path("uploads")
-UPLOAD_DIR.mkdir(exist_ok=True)
-
 
 app.add_exception_handler(errors.NotFoundError, handlers.not_found_handler)
 app.add_exception_handler(errors.ConflictError, handlers.conflict_handler)
@@ -86,21 +79,3 @@ app.include_router(coref.router)
 @app.get("/")
 async def root():
     return {"status": "API is running"}
-
-
-@app.post("/upload")
-async def upload_file(file: UploadFile = File(...)):
-    if file.filename is None:
-        raise Exception
-
-    destination = UPLOAD_DIR / file.filename
-
-    with destination.open("wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-
-    return {
-        "success": True,
-        "filename": file.filename,
-        "content_type": file.content_type,
-        "size": destination.stat().st_size,
-    }

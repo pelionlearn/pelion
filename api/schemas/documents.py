@@ -9,5 +9,7 @@ class DocumentCreateRequest(BaseModel):
 
 class DocumentResponse(BaseModel):
     id: UUID
+    content_type: str | None
+    size: int
     file_name: str
-    file_url: str
+    file_url: str | None

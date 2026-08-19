@@ -1,0 +1,22 @@
+from fastapi import UploadFile
+from uuid import UUID
+import shutil
+from pathlib import Path
+
+STORAGE_LOCATION = Path("/storage")
+
+
+def save_file(file: UploadFile, documentId: UUID):
+    destination = STORAGE_LOCATION / str(documentId)
+
+    with destination.open("wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    # TODO: add error handling for failure to write
+
+    return {
+        "success": True,
+        "filename": file.filename,
+        "content_type": file.content_type,
+        "size": destination.stat().st_size,
+    }

@@ -1,7 +1,7 @@
 services:
   api-test:
     build: api/
-    command: pytest --cov
+    command: pytest -vv --cov
     ports:
       - "5000:5000"
     env_file:
@@ -11,6 +11,8 @@ services:
         condition: service_healthy
     volumes:
       - ./api/migrations:/home/myuser/migrations
+    tmpfs:
+      - /storage
 
   redis:
     image: redis:latest

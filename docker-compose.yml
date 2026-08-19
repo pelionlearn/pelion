@@ -21,6 +21,7 @@ services:
         condition: service_healthy
     volumes:
       - ./api/migrations:/home/myuser/migrations
+      - file_storage:/storage
     restart: unless-stopped
 
   celery:
@@ -77,3 +78,4 @@ volumes:
   neo4j:
   chromadb:
   postgres_data:
+  file_storage:
