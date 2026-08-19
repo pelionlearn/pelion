@@ -33,16 +33,19 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v4
-      
+
       - name: set up uv
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
           python-version: "3.13"
-      
+
       - name: install dependencies
         run: uv sync --frozen --dev
-      
+
+      - name: make test storage
+        run: mkdir -p ./storage
+
       - name: run pytest
         env:
           POSTGRES_HOST: localhost
@@ -58,9 +61,9 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: 'read'
-      id-token: 'write'
-  
+      contents: "read"
+      id-token: "write"
+
     strategy:
       fail-fast: false
       matrix:
@@ -100,7 +103,7 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.GCP_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-          token_format: 'access_token'
+          token_format: "access_token"
 
       - name: auth google artifact registry
         if: steps.changes.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
