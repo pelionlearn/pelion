@@ -1,7 +1,6 @@
 import { motion } from "motion/react";
 
 function Dashboard() {
-
     return (
         <div className="flex h-screen bg-(--bg-950) text-text">
             <div className="flex flex-1 flex-col overflow-hidden">
@@ -37,24 +36,22 @@ function Dashboard() {
                     animate={{ opacity: [0, 1], y: [-20, 0] }}
                     transition={{ duration: 0.5 }}
                 >
-
                     {/* classes */}
                     <section className="mt-0">
                         <div className="mb-4 flex justify-between">
-                            <h2 className="text-xl font-semibold text-text">
-                                Your Classes
-                            </h2>
+                            <h2 className="text-xl font-semibold text-text">Your Classes</h2>
 
                             <div className="flex gap-6">
                                 <button className="button-text text-text hover:text-primary cursor-pointer transition-all duration-150">
-                                    <i className="fa-solid fa-user-group mr-2"/>Join
+                                    <i className="fa-solid fa-user-group mr-2" />
+                                    Join
                                 </button>
 
                                 <button className="button-text text-text hover:text-primary cursor-pointer transition-all duration-150">
-                                    <i className="fa-solid fa-plus mr-2"/>Create
+                                    <i className="fa-solid fa-plus mr-2" />
+                                    Create
                                 </button>
                             </div>
-                            
                         </div>
 
                         <div className="grid gap-5">

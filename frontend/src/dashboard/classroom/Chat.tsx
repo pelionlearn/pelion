@@ -19,14 +19,12 @@ function Chat() {
         },
         {
             sender: "Pelion",
-            message:
-                "Hi gay, I'm Pelion, your AI assistant. How can I help you today?",
+            message: "Hi gay, I'm Pelion, your AI assistant. How can I help you today?",
             time: "7:44 PM",
         },
         {
             sender: "Matthew",
-            message:
-                "Hi bozo",
+            message: "Hi bozo",
             time: "7:44 PM",
         },
         {
@@ -55,24 +53,17 @@ function Chat() {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
         >
-
             <div className="px-8 pt-6 pb-5 border-b border-white/10">
-                <h2 className="text-primary text-xl font-semibold">
-                    {chatId}
-                </h2>
+                <h2 className="text-primary text-xl font-semibold">{chatId}</h2>
 
-                <p className="text-sm mt-1 text-primary">
-                    Pelion · Teo · Matthew · Matt · You
-                </p>
+                <p className="text-sm mt-1 text-primary">Pelion · Teo · Matthew · Matt · You</p>
             </div>
 
             <div className="flex-1 overflow-y-auto px-8 py-6 space-y-5">
                 {messages.map((msg, index) => (
                     <div
                         key={index}
-                        className={`flex ${
-                            msg.self ? "justify-end" : "justify-start"
-                        }`}
+                        className={`flex ${msg.self ? "justify-end" : "justify-start"}`}
                     >
                         <div
                             className={`max-w-[70%] flex flex-col ${
@@ -90,9 +81,7 @@ function Chat() {
                                         : "bg-dark text-text rounded-bl-xs"
                                 }`}
                             >
-                                <p className="text-md leading-relaxed">
-                                    {msg.message}
-                                </p>
+                                <p className="text-md leading-relaxed">{msg.message}</p>
                             </div>
                         </div>
                     </div>
@@ -111,7 +100,7 @@ function Chat() {
                         type="button"
                         className="cursor-pointer px-2 py-1 rounded-xl text-primary hover:opacity-70 hover:bg-primary/25 transition-opacity"
                     >
-                        <i className="fa-solid fa-arrow-right-long"/>
+                        <i className="fa-solid fa-arrow-right-long" />
                     </button>
                 </div>
             </div>

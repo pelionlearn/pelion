@@ -8,36 +8,28 @@ function Classroom() {
     const items: [string, string, string][] = [
         ["user-tie", "Tutor", "tutor"],
         ["note-sticky", "Notes", "notes"],
-        ["question", "Quizzes", "quizzes"]
+        ["question", "Quizzes", "quizzes"],
     ];
 
     const tutor: [string, string][] = [
         ["Circuit Calculations", "chat/circuit-calculations"],
-        ["Exam Prep", "chat/exam-prep"]
-    ]
+        ["Exam Prep", "chat/exam-prep"],
+    ];
 
     const groups: [string, string][] = [
         ["Riverbot Team", "chat/riverbot-team"],
-        ["Study peeps", "chat/study-peeps"]
-    ]
+        ["Study peeps", "chat/study-peeps"],
+    ];
 
-    const dms: [string, string][] = [
-        ["Carson's Mom", "chat/carsons-mom"]
-    ]
+    const dms: [string, string][] = [["Carson's Mom", "chat/carsons-mom"]];
 
     return (
         <div className="flex h-screen bg-(--bg-950) text-text">
             {/* sidebar */}
             <aside className="flex w-52 flex-col border-r border-dark">
                 <div className="p-6 flex items-center">
-                    <img
-                        src="/pelion_alt_nobg.svg"
-                        alt="Pelion"
-                        className="h-10 scale-200"
-                    />
-                    <h3 className="text-text font-arvo text-2xl ml-3">
-                        Pelion
-                    </h3>
+                    <img src="/pelion_alt_nobg.svg" alt="Pelion" className="h-10 scale-200" />
+                    <h3 className="text-text font-arvo text-2xl ml-3">Pelion</h3>
                 </div>
 
                 <motion.nav className="flex flex-1 flex-col gap-1 px-3">
@@ -48,11 +40,7 @@ function Classroom() {
                             className={`
                                 button-text cursor-pointer rounded-xl px-3 py-1.5 text-left
                                 hover:text-primary hover:bg-dark
-                                ${
-                                    location.pathname.endsWith(route)
-                                        ? "text-primary bg-dark"
-                                        : ""
-                                }
+                                ${location.pathname.endsWith(route) ? "text-primary bg-dark" : ""}
                             `}
                         >
                             <i className={`fa-solid fa-${icon} mr-3`}></i>
@@ -69,11 +57,7 @@ function Classroom() {
                             className={`
                                 button-text cursor-pointer rounded-xl px-3 py-1.5 text-left
                                 hover:text-primary hover:bg-dark
-                                ${
-                                    location.pathname.endsWith(route)
-                                        ? "text-primary bg-dark"
-                                        : ""
-                                }
+                                ${location.pathname.endsWith(route) ? "text-primary bg-dark" : ""}
                             `}
                         >
                             {name}
@@ -89,17 +73,13 @@ function Classroom() {
                             className={`
                                 button-text cursor-pointer rounded-xl px-3 py-1.5 text-left
                                 hover:text-primary hover:bg-dark
-                                ${
-                                    location.pathname.endsWith(route)
-                                        ? "text-primary bg-dark"
-                                        : ""
-                                }
+                                ${location.pathname.endsWith(route) ? "text-primary bg-dark" : ""}
                             `}
                         >
                             {name}
                         </motion.button>
                     ))}
-                    
+
                     <p className="mt-6 ml-2 mb-2 text-primary">DMs</p>
 
                     {dms.map(([name, route]) => (
@@ -109,35 +89,24 @@ function Classroom() {
                             className={`
                                 button-text cursor-pointer rounded-xl px-3 py-1.5 text-left
                                 hover:text-primary hover:bg-dark
-                                ${
-                                    location.pathname.endsWith(route)
-                                        ? "text-primary bg-dark"
-                                        : ""
-                                }
+                                ${location.pathname.endsWith(route) ? "text-primary bg-dark" : ""}
                             `}
                         >
                             {name}
                         </motion.button>
                     ))}
-
                 </motion.nav>
             </aside>
 
-
             <div className="flex flex-1 flex-col overflow-hidden">
-
                 {/* top bar */}
                 <header className="flex h-18 items-center justify-between border-b border-dark px-8">
-                    <h2 className="text-xl">
-                        Intro to Engineering
-                    </h2>
+                    <h2 className="text-xl">Intro to Engineering</h2>
                 </header>
-                
+
                 {/* content */}
                 <Outlet />
-
             </div>
-
         </div>
     );
 }

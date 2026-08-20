@@ -30,11 +30,11 @@ const router = createBrowserRouter([
     },
     {
         path: "/login",
-        element: <Login />
+        element: <Login />,
     },
     {
         path: "/dashboard",
-        element: <Dashboard />
+        element: <Dashboard />,
     },
     {
         path: "*",
@@ -59,7 +59,7 @@ const router = createBrowserRouter([
             {
                 path: "quizzes",
                 element: <ClassroomPageNotFound />,
-            }
+            },
         ],
     },
 ]);
