@@ -44,10 +44,11 @@ jobs:
         run: uv sync --frozen --dev
 
       - name: make test storage
-        run: mkdir -p ./storage
+        run: mkdir -p ${{ github.workspace }}/storage
 
       - name: run pytest
         env:
+          STORAGE_LOCATION: ${{ github.workspace }}/storage
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
           POSTGRES_DB: app

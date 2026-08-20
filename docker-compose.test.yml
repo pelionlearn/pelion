@@ -4,6 +4,8 @@ services:
     command: pytest -vv --cov
     ports:
       - "5000:5000"
+    environment:
+      STORAGE_LOCATION: /storage
     env_file:
       - ./.env.test
     depends_on:
@@ -35,7 +37,3 @@ services:
       - "5432:5432"
     tmpfs:
       - /var/lib/postgresql/data
-
-volumes:
-  neo4j:
-  chromadb:
