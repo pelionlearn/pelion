@@ -12,6 +12,8 @@ services:
     image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest
     ports:
       - "5000:5000"
+    environment:
+      STORAGE_LOCATION: /storage # its probably best if you dont touch this
     env_file:
       - ./.env
     depends_on:
@@ -76,6 +78,5 @@ services:
 
 volumes:
   neo4j:
-  chromadb:
   postgres_data:
   file_storage:

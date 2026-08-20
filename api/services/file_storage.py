@@ -2,8 +2,9 @@ from fastapi import UploadFile
 from uuid import UUID
 import shutil
 from pathlib import Path
+import os
 
-STORAGE_LOCATION = Path("/storage")
+STORAGE_LOCATION = Path(os.environ["STORAGE_LOCATION"])
 
 
 def save_file(file: UploadFile, documentId: UUID):
