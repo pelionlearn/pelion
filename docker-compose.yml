@@ -2,8 +2,11 @@ services:
   frontend:
     build: frontend/
     image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
     ports:
-      - "8080:8080"
+      - "80:80"
+      - "443:443"
     depends_on: [api]
     restart: unless-stopped
 
@@ -26,14 +29,14 @@ services:
       - file_storage:/storage
     restart: unless-stopped
 
-  celery:
-    build: coref/
-    image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-celery:latest
-    environment:
-      - MODEL_PATH=/app/model
-    env_file:
-      - ./.env
-    restart: unless-stopped
+  # celery:
+  #   build: coref/
+  #   image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-celery:latest
+  #   environment:
+  #     - MODEL_PATH=/app/model
+  #   env_file:
+  #     - ./.env
+  #   restart: unless-stopped
 
   redis:
     image: redis:latest
@@ -49,16 +52,16 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD}
     restart: unless-stopped
 
-  neo4j:
-    image: neo4j:2026.05.0
-    ports:
-      - "6868:7474"
-      - "6969:7687"
-    env_file:
-      - ./.env
-    volumes:
-      - neo4j:/etc/neo4j
-    restart: unless-stopped
+  # neo4j:
+  #   image: neo4j:2026.05.0
+  #   ports:
+  #     - "6868:7474"
+  #     - "6969:7687"
+  #   env_file:
+  #     - ./.env
+  #   volumes:
+  #     - neo4j:/etc/neo4j
+  #   restart: unless-stopped
 
   postgres:
     image: postgres:17
@@ -77,6 +80,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  neo4j:
+  # neo4j:
   postgres_data:
   file_storage:

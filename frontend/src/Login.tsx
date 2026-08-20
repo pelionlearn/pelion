@@ -1,6 +1,38 @@
+import { useState, type ChangeEvent } from "react";
 import Navbar from "./Navbar.tsx";
 
 function Login() {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+
+    async function handleSubmit(e: ChangeEvent<HTMLFormElement>) {
+        e.preventDefault();
+
+        try {
+            const body = new URLSearchParams();
+            body.append("username", username);
+            body.append("password", password);
+
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body,
+            });
+
+            if (response.ok) {
+                console.log("Logged in");
+            }
+
+            if (response.status == 400) {
+                console.log("Invalid credentials");
+            }
+        } catch (err) {
+            console.log("ummm");
+        }
+    }
+
     return (
         <div className="top-0 left-0 min-w-screen min-h-screen">
             <div className="relative z-10">
@@ -10,7 +42,7 @@ function Login() {
             <div className="flex items-center justify-center px-6 mt-20">
                 <div className="w-full max-w-md p-6 bg-background border border-dark rounded-2xl text-text">
                     <h2 className="text-2xl font-bold my-6 text-center">Log into Pelion</h2>
-                    <form className="mb-4">
+                    <form onSubmit={handleSubmit} className="mb-4">
                         <div className="py-2">
                             <div className="relative">
                                 <i
@@ -21,6 +53,7 @@ function Login() {
                                     type="email"
                                     placeholder="Email"
                                     className="pl-10 px-3 py-2 w-full outline outline-dark rounded-lg"
+                                    onChange={e => setUsername(e.target.value)}
                                     required
                                 />
                             </div>
@@ -35,6 +68,7 @@ function Login() {
                                     type="password"
                                     placeholder="Password"
                                     className="pl-10 px-3 py-2 w-full outline outline-dark rounded-lg"
+                                    onChange={e => setPassword(e.target.value)}
                                     required
                                 />
                             </div>

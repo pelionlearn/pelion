@@ -1,9 +1,9 @@
-import { useRouteError } from "react-router-dom";
+// import { useRouteError } from "react-router-dom";
 
 import Navbar from "./Navbar.tsx";
 
 function NotFound() {
-    const error = useRouteError();
+    // const error = useRouteError();
     return (
         <div>
             <div className="fixed -z-10 bg-background top-0 left-0 w-screen h-screen flex flex-col items-center"></div>
