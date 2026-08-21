@@ -1,6 +1,5 @@
 import { useState, type ChangeEvent } from "react";
 import Navbar from "./Navbar.tsx";
-import { Link } from "react-router-dom";
 
 function Login() {
     const [username, setUsername] = useState("");
@@ -42,7 +41,7 @@ function Login() {
 
             <div className="flex items-center justify-center px-6 mt-20">
                 <div className="w-full max-w-md p-6 bg-background border border-dark rounded-2xl text-text">
-                    <h2 className="text-2xl font-bold my-6 text-center">Log into Pelion</h2>
+                    <h2 className="text-2xl font-bold my-6 text-center">Create an Account</h2>
                     <form onSubmit={handleSubmit} className="mb-4">
                         <div className="py-2">
                             <div className="relative">
@@ -79,25 +78,10 @@ function Login() {
                                 type="submit"
                                 className="w-full py-3 bg-primary text-dark rounded-2xl cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
                             >
-                                Login
+                                Register
                             </button>
                         </div>
                     </form>
-
-                    <div className="flex justify-center mt-4 gap-4 mb-4">
-                        <button
-                            type="submit"
-                            className="w-full py-3 bg-background text-text rounded-2xl outline outline-dark cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
-                        >
-                            Forgot Password
-                        </button>
-                        <Link
-                            to="/register"
-                            className="w-full text-center py-3 bg-background text-text rounded-2xl outline outline-dark cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
-                        >
-                            Register
-                        </Link>
-                    </div>
 
                     <hr className="border-dark" />
 

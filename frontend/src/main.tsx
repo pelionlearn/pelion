@@ -14,6 +14,7 @@ import Notes from "./dashboard/classroom/Notes.tsx";
 import Chat from "./dashboard/classroom/Chat.tsx";
 import ClassroomPageNotFound from "./dashboard/classroom/ClassroomPageNotFound.tsx";
 import NotFound from "./NotFound.tsx";
+import Register from "./Register.tsx";
 
 const router = createBrowserRouter([
     {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login />,
+    },
+    {
+        path: "/register",
+        element: <Register />,
     },
     {
         path: "/dashboard",
