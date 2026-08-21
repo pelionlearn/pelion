@@ -9,7 +9,7 @@ from schemas.users import UserCreate, UserRead
 from auth.authentication import google_client, OAUTH_SECRET
 
 
-app = FastAPI()
+app = FastAPI(root_path="/api")
 
 app.add_middleware(
     CORSMiddleware,

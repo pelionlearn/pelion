@@ -1,7 +1,7 @@
 import os
 from uuid import UUID
-from fastapi import Depends, Request
-from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
+from fastapi import Depends, Request, Response
+from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin, models
 from fastapi_users.authentication import AuthenticationBackend, CookieTransport
 from fastapi_users.authentication.strategy.db import (
     DatabaseStrategy,
@@ -42,6 +42,20 @@ async def get_access_token_db(session=Depends(get_db)):
 class UserManager(UUIDIDMixin, BaseUserManager[User, UUID]):
     reset_password_token_secret = JWT_SECRET
     verification_token_secret = JWT_SECRET
+
+    async def on_after_login(
+        self,
+        user: User,
+        request: Request | None = None,
+        response: Response | None = None,
+    ) -> None:
+        if request is not None and response is not None:
+            if "/auth/google/callback" in request.url.path:
+                response.status_code = 303
+                response.headers["Location"] = (
+                    "http://localhost/"  # TODO: replace redirect url with domain name
+                )
+        return await super().on_after_login(user, request, response)
 
     async def on_after_request_verify(
         self, user: User, token: str, request: Request | None = None

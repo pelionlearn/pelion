@@ -6,7 +6,7 @@ function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    async function handleSubmit(e: ChangeEvent<HTMLFormElement>) {
+    async function handleLogin(e: ChangeEvent<HTMLFormElement>) {
         e.preventDefault();
 
         try {
@@ -34,6 +34,14 @@ function Login() {
         }
     }
 
+    async function handleLoginWithGoogle() {
+        const response = await fetch("/api/auth/google/authorize");
+
+        const data = await response.json();
+
+        window.location.href = data.authorization_url;
+    }
+
     return (
         <div className="top-0 left-0 min-w-screen min-h-screen">
             <div className="relative z-10">
@@ -43,7 +51,7 @@ function Login() {
             <div className="flex items-center justify-center px-6 mt-20">
                 <div className="w-full max-w-md p-6 bg-background border border-dark rounded-2xl text-text">
                     <h2 className="text-2xl font-bold my-6 text-center">Log into Pelion</h2>
-                    <form onSubmit={handleSubmit} className="mb-4">
+                    <form onSubmit={handleLogin} className="mb-4">
                         <div className="py-2">
                             <div className="relative">
                                 <i
@@ -104,6 +112,7 @@ function Login() {
                     <div className="flex justify-center mt-4 gap-4">
                         <button
                             type="submit"
+                            onClick={handleLoginWithGoogle}
                             className="w-full py-3 bg-background text-text rounded-2xl outline outline-dark cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
                         >
                             <i className="fa-brands fa-google mr-2" />
