@@ -52,9 +52,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, UUID]):
         if request is not None and response is not None:
             if "/auth/google/callback" in request.url.path:
                 response.status_code = 303
-                response.headers["Location"] = (
-                    "/dashboard"
-                )
+                response.headers["Location"] = "/dashboard"
         return await super().on_after_login(user, request, response)
 
     async def on_after_request_verify(
@@ -62,6 +60,49 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, UUID]):
     ) -> None:
         print(f"Verification requested for user {user.id}. Verification token: {token}")
         return await super().on_after_request_verify(user, token, request)
+
+    async def oauth_callback(  # type: ignore
+        self,
+        oauth_name: str,
+        access_token: str,
+        account_id: str,
+        account_email: str,
+        expires_at: int | None = None,
+        refresh_token: str | None = None,
+        request: Request | None = None,
+        *,
+        associate_by_email: bool = False,
+        is_verified_by_default: bool = False,
+    ) -> User:
+
+        user: User = await super().oauth_callback(  # type: ignore
+            oauth_name,
+            access_token,
+            account_id,
+            account_email,
+            expires_at,
+            refresh_token,
+            request,
+            associate_by_email=associate_by_email,
+            is_verified_by_default=is_verified_by_default,
+        )
+
+        # use google username when registering with oauth
+        if not user.name:
+            async with google_client.get_httpx_client() as client:
+                response = await client.get(
+                    "https://people.googleapis.com/v1/people/me",
+                    params={"personFields": "names"},
+                    headers={"Authorization": f"Bearer {access_token}"},
+                )
+
+            response.raise_for_status()
+
+            profile = response.json()
+            username = profile["names"][0]["displayName"]
+            await self.user_db.update(user, {"name": username})
+
+        return user
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):
