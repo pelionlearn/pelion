@@ -1,8 +1,8 @@
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from db.models import User
 from exceptions import errors
-
-# MOST USER METHODS ARE UNNECESSARY BECAUSE OF FASTAPI USERS
 
 
 async def get_user(db: AsyncSession, id):
@@ -33,3 +33,13 @@ async def rename_user(db: AsyncSession, id, name: str):
     await db.refresh(user)
 
     return user
+
+
+async def get_user_classes(db: AsyncSession, id):
+    stmt = select(User).where(User.id == id).options(selectinload(User.classrooms))
+    user = (await db.scalars(stmt)).one_or_none()
+
+    if user is None:
+        return []
+
+    return user.classrooms
