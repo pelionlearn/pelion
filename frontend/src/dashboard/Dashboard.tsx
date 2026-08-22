@@ -1,6 +1,26 @@
 import { motion } from "motion/react";
+import { useAuth } from "../auth";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
+    const { user, loading } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!loading && !user) {
+            navigate("/");
+        }
+    }, [loading, user, navigate]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!user) {
+        return null;
+    }
+
     return (
         <div className="flex h-screen bg-(--bg-950) text-text">
             <div className="flex flex-1 flex-col overflow-hidden">
@@ -22,7 +42,7 @@ function Dashboard() {
                             </div>
 
                             <div>
-                                <p className="font-medium">Jeremy</p>
+                                <p className="font-medium">{user?.name}</p>
 
                                 <p className="text-sm text-text-secondary">Student</p>
                             </div>

@@ -53,7 +53,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, UUID]):
             if "/auth/google/callback" in request.url.path:
                 response.status_code = 303
                 response.headers["Location"] = (
-                    "http://localhost/"  # TODO: replace redirect url with domain name
+                    "/dashboard"
                 )
         return await super().on_after_login(user, request, response)
 

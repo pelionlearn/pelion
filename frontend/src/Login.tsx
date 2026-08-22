@@ -1,10 +1,14 @@
 import { useState, type ChangeEvent } from "react";
 import Navbar from "./Navbar.tsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "./auth.tsx";
 
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    const { setUser } = useAuth();
+    const navigate = useNavigate();
 
     async function handleLogin(e: ChangeEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -24,6 +28,10 @@ function Login() {
 
             if (response.ok) {
                 console.log("Logged in");
+                const meResponse = await fetch("/api/users/me");
+                const userData = await meResponse.json();
+                setUser(userData);
+                navigate("/dashboard");
             }
 
             if (response.status == 400) {
@@ -39,7 +47,9 @@ function Login() {
 
         const data = await response.json();
 
-        window.location.href = data.authorization_url;
+        const authUrl = new URL(data.authorization_url, window.location.origin);
+
+        window.location.href = authUrl.toString();
     }
 
     return (
