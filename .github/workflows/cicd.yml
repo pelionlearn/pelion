@@ -64,7 +64,7 @@ jobs:
           OPENROUTER_BASE_URL: https://openrouter.ai/v1
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           EMBEDDING_TAG: nvidia/nemotron-3-embed-1b:free
-          CHROMA_HOST: chromadb
+          CHROMA_HOST: localhost
           CHROMA_PORT: 8000
         run: uv run pytest
 
