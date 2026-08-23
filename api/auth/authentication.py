@@ -12,6 +12,8 @@ from db.database import get_db
 from db.models import User, AccessToken, OAuthAccount
 from httpx_oauth.clients.google import GoogleOAuth2
 
+from services.email import send_email
+
 # only used for reset password and verification email tokens, not main authentication method
 JWT_SECRET = os.getenv("JWT_SECRET", "SECRETEST_KEY")
 
@@ -58,7 +60,16 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, UUID]):
     async def on_after_request_verify(
         self, user: User, token: str, request: Request | None = None
     ) -> None:
-        print(f"Verification requested for user {user.id}. Verification token: {token}")
+        verification_url = f"http://localhost:8080/verify-email?token={token}"
+        await send_email(
+            user.email,
+            "Email Verification",
+            f"""
+                <h1>Verify your email</h1>
+                <p>Click below to verify your account:</p>
+                <a href="{verification_url}">Verify email</a>
+            """,
+        )
         return await super().on_after_request_verify(user, token, request)
 
     async def oauth_callback(  # type: ignore

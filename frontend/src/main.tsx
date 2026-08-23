@@ -16,6 +16,7 @@ import ClassroomPageNotFound from "./dashboard/classroom/ClassroomPageNotFound.t
 import NotFound from "./NotFound.tsx";
 import Register from "./Register.tsx";
 import { AuthProvider } from "./auth.tsx";
+import VerifyEmail from "./VerifyEmail.tsx";
 
 const router = createBrowserRouter([
     {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
     {
         path: "*",
         element: <NotFound />,
+    },
+    {
+        path: "/verify-email",
+        element: <VerifyEmail />,
     },
     {
         path: "/dashboard/classroom/:classroomId",
