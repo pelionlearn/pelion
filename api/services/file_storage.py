@@ -64,7 +64,10 @@ async def save_file(
     if file.filename and file.filename.endswith(".txt"):
         # chunk
         chunks = text_splitter.split_text(contents.decode("utf-8"))
-        docs = [Document(page_content=chunk, source=file.filename) for chunk in chunks]
+        docs = [
+            Document(page_content=chunk, metadata={"source": file.filename})
+            for chunk in chunks
+        ]
 
         # add to chromadb
         vectorstore = Chroma(
