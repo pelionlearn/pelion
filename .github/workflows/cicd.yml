@@ -54,6 +54,9 @@ jobs:
           POSTGRES_DB: app
           POSTGRES_USER: appuser
           POSTGRES_PASSWORD: password
+          EMBEDDING_TAG: nvidia/nemotron-3-embed-1b:free
+          CHROMA_HOST: chromadb
+          CHROMA_PORT: 8000
         run: uv run pytest
 
   build:
