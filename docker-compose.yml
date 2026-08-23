@@ -23,6 +23,9 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      chromadb:
+        # condition: service_healthy
+        condition: service_started
     volumes:
       - ./api/migrations:/home/myuser/migrations
       - file_storage:/storage
@@ -78,7 +81,24 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  chromadb:
+    image: chromadb/chroma:latest
+    restart: unless-stopped
+    ports:
+      - "8003:8000"
+    # healthcheck:
+    #   # test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v2/heartbeat" ]
+    #   # test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v2/heartbeat', timeout=5)"]
+    #   # test: ["CMD-SHELL", "pgrep -f chromadb || exit 1"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+
 volumes:
   # neo4j:
   postgres_data:
+  chroma_data:
   file_storage:

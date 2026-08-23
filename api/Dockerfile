@@ -28,7 +28,11 @@ RUN uv sync --frozen
 
 FROM ubuntu:26.10 AS runner-image
 
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN useradd --create-home myuser
+RUN mkdir -p /storage && chown -R myuser:myuser /storage
 USER myuser
 WORKDIR /home/myuser
 
