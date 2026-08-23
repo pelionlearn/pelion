@@ -51,6 +51,27 @@ async def get_llm_response(
         embedding_function=chroma_embeddings,
     )
 
+    squashed_messages = []
+    i = 0
+    while i < len(prev_messages):
+        prev_message = prev_messages[i]
+        if prev_message["role"] == "assistant":
+            squashed_messages.append(prev_message)
+        elif prev_message["role"] == "rag":
+            if i < len(prev_messages) - 1 and prev_messages[i + 1]["role"] == "user":
+                next_prev_message = prev_messages[i + 1]
+                squashed_message = {
+                    "role": "user",
+                    "content": prev_message["content"] + next_prev_message["content"],
+                }
+                squashed_messages.append(squashed_message)
+                i += 1
+            else:
+                raise Exception(
+                    "malformed message roles: rag message not followed by user message"
+                )
+        i += 1
+
     results = vectorstore.similarity_search(user_message, k=5)
 
     rag_context = "\n".join(
@@ -59,10 +80,12 @@ async def get_llm_response(
             for result in results
         ]
     )
-    rag_prompt = f"[Retrieved Context]\n{rag_context}\n\n[User Query]\n{user_message}"
-    messages = prev_messages[:]
-    messages.append({"role": "user", "content": rag_prompt})
-    # print(messages)
+    rag_part = f"[Retrieved Context]\n{rag_context}\n\n[User Query]\n"
+    usr_part = f"{user_message}"
+    prompt = f"{rag_part}{usr_part}"
+    messages = squashed_messages[:]
+    messages.append({"role": "user", "content": prompt})
+    print(messages)
 
     response = None
 
@@ -75,4 +98,4 @@ async def get_llm_response(
 
     assert response
 
-    return rag_prompt, response.content
+    return rag_part, usr_part, response.content

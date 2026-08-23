@@ -70,12 +70,12 @@ async def post_message(
         {"content": message.content, "role": message.role} for message in prev_messages
     ]
 
-    usr_content, llm_content = await get_llm_response(
+    rag_content, usr_content, llm_content = await get_llm_response(
         prev_messages, message.content, classroom_id
     )
 
+    rag_msg = await repositories.chats.create_message(db, chat_id, "rag", rag_content)
     usr_msg = await repositories.chats.create_message(db, chat_id, "user", usr_content)
-
     llm_msg = await repositories.chats.create_message(
         db, chat_id, "assistant", llm_content
     )

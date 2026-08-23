@@ -41,7 +41,7 @@ function Chat() {
             })
             .catch(() => {
                 if (!cancelled) setChat(null);
-            })
+            });
 
         return () => {
             cancelled = true;
@@ -144,34 +144,38 @@ function Chat() {
             </div>
 
             <div className="flex-1 overflow-y-auto px-8 py-6 space-y-5">
-                {messages.map((msg, index) => (
-                    <div
-                        key={index}
-                        className={`flex ${msg.role == "user" ? "justify-end" : "justify-start"}`}
-                    >
+                {messages
+                    .filter(msg => msg.role != "rag")
+                    .map((msg, index) => (
                         <div
-                            className={`max-w-[70%] flex flex-col ${
-                                msg.role == "user" ? "items-end" : "items-start"
-                            }`}
+                            key={index}
+                            className={`flex ${msg.role == "user" || msg.role == "rag" ? "justify-end" : "justify-start"}`}
                         >
-                            <span className="text-sm text-tertiary mb-2 ml-1">
-                                {msg.role} - {msg.created_at}
-                            </span>
-
                             <div
-                                className={`px-4 py-3 rounded-xl ${
-                                    msg.role == "user"
-                                        ? "bg-primary text-black rounded-br-xs"
-                                        : "bg-dark text-text rounded-bl-xs"
+                                className={`max-w-[70%] flex flex-col ${
+                                    msg.role == "user" || msg.role == "rag"
+                                        ? "items-end"
+                                        : "items-start"
                                 }`}
                             >
-                                <p className="text-md leading-relaxed whitespace-pre-wrap wrap-break-word">
-                                    {msg.content}
-                                </p>
+                                <span className="text-sm text-tertiary mb-2 ml-1">
+                                    {msg.role} - {msg.created_at}
+                                </span>
+
+                                <div
+                                    className={`px-4 py-3 rounded-xl ${
+                                        msg.role == "user"
+                                            ? "bg-primary text-black rounded-br-xs"
+                                            : "bg-dark text-text rounded-bl-xs"
+                                    }`}
+                                >
+                                    <p className="text-md leading-relaxed whitespace-pre-wrap wrap-break-word">
+                                        {msg.content}
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
                 <div ref={messagesEndRef} />
             </div>
 
