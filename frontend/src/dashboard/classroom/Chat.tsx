@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import type { ChatType } from "../../types/chat";
 
 type Message = {
     id: string;
@@ -15,6 +16,8 @@ function Chat() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const { classroomId, chatId } = useParams<{ classroomId: string; chatId: string }>();
 
+    const [chat, setChat] = useState<ChatType | null>(null);
+
     const [userText, setUserText] = useState<string>("");
     const [messages, setMessages] = useState<Message[]>([]);
     const [_, setLoading] = useState(true);
@@ -22,6 +25,28 @@ function Chat() {
     const [sending, setSending] = useState(false);
 
     // const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+    useEffect(() => {
+        if (!classroomId) return;
+
+        let cancelled = false;
+
+        fetch(`/api/classrooms/${classroomId}/chats/${chatId}`)
+            .then(res => {
+                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                if (!cancelled) setChat(data);
+            })
+            .catch(() => {
+                if (!cancelled) setChat(null);
+            })
+
+        return () => {
+            cancelled = true;
+        };
+    }, [classroomId, chatId]);
 
     const fetchMessages = () => {
         if (!classroomId || !chatId) return;
@@ -113,7 +138,7 @@ function Chat() {
             animate={{ opacity: 1, x: 0 }}
         >
             <div className="px-8 pt-6 pb-5 border-b border-white/10">
-                <h2 className="text-primary text-xl font-semibold">{chatId}</h2>
+                <h2 className="text-primary text-xl font-semibold">{chat?.name || chatId}</h2>
 
                 <p className="text-sm mt-1 text-primary">Pelion · You</p>
             </div>
