@@ -8,7 +8,7 @@ function Tutor() {
         >
             <h1 className="text-4xl font-bold text-primary">Good evening, Jeremy.</h1>
 
-            <p className="mt-4">Ask Chiron anything about this class.</p>
+            <p className="mt-4">Ask anything about this class.</p>
 
             <div className="relative mt-8">
                 <textarea
