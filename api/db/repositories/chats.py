@@ -11,7 +11,7 @@ async def get_messages(db: AsyncSession, chat_id: UUID):
     stmt = (
         select(ChatMessage)
         .where(ChatMessage.chat_id == chat_id)
-        .order_by(ChatMessage.created_at.desc())
+        .order_by(ChatMessage.created_at.asc())
         .limit(50)
     )
 
@@ -20,7 +20,7 @@ async def get_messages(db: AsyncSession, chat_id: UUID):
     return result.scalars().all()
 
 
-async def get_all_messages_asc(db: AsyncSession, chat_id: UUID):
+async def get_all_messages(db: AsyncSession, chat_id: UUID):
     stmt = (
         select(ChatMessage)
         .where(ChatMessage.chat_id == chat_id)

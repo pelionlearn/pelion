@@ -54,7 +54,7 @@ async def post_message(
     _chat_member: None = Depends(require_chat_member),
     db: AsyncSession = Depends(get_db),
 ):
-    prev_messages = await repositories.chats.get_all_messages_asc(db, chat_id)
+    prev_messages = await repositories.chats.get_all_messages(db, chat_id)
     prev_messages = [
         {"content": message.content, "role": message.role} for message in prev_messages
     ]

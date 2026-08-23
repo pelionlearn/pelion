@@ -1,50 +1,83 @@
 import { motion } from "motion/react";
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 type Message = {
-    sender: string;
-    message: string;
-    time: string;
-    self?: boolean;
+    id: string;
+    chat_id: string;
+    role: string;
+    content: string;
+    created_at: string;
 };
 
 function Chat() {
-    const { chatId } = useParams<{ chatId: string }>();
+    const { classroomId, chatId } = useParams<{ classroomId: string; chatId: string }>();
 
-    const messages: Message[] = [
-        {
-            sender: "Teo",
-            message: "im gay",
-            time: "7:43 PM",
-        },
-        {
-            sender: "Pelion",
-            message: "Hi gay, I'm Pelion, your AI assistant. How can I help you today?",
-            time: "7:44 PM",
-        },
-        {
-            sender: "Matthew",
-            message: "Hi bozo",
-            time: "7:44 PM",
-        },
-        {
-            sender: "You",
-            message: "hi bozo",
-            time: "7:45 PM",
-            self: true,
-        },
-        {
-            sender: "Matt",
-            message: "i use arch btw",
-            time: "7:46 PM",
-        },
-        {
-            sender: "You",
-            message: "ur a loser",
-            time: "7:47 PM",
-            self: true,
-        },
-    ];
+    const [userText, setUserText] = useState<string>("");
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [_, setLoading] = useState(true);
+
+    const [sending, setSending] = useState(false);
+
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+    const fetchMessages = () => {
+        if (!classroomId || !chatId) return;
+        setLoading(true);
+        fetch(`/api/classrooms/${classroomId}/chats/${chatId}`)
+            .then(res => {
+                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                setMessages(data);
+            })
+            .catch(() => {
+                setMessages([]);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        fetchMessages();
+    }, [classroomId, chatId]);
+
+    const handleSend = async (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        setSending(true);
+
+        setUserText("");
+
+        fetch(`/api/classrooms/${classroomId}/chats/${chatId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ content: userText }),
+        })
+            .then(res => {
+                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+                return res.json();
+            })
+            .finally(() => {
+                setSending(false);
+            });
+
+        await sleep(500);
+        fetchMessages();
+
+        // const prevLength = messages.length;
+        // let currLength = messages.length;
+        // while (prevLength == currLength) {
+        //     await sleep(500);
+        //     fetchMessages();
+        //     currLength = messages.length;
+        //     console.log(prevLength, currLength);
+        // }
+    };
 
     return (
         <motion.main
@@ -63,25 +96,27 @@ function Chat() {
                 {messages.map((msg, index) => (
                     <div
                         key={index}
-                        className={`flex ${msg.self ? "justify-end" : "justify-start"}`}
+                        className={`flex ${msg.role == "user" ? "justify-end" : "justify-start"}`}
                     >
                         <div
                             className={`max-w-[70%] flex flex-col ${
-                                msg.self ? "items-end" : "items-start"
+                                msg.role == "user" ? "items-end" : "items-start"
                             }`}
                         >
                             <span className="text-sm text-tertiary mb-2 ml-1">
-                                {msg.sender} - {msg.time}
+                                {msg.role} - {msg.created_at}
                             </span>
 
                             <div
                                 className={`px-4 py-3 rounded-xl ${
-                                    msg.self
+                                    msg.role == "user"
                                         ? "bg-primary text-black rounded-br-xs"
                                         : "bg-dark text-text rounded-bl-xs"
                                 }`}
                             >
-                                <p className="text-md leading-relaxed">{msg.message}</p>
+                                <p className="text-md leading-relaxed whitespace-pre-wrap wrap-break-word">
+                                    {msg.content}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -89,20 +124,25 @@ function Chat() {
             </div>
 
             <div className="px-8 pb-6 pt-3 text-lg">
-                <div className="flex items-center gap-3 border border-white/10 rounded-2xl px-4 py-3">
+                <form
+                    className="flex items-center gap-3 border border-white/10 rounded-2xl px-4 py-3"
+                    onSubmit={handleSend}
+                >
                     <input
                         type="text"
                         placeholder="Type a message..."
-                        className="flex-1 bg-transparent outline-none text-primary placeholder:text-primary/25"
+                        className="text-md flex-1 bg-transparent outline-none text-primary placeholder:text-primary/25"
+                        value={userText}
+                        onChange={e => setUserText(e.target.value)}
                     />
 
                     <button
-                        type="button"
-                        className="cursor-pointer px-2 py-1 rounded-xl text-primary hover:opacity-70 hover:bg-primary/25 transition-opacity"
+                        type="submit"
+                        className="text-md cursor-pointer px-2 py-1 rounded-xl text-primary hover:opacity-70 hover:bg-primary/25 transition-opacity"
                     >
-                        <i className="fa-solid fa-arrow-right-long" />
+                        {sending ? "..." : <i className="fa-solid fa-arrow-right-long" />}
                     </button>
-                </div>
+                </form>
             </div>
         </motion.main>
     );
