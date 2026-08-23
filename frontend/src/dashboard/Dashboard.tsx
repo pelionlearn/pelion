@@ -1,11 +1,63 @@
 import { motion } from "motion/react";
 import { useAuth } from "../auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CreateClassPopup from "./classroom/CreateClassPopup";
+
+interface Classroom {
+    id: string;
+    name: string;
+}
 
 function Dashboard() {
     const { user, loading } = useAuth();
     const navigate = useNavigate();
+
+    const [classrooms, setClassrooms] = useState<Classroom[]>([]);
+    const [classroomsLoading, setClassroomsLoading] = useState(true);
+    const [classroomsError, setClassroomsError] = useState<string | null>(null);
+
+    const [createModalOpen, setCreateModalOpen] = useState(false);
+
+    function handleClassroomCreated(newClassroom: Classroom) {
+        setClassrooms(prev => [...prev, newClassroom]);
+    }
+
+    useEffect(() => {
+        if (!user) return;
+
+        let cancelled = false;
+
+        async function fetchClassrooms() {
+            try {
+                const response = await fetch("/api/users/me/classrooms");
+
+                if (!response.ok) {
+                    throw new Error(`Request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (!cancelled) {
+                    setClassrooms(data);
+                }
+            } catch (err) {
+                if (!cancelled) {
+                    setClassroomsError("Failed to load classrooms");
+                }
+            } finally {
+                if (!cancelled) {
+                    setClassroomsLoading(false);
+                }
+            }
+        }
+
+        fetchClassrooms();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [user]);
 
     useEffect(() => {
         if (!loading && !user) {
@@ -67,38 +119,50 @@ function Dashboard() {
                                     Join
                                 </button>
 
-                                <button className="button-text text-text hover:text-primary cursor-pointer transition-all duration-150">
+                                <button
+                                    onClick={() => setCreateModalOpen(true)}
+                                    className="button-text text-text hover:text-primary cursor-pointer transition-all duration-150"
+                                >
                                     <i className="fa-solid fa-plus mr-2" />
                                     Create
                                 </button>
                             </div>
                         </div>
 
-                        <div className="grid gap-5">
-                            <div className="rounded-2xl p-6 cursor-pointer outline outline-dark border-l-10 border-secondary">
-                                <h3 className="font-semibold">Discrete Math</h3>
+                        {classroomsLoading && <div>Loading classrooms...</div>}
 
-                                <p className="mt-2 text-sm text-text-secondary">
-                                    24 notes - 18 members
-                                </p>
-                            </div>
-                            <div className="rounded-2xl p-6 cursor-pointer outline outline-dark border-l-10 border-dark">
-                                <h3 className="font-semibold">Calculus I</h3>
+                        {classroomsError && <div className="text-red-500">{classroomsError}</div>}
 
-                                <p className="mt-2 text-sm text-text-secondary">
-                                    24 notes - 18 members
-                                </p>
-                            </div>
-                            <div className="rounded-2xl p-6 cursor-pointer outline outline-dark border-l-10 border-tertiary">
-                                <h3 className="font-semibold">Government</h3>
 
-                                <p className="mt-2 text-sm text-text-secondary">
-                                    24 notes - 18 members
-                                </p>
+                        {!classroomsLoading && !classroomsError && (
+                            <div className="grid gap-5">
+                                {classrooms.map((classroom, index) => (
+                                    <motion.div 
+                                        className="rounded-2xl p-6 cursor-pointer outline outline-dark border-l-10 border-secondary"
+                                        key={classroom.id}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{
+                                            delay: index * 0.1,
+                                        }}
+                                    >
+                                        <h3 className="font-semibold">{classroom.name}</h3>
+
+                                        <p className="mt-2 text-sm text-text-secondary">
+                                            24 notes - 18 members
+                                        </p>
+                                    </motion.div>
+                                ))}
                             </div>
-                        </div>
+                        )}
                     </section>
                 </motion.main>
+
+                <CreateClassPopup
+                    open={createModalOpen}
+                    onClose={() => setCreateModalOpen(false)}
+                    onCreated={handleClassroomCreated}
+                />
             </div>
         </div>
     );
