@@ -85,6 +85,9 @@ async def save_file(
     ]
     print(docs)
 
+    for doc in docs:
+        assert isinstance(doc, Document)
+
     # add to chromadb
     vectorstore = Chroma(
         client=chroma_client,  # type: ignore
