@@ -50,4 +50,4 @@ COPY --chown=myuser:myuser . .
 # RUN chmod +x /home/myuser/entrypoint.sh
 # ENTRYPOINT [ "/home/myuser/entrypoint.sh" ]
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--proxy-headers", "--forwarded-allow-ips", "*"]
