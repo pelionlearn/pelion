@@ -1,6 +1,8 @@
 :8080 {
     handle /api/* {
-        reverse_proxy api:5000
+        reverse_proxy api:5000 {
+            header_up X-Forwarded-Proto {header.X-Forwarded-Proto}
+        }
     }
 
     handle {
