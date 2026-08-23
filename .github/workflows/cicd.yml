@@ -66,6 +66,7 @@ jobs:
           EMBEDDING_TAG: nvidia/nemotron-3-embed-1b:free
           CHROMA_HOST: localhost
           CHROMA_PORT: 8000
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
         run: uv run pytest
 
   build:
