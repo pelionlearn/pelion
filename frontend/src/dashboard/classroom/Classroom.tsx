@@ -1,9 +1,41 @@
-import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, Link, useParams } from "react-router-dom";
 import { motion } from "motion/react";
+import { useEffect, useState } from "react";
+import type { ClassroomType } from "../../types/classroom";
 
 function Classroom() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { classroomId } = useParams();
+
+    const [classroom, setClassroom] = useState<ClassroomType | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (!classroomId) return;
+
+        let cancelled = false;
+        setLoading(true);
+
+        fetch(`/api/classrooms/${classroomId}`)
+            .then(res => {
+                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                if (!cancelled) setClassroom(data);
+            })
+            .catch(() => {
+                if (!cancelled) setClassroom(null);
+            })
+            .finally(() => {
+                if (!cancelled) setLoading(false);
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [classroomId]);
 
     const items: [string, string, string][] = [
         ["user-tie", "Tutor", "tutor"],
@@ -101,7 +133,7 @@ function Classroom() {
             <div className="flex flex-1 flex-col overflow-hidden">
                 {/* top bar */}
                 <header className="flex h-18 items-center justify-between border-b border-dark px-8">
-                    <h2 className="text-xl">Intro to Engineering</h2>
+                    <h2 className="text-xl">{loading ? "" : classroom?.name}</h2>
                 </header>
 
                 {/* content */}

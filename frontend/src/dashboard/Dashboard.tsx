@@ -3,23 +3,19 @@ import { useAuth } from "../auth";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CreateClassPopup from "./classroom/CreateClassPopup";
-
-interface Classroom {
-    id: string;
-    name: string;
-}
+import type { ClassroomType } from "../types/classroom";
 
 function Dashboard() {
     const { user, loading } = useAuth();
     const navigate = useNavigate();
 
-    const [classrooms, setClassrooms] = useState<Classroom[]>([]);
+    const [classrooms, setClassrooms] = useState<ClassroomType[]>([]);
     const [classroomsLoading, setClassroomsLoading] = useState(true);
     const [classroomsError, setClassroomsError] = useState<string | null>(null);
 
     const [createModalOpen, setCreateModalOpen] = useState(false);
 
-    function handleClassroomCreated(newClassroom: Classroom) {
+    function handleClassroomCreated(newClassroom: ClassroomType) {
         setClassrooms(prev => [...prev, newClassroom]);
     }
 
