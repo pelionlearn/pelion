@@ -1,22 +1,55 @@
 # Pelion
 
-## Frontend
+Pelion was born out of a desire to make studying more collaborative, organized, and integrated with the digital resources you already use every day.
 
-In the `frontend/` directory, run `npm install` and then `npm run dev`.
+## Features
 
-## Backend
+- Classroom Organization: create classrooms and share your notes with others
+- Collaborative Notes System: save your study notes to cloud storage, making it accessible to others in your classroom and to your AI tutor
+- AI Tutor: chat to an AI tutor with access to your notes
+- Google OAuth: register and sign in with Google; Google Drive integration coming soon
 
-### Development and usage
+## Setup and Run
 
-In the root directory, copy `.env.example` to `.env.`. Fill in your API key.
+### Run Instructions
 
-**For local development:**
+Create a `.env` based off of `.env.example`. Add your OpenRouter API key, select a model, and modify any secrets listed as needed.
+You'll need to create a Google Cloud project and configure OAuth for it.
 
-In each backend component directory (each one except `frontend/`), run `uv sync`.
-Use `uv run main.py` to run each backend componenet.
+Pelion uses Docker and Docker Compose. To start Pelion, install Docker and run `docker compose up --build`
 
-In the `api/` directory, run `uv run uvicorn main:app --reload --port 5000` to run the middleware.
+### Testing
 
-**For production/testing:**
+You can run automated tests with `./scripts/test.sh`, which runs the `docker-compose.test.yml`.
 
-In the root directory, run `docker compose up` to build and run all containers.
+Alternatively, you can start it normally with `docker compose up --build` and then go to `localhost:5000/docs` which has interactive API docs.
+
+## Technical Details
+
+### Tech Stack
+
+- Frontend
+  - React + React Router
+  - TypeScript
+- API
+  - FastAPI + FastAPI Users
+  - LangChain
+  - SQLAlchemy
+  - LiteParse
+  - Resend
+- Databases
+  - PostgreSQL
+  - ChromaDB
+- Testing
+  - Pytest
+
+Future Stack:
+
+- Neo4j
+- Redis
+- Celery
+- FastCoref
+- SpaCy
+- Alembic
+- React Query
+- Docling
