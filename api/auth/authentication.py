@@ -60,7 +60,10 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, UUID]):
     async def on_after_request_verify(
         self, user: User, token: str, request: Request | None = None
     ) -> None:
-        verification_url = f"http://localhost:8080/verify-email?token={token}"
+        hostname = f"localhost:8080/verify-email?token={token}"
+        if request:
+            hostname = request.base_url.hostname
+        verification_url = f"https://{hostname}/verify-email?token={token}"  # TODO: assumes https and default port
         await send_email(
             user.email,
             "Email Verification",

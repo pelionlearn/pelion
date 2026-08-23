@@ -27,7 +27,7 @@ export default function VerifyEmail() {
                     return;
                 }
 
-                setStatus("Your email has been verified!");
+                setStatus("Your email has been verified!\nYou can close this page.");
             } catch {
                 setStatus("Something went wrong.");
             }
@@ -36,5 +36,14 @@ export default function VerifyEmail() {
         verify();
     }, []);
 
-    return <div>{status}</div>;
+    return (
+        <div>
+            <div className="fixed -z-10 bg-background top-0 left-0 w-screen h-screen flex flex-col items-center"></div>
+            <div className="relative z-10">
+                <h1 className="text-text font-arvo text-xl md:text-xl p-20 text-center whitespace-pre-line">
+                    {status}
+                </h1>
+            </div>
+        </div>
+    );
 }
