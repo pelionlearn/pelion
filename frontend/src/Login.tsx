@@ -130,7 +130,7 @@ function Login() {
                         </button>
                     </div>
 
-                    <div className="flex justify-center mt-4 gap-4">
+                    {/* <div className="flex justify-center mt-4 gap-4">
                         <button
                             type="submit"
                             className="w-full py-3 bg-background text-text rounded-2xl outline outline-dark cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
@@ -138,7 +138,7 @@ function Login() {
                             <i className="fa-brands fa-apple mr-2" />
                             Apple
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

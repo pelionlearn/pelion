@@ -1,10 +1,15 @@
 import { useState, type ChangeEvent } from "react";
 import Navbar from "./Navbar.tsx";
+import { useAuth } from "./auth.tsx";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    const { setUser } = useAuth();
+    const navigate = useNavigate();
 
     async function handleRegister(e: ChangeEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -38,7 +43,7 @@ function Login() {
     async function handleLogin() {
         try {
             const body = new URLSearchParams();
-            body.append("username", email);
+            body.append("username", username);
             body.append("password", password);
 
             const response = await fetch("/api/auth/login", {
@@ -51,6 +56,10 @@ function Login() {
 
             if (response.ok) {
                 console.log("Logged in");
+                const meResponse = await fetch("/api/users/me");
+                const userData = await meResponse.json();
+                setUser(userData);
+                navigate("/dashboard");
             }
 
             if (response.status == 400) {
@@ -66,7 +75,9 @@ function Login() {
 
         const data = await response.json();
 
-        window.location.href = data.authorization_url;
+        const authUrl = new URL(data.authorization_url, window.location.origin);
+
+        window.location.href = authUrl.toString();
     }
 
     return (
@@ -147,7 +158,7 @@ function Login() {
                         </button>
                     </div>
 
-                    <div className="flex justify-center mt-4 gap-4">
+                    {/* <div className="flex justify-center mt-4 gap-4">
                         <button
                             type="submit"
                             className="w-full py-3 bg-background text-text rounded-2xl outline outline-dark cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
@@ -155,7 +166,7 @@ function Login() {
                             <i className="fa-brands fa-apple mr-2" />
                             Apple
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
