@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
 import "./index.css";
 import Home from "./Home.tsx";
@@ -50,6 +50,10 @@ const router = createBrowserRouter([
         path: "/dashboard/classroom/:classroomId",
         element: <Classroom />,
         children: [
+            {
+                index: true,
+                element: <Navigate to="tutor" replace />,
+            },
             {
                 path: "tutor",
                 element: <Tutor />,

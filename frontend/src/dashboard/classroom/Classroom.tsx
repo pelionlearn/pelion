@@ -1,4 +1,4 @@
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import { motion } from "motion/react";
 
 function Classroom() {
@@ -27,10 +27,10 @@ function Classroom() {
         <div className="flex h-screen bg-(--bg-950) text-text">
             {/* sidebar */}
             <aside className="flex w-52 flex-col border-r border-dark">
-                <div className="p-6 flex items-center">
+                <Link to="/dashboard" className="p-6 flex items-center">
                     <img src="/pelion_alt_nobg.svg" alt="Pelion" className="h-10 scale-200" />
                     <h3 className="text-text font-arvo text-2xl ml-3">Pelion</h3>
-                </div>
+                </Link>
 
                 <motion.nav className="flex flex-1 flex-col gap-1 px-3">
                     {items.map(([icon, name, route]) => (

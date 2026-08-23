@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { useAuth } from "../auth";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CreateClassPopup from "./classroom/CreateClassPopup";
 
 interface Classroom {
@@ -137,21 +137,24 @@ function Dashboard() {
                         {!classroomsLoading && !classroomsError && (
                             <div className="grid gap-5">
                                 {classrooms.map((classroom, index) => (
-                                    <motion.div 
-                                        className="rounded-2xl p-6 cursor-pointer outline outline-dark border-l-10 border-secondary"
-                                        key={classroom.id}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{
-                                            delay: index * 0.1,
-                                        }}
-                                    >
-                                        <h3 className="font-semibold">{classroom.name}</h3>
+                                    <Link to={`/dashboard/classroom/${classroom.id}`}>
+                                        <motion.div 
+                                            className="rounded-2xl p-6 cursor-pointer outline outline-dark border-l-10 border-secondary"
+                                            key={classroom.id}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{
+                                                delay: index * 0.1,
+                                            }}
+                                        >
+                                            <h3 className="font-semibold">{classroom.name}</h3>
 
-                                        <p className="mt-2 text-sm text-text-secondary">
-                                            24 notes - 18 members
-                                        </p>
-                                    </motion.div>
+                                            <p className="mt-2 text-sm text-text-secondary">
+                                                24 notes - 18 members
+                                            </p>
+                                        </motion.div>
+                                    </Link>
+                                    
                                 ))}
                             </div>
                         )}
