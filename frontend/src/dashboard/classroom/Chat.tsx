@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import type { ChatType } from "../../types/chat";
 
@@ -13,8 +13,10 @@ type Message = {
 
 function Chat() {
     const initialLoad = useRef(true);
+    const initialMessageSent = useRef(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const { classroomId, chatId } = useParams<{ classroomId: string; chatId: string }>();
+    const location = useLocation();
 
     const [chat, setChat] = useState<ChatType | null>(null);
 
@@ -48,38 +50,13 @@ function Chat() {
         };
     }, [classroomId, chatId]);
 
-    const fetchMessages = () => {
-        if (!classroomId || !chatId) return;
-        setLoading(true);
-        fetch(`/api/classrooms/${classroomId}/chats/${chatId}/messages`)
-            .then(res => {
-                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                setMessages(data);
-            })
-            .catch(() => {
-                setMessages([]);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
+    const requestIdRef = useRef(0);
 
-    useEffect(() => {
-        fetchMessages();
-        initialLoad.current = true;
-    }, [classroomId, chatId]);
-
-    const handleSend = async (e: React.SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const sendMessage = async (message: string) => {
         if (!classroomId || !chatId) return;
-        if (userText == "") return;
+        if (message == "") return;
 
         setSending(true);
-        const message = userText;
-        setUserText("");
 
         // this is basically a fake client-side only message rn
         const userMessage: Message = {
@@ -120,6 +97,53 @@ function Chat() {
         //     currLength = messages.length;
         //     console.log(prevLength, currLength);
         // }
+    };
+
+    useEffect(() => {
+        if (!classroomId || !chatId) return;
+        
+        const requestId = ++requestIdRef.current;
+
+        initialLoad.current = true;
+        initialMessageSent.current = false;
+        setLoading(true);
+
+        fetch(`/api/classrooms/${classroomId}/chats/${chatId}/messages`)
+            .then(res => {
+                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                if (requestIdRef.current !== requestId) return;
+                setMessages(data);
+
+                const initialMessage = (location.state as { initialMessage?: string } | null)
+                    ?.initialMessage;
+
+                if (initialMessage && !initialMessageSent.current) {
+                    initialMessageSent.current = true;
+                    sendMessage(initialMessage);
+                    window.history.replaceState({}, "");
+                }
+            })
+            .catch(() => {
+                if (requestIdRef.current !== requestId) return;
+                setMessages([]);
+            })
+            .finally(() => {
+                if (requestIdRef.current !== requestId) return;
+                setLoading(false);
+            });
+
+    }, [classroomId, chatId]);
+
+    const handleSend = async (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (userText == "") return;
+
+        const message = userText;
+        setUserText("");
+        await sendMessage(message);
     };
 
     useEffect(() => {

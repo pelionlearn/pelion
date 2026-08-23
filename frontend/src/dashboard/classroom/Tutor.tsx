@@ -34,7 +34,9 @@ function Tutor() {
 
             const chat = await response.json();
             refetchChats();
-            navigate(`/dashboard/classroom/${classroomId}/chat/${chat.id}`);
+            navigate(`/dashboard/classroom/${classroomId}/chat/${chat.id}`, {
+                state: { initialMessage: trimmed },
+            });
         } catch (err) {
             setError("Failed to start chat. Try again.");
         } finally {
