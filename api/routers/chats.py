@@ -8,6 +8,7 @@ from db import repositories
 from db.database import get_db
 from db.models import User
 from schemas.chats import ChatCreate, ChatMessageCreate, ChatMessageRead, ChatRead
+from services.llm import get_llm_response
 
 router = APIRouter(prefix="/classrooms/{classroom_id}/chats", tags=["Chats"])
 
@@ -53,14 +54,17 @@ async def post_message(
     _chat_member: None = Depends(require_chat_member),
     db: AsyncSession = Depends(get_db),
 ):
-    # create user message in db
-    user_msg = await repositories.chats.create_message(
-        db, chat_id, "user", message.content
+    prev_messages = await repositories.chats.get_all_messages_asc(db, chat_id)
+    prev_messages = [
+        {"content": message.content, "role": message.role} for message in prev_messages
+    ]
+
+    usr_content, llm_content = await get_llm_response(prev_messages, message.content)
+
+    usr_msg = await repositories.chats.create_message(db, chat_id, "user", usr_content)
+
+    llm_msg = await repositories.chats.create_message(
+        db, chat_id, "assistant", llm_content
     )
 
-    # TODO: call to llm for a response
-    # add role="ai" or smth
-    # save response to db
-    # return llm message instead of user's message
-
-    return user_msg
+    return llm_msg

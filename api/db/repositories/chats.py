@@ -20,6 +20,18 @@ async def get_messages(db: AsyncSession, chat_id: UUID):
     return result.scalars().all()
 
 
+async def get_all_messages_asc(db: AsyncSession, chat_id: UUID):
+    stmt = (
+        select(ChatMessage)
+        .where(ChatMessage.chat_id == chat_id)
+        .order_by(ChatMessage.created_at.asc())
+    )
+
+    result = await db.execute(stmt)
+
+    return result.scalars().all()
+
+
 async def create_chat(db: AsyncSession, classroom_id: UUID, user_id: UUID, name: str):
     obj = Chat(name=name, classroom_id=classroom_id, user_id=user_id)
     db.add(obj)
