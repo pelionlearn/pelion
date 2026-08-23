@@ -23,8 +23,8 @@ chroma_client = None
 chroma_embeddings = None
 parser = None
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=2000,
-    chunk_overlap=400,
+    chunk_size=1000,
+    chunk_overlap=200,
     separators=["\n\n", "\n", ".", "!", "?", ";", ":", ",", " ", ""],
     keep_separator="end",
 )

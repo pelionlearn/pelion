@@ -85,7 +85,7 @@ async def get_llm_response(
     prompt = f"{rag_part}{usr_part}"
     messages = squashed_messages[:]
     messages.append({"role": "user", "content": prompt})
-    print(messages)
+    # print(messages)
 
     response = None
 
