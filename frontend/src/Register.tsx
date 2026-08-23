@@ -43,7 +43,7 @@ function Login() {
     async function handleLogin() {
         try {
             const body = new URLSearchParams();
-            body.append("username", username);
+            body.append("username", email);
             body.append("password", password);
 
             const response = await fetch("/api/auth/login", {
