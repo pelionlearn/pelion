@@ -29,6 +29,13 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      chromadb:
+        image: chromadb/chroma:latest
+        ports:
+          - "8000:8000"
+        env:
+          IS_PERSISTENT: TRUE
+          ANONYMIZED_TELEMETRY: FALSE
 
     steps:
       - name: checkout repo
@@ -57,7 +64,7 @@ jobs:
           OPENROUTER_BASE_URL: https://openrouter.ai/v1
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           EMBEDDING_TAG: nvidia/nemotron-3-embed-1b:free
-          CHROMA_HOST: chromadb
+          CHROMA_HOST: localhost
           CHROMA_PORT: 8000
         run: uv run pytest
 
