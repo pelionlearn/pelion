@@ -1,7 +1,12 @@
 import { Outlet, useNavigate, useLocation, Link, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ClassroomType } from "../../types/classroom";
+import type { ChatType } from "../../types/chat";
+
+export interface ClassroomOutletContext {
+    refetchChats: () => void;
+}
 
 function Classroom() {
     const navigate = useNavigate();
@@ -10,6 +15,9 @@ function Classroom() {
 
     const [classroom, setClassroom] = useState<ClassroomType | null>(null);
     const [loading, setLoading] = useState(true);
+
+    const [chats, setChats] = useState<ChatType[]>([]);
+    const [chatsError, setChatsError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!classroomId) return;
@@ -37,23 +45,42 @@ function Classroom() {
         };
     }, [classroomId]);
 
+    const fetchChats = useCallback(() => {
+        if (!classroomId) return;
+
+        setChatsError(null);
+
+        fetch(`/api/classrooms/${classroomId}/chats`)
+            .then(res => {
+                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+                return res.json();
+            })
+            .then((data: ChatType[]) => {
+                setChats(data);
+            })
+            .catch(() => {
+                setChatsError("Failed to load chats");
+            });
+    }, [classroomId]);
+
+    useEffect(() => {
+        fetchChats();
+    }, [fetchChats]);
+
+    
+
     const items: [string, string, string][] = [
         ["user-tie", "Tutor", "tutor"],
         ["note-sticky", "Notes", "notes"],
         ["question", "Quizzes", "quizzes"],
     ];
 
-    const tutor: [string, string][] = [
-        ["Circuit Calculations", "chat/circuit-calculations"],
-        ["Exam Prep", "chat/exam-prep"],
-    ];
+    // const groups: [string, string][] = [
+    //     ["Riverbot Team", "chat/riverbot-team"],
+    //     ["Study peeps", "chat/study-peeps"],
+    // ];
 
-    const groups: [string, string][] = [
-        ["Riverbot Team", "chat/riverbot-team"],
-        ["Study peeps", "chat/study-peeps"],
-    ];
-
-    const dms: [string, string][] = [["Carson's Mom", "chat/carsons-mom"]];
+    // const dms: [string, string][] = [["Carson's Mom", "chat/carsons-mom"]];
 
     return (
         <div className="flex h-screen bg-(--bg-950) text-text">
@@ -80,7 +107,7 @@ function Classroom() {
                         </motion.button>
                     ))}
 
-                    <p className="mt-6 ml-2 mb-2 text-primary">Groups</p>
+                    {/* <p className="mt-6 ml-2 mb-2 text-primary">Groups</p>
 
                     {groups.map(([name, route]) => (
                         <motion.button
@@ -94,25 +121,33 @@ function Classroom() {
                         >
                             {name}
                         </motion.button>
-                    ))}
+                    ))} */}
 
-                    <p className="mt-6 ml-2 mb-2 text-primary">Tutor</p>
+                    {!chatsError && chats.length !== 0 && (
+                        <p className="mt-6 ml-2 mb-2 text-primary">Tutor</p>
+                    )}
 
-                    {tutor.map(([name, route]) => (
-                        <motion.button
-                            key={name}
-                            onClick={() => navigate(route)}
-                            className={`
-                                button-text cursor-pointer rounded-xl px-3 py-1.5 text-left
-                                hover:text-primary hover:bg-dark
-                                ${location.pathname.endsWith(route) ? "text-primary bg-dark" : ""}
-                            `}
-                        >
-                            {name}
-                        </motion.button>
-                    ))}
+                    {chatsError && (
+                        <p className="px-3 text-sm text-red-500">{chatsError}</p>
+                    )}
 
-                    <p className="mt-6 ml-2 mb-2 text-primary">DMs</p>
+                    {!chatsError &&
+                        [...chats].reverse().map(chat => (
+                            <motion.button
+                                key={chat.id}
+                                onClick={() => navigate(`chat/${chat.id}`)}
+                                className={`
+                                    button-text cursor-pointer rounded-xl px-3 py-1.5 text-left
+                                    hover:text-primary hover:bg-dark
+                                    ${location.pathname.endsWith(`chat/${chat.id}`) ? "text-primary bg-dark" : ""}
+                                `}
+                            >
+                                {chat.name}
+                            </motion.button>
+                        ))
+                    }
+
+                    {/* <p className="mt-6 ml-2 mb-2 text-primary">DMs</p>
 
                     {dms.map(([name, route]) => (
                         <motion.button
@@ -126,7 +161,7 @@ function Classroom() {
                         >
                             {name}
                         </motion.button>
-                    ))}
+                    ))} */}
                 </motion.nav>
             </aside>
 
@@ -137,7 +172,7 @@ function Classroom() {
                 </header>
 
                 {/* content */}
-                <Outlet />
+                <Outlet context={{ refetchChats: fetchChats } satisfies ClassroomOutletContext} />
             </div>
         </div>
     );

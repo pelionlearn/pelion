@@ -56,7 +56,7 @@ function Chat() {
             <div className="px-8 pt-6 pb-5 border-b border-white/10">
                 <h2 className="text-primary text-xl font-semibold">{chatId}</h2>
 
-                <p className="text-sm mt-1 text-primary">Pelion · Teo · Matthew · Matt · You</p>
+                <p className="text-sm mt-1 text-primary">Pelion · You</p>
             </div>
 
             <div className="flex-1 overflow-y-auto px-8 py-6 space-y-5">
