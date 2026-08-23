@@ -1,4 +1,5 @@
 import os
+from uuid import UUID
 
 import chromadb
 from dotenv import load_dotenv
@@ -11,11 +12,10 @@ load_dotenv()
 llm_client = None
 chroma_client = None
 chroma_embeddings = None
-vectorstore = None
 
 
 def lazy_load():
-    global llm_client, chroma_client, chroma_embeddings, vectorstore
+    global llm_client, chroma_client, chroma_embeddings
     if llm_client is None:
         llm_client = ChatOpenAI(
             model=os.environ["LLM_TAG"],
@@ -35,18 +35,21 @@ def lazy_load():
             check_embedding_ctx_length=False,
             model_kwargs={"encoding_format": "float"},
         )
-    if vectorstore is None:
-        vectorstore = Chroma(
-            client=chroma_client,
-            collection_name="embedding_collection",
-            embedding_function=chroma_embeddings,
-        )
 
 
-async def get_llm_response(prev_messages: list[dict[str, str]], user_message: str):
+async def get_llm_response(
+    prev_messages: list[dict[str, str]],
+    user_message: str,
+    classroom_id: UUID,
+):
     lazy_load()
-    assert vectorstore
     assert llm_client
+
+    vectorstore = Chroma(
+        client=chroma_client,
+        collection_name=str(classroom_id),
+        embedding_function=chroma_embeddings,
+    )
 
     results = vectorstore.similarity_search(user_message, k=5)
 

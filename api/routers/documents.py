@@ -71,7 +71,7 @@ async def create_document(
         db, file_name, file_url, content_type, size, classroom_id
     )
 
-    await save_file(file, doc.id)
+    await save_file(file, classroom_id, doc.id)
 
     return doc
 

@@ -52,7 +52,8 @@ def lazy_load():  # type: ignore
 # TODO: reads entire file into memory, implement proper streaming
 async def save_file(
     file: UploadFile,
-    documentId: UUID,
+    classroom_id: UUID,
+    document_id: UUID,
     # client: Annotated[chromadb.AsyncHttpClient, Depends(get_chroma_client)],  # type: ignore
 ):
     lazy_load()
@@ -61,7 +62,7 @@ async def save_file(
     assert parser
 
     file_ending = "." + file.filename.split(".")[-1] if file.filename else ""
-    destination = STORAGE_LOCATION / (str(documentId) + file_ending)
+    destination = STORAGE_LOCATION / (str(document_id) + file_ending)
     # contents = file.file.read()
 
     with destination.open("wb") as buffer:
@@ -91,7 +92,7 @@ async def save_file(
     # add to chromadb
     vectorstore = Chroma(
         client=chroma_client,  # type: ignore
-        collection_name="embedding_collection",
+        collection_name=str(classroom_id),
         embedding_function=chroma_embeddings,
     )
     vectorstore.add_documents(docs)
