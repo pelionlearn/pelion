@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Message = {
     id: string;
@@ -11,6 +11,8 @@ type Message = {
 };
 
 function Chat() {
+    const initialLoad = useRef(true);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
     const { classroomId, chatId } = useParams<{ classroomId: string; chatId: string }>();
 
     const [userText, setUserText] = useState<string>("");
@@ -19,7 +21,7 @@ function Chat() {
 
     const [sending, setSending] = useState(false);
 
-    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    // const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     const fetchMessages = () => {
         if (!classroomId || !chatId) return;
@@ -42,22 +44,38 @@ function Chat() {
 
     useEffect(() => {
         fetchMessages();
+        initialLoad.current = true;
     }, [classroomId, chatId]);
 
     const handleSend = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!classroomId || !chatId) return;
 
         setSending(true);
-
+        const message = userText;
         setUserText("");
 
-        fetch(`/api/classrooms/${classroomId}/chats/${chatId}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ content: userText }),
-        })
+        // this is basically a fake client-side only message rn
+        const userMessage: Message = {
+            id: "",
+            chat_id: chatId,
+            role: "user",
+            content: message,
+            created_at: new Date().toISOString(),
+        };
+
+        setMessages(prev => [...prev, userMessage]);
+
+        const llm_response: Message = await fetch(
+            `/api/classrooms/${classroomId}/chats/${chatId}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ content: message }),
+            }
+        )
             .then(res => {
                 if (!res.ok) throw new Error(`Request failed: ${res.status}`);
                 return res.json();
@@ -66,8 +84,7 @@ function Chat() {
                 setSending(false);
             });
 
-        await sleep(500);
-        fetchMessages();
+        setMessages(prev => [...prev, llm_response]);
 
         // const prevLength = messages.length;
         // let currLength = messages.length;
@@ -78,6 +95,14 @@ function Chat() {
         //     console.log(prevLength, currLength);
         // }
     };
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({
+            behavior: initialLoad.current ? "instant" : "smooth",
+        });
+
+        initialLoad.current = false;
+    }, [messages]);
 
     return (
         <motion.main
@@ -121,6 +146,7 @@ function Chat() {
                         </div>
                     </div>
                 ))}
+                <div ref={messagesEndRef} />
             </div>
 
             <div className="px-8 pb-6 pt-3 text-lg">
