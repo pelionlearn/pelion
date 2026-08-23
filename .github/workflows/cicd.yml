@@ -31,6 +31,8 @@ jobs:
           --health-retries 5
       chromadb:
         image: chromadb:latest
+        ports:
+          - "8000:8000"
         env:
           IS_PERSISTENT: TRUE
           ANONYMIZED_TELEMETRY: FALSE
