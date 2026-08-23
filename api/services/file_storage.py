@@ -18,29 +18,31 @@ load_dotenv()
 STORAGE_LOCATION = Path(os.environ["STORAGE_LOCATION"])
 
 chroma_client = None
+chroma_embeddings = None
 text_splitter = RecursiveCharacterTextSplitter(
     chunk_size=2000,
     chunk_overlap=400,
     separators=["\n\n", "\n", ".", "!", "?", ";", ":", ",", " ", ""],
     keep_separator="end",
 )
-chroma_embeddings = OpenAIEmbeddings(
-    model=os.environ["EMBEDDING_TAG"],
-    base_url=os.environ["OPENROUTER_BASE_URL"],
-    api_key=SecretStr(os.environ["OPENROUTER_API_KEY"]),
-    check_embedding_ctx_length=False,
-    model_kwargs={"encoding_format": "float"},
-)
 
 
-def get_chroma_client() -> chromadb.HttpClient:  # type: ignore
-    global chroma_client
+def get_chroma_client_and_embeddings() -> chromadb.HttpClient:  # type: ignore
+    global chroma_client, chroma_embeddings
     if chroma_client is None:
         chroma_client = chromadb.HttpClient(
             os.environ["CHROMA_HOST"],  # "localhost"
             int(os.environ["CHROMA_PORT"]),
         )
-    return chroma_client
+    if chroma_embeddings is None:
+        chroma_embeddings = OpenAIEmbeddings(
+            model=os.environ["EMBEDDING_TAG"],
+            base_url=os.environ["OPENROUTER_BASE_URL"],
+            api_key=SecretStr(os.environ["OPENROUTER_API_KEY"]),
+            check_embedding_ctx_length=False,
+            model_kwargs={"encoding_format": "float"},
+        )
+    return chroma_client, chroma_embeddings
 
 
 # TODO: reads entire file into memory, implement proper streaming
@@ -49,7 +51,7 @@ async def save_file(
     documentId: UUID,
     # client: Annotated[chromadb.AsyncHttpClient, Depends(get_chroma_client)],  # type: ignore
 ):
-    client = get_chroma_client()
+    client, embeddings = get_chroma_client_and_embeddings()
     destination = STORAGE_LOCATION / str(documentId)
     contents = file.file.read()
 
@@ -68,7 +70,7 @@ async def save_file(
         vectorstore = Chroma(
             client=client,  # type: ignore
             collection_name="embedding_collection",
-            embedding_function=chroma_embeddings,
+            embedding_function=embeddings,
         )
         vectorstore.add_documents(docs)
 
