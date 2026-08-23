@@ -67,8 +67,6 @@ function Classroom() {
         fetchChats();
     }, [fetchChats]);
 
-    
-
     const items: [string, string, string][] = [
         ["user-tie", "Tutor", "tutor"],
         ["note-sticky", "Notes", "notes"],
@@ -127,9 +125,7 @@ function Classroom() {
                         <p className="mt-6 ml-2 mb-2 text-primary">Tutor</p>
                     )}
 
-                    {chatsError && (
-                        <p className="px-3 text-sm text-red-500">{chatsError}</p>
-                    )}
+                    {chatsError && <p className="px-3 text-sm text-red-500">{chatsError}</p>}
 
                     {!chatsError &&
                         [...chats].reverse().map(chat => (
@@ -144,8 +140,7 @@ function Classroom() {
                             >
                                 {chat.name}
                             </motion.button>
-                        ))
-                    }
+                        ))}
 
                     {/* <p className="mt-6 ml-2 mb-2 text-primary">DMs</p>
 

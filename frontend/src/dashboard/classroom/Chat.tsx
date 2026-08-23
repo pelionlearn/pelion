@@ -26,7 +26,7 @@ function Chat() {
     const fetchMessages = () => {
         if (!classroomId || !chatId) return;
         setLoading(true);
-        fetch(`/api/classrooms/${classroomId}/chats/${chatId}`)
+        fetch(`/api/classrooms/${classroomId}/chats/${chatId}/messages`)
             .then(res => {
                 if (!res.ok) throw new Error(`Request failed: ${res.status}`);
                 return res.json();
@@ -50,6 +50,7 @@ function Chat() {
     const handleSend = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!classroomId || !chatId) return;
+        if (userText == "") return;
 
         setSending(true);
         const message = userText;
@@ -67,7 +68,7 @@ function Chat() {
         setMessages(prev => [...prev, userMessage]);
 
         const llm_response: Message = await fetch(
-            `/api/classrooms/${classroomId}/chats/${chatId}`,
+            `/api/classrooms/${classroomId}/chats/${chatId}/messages`,
             {
                 method: "POST",
                 headers: {

@@ -34,7 +34,18 @@ async def get_chats(
     return await repositories.chats.get_chats(db, classroom_id, user.id)
 
 
-@router.get("/{chat_id}", response_model=list[ChatMessageRead])
+@router.get("/{chat_id}", response_model=ChatRead)
+async def get_chat(
+    classroom_id: UUID,
+    chat_id: UUID,
+    _classroom_member: None = Depends(require_classroom_member),
+    _chat_member: None = Depends(require_chat_member),
+    db: AsyncSession = Depends(get_db),
+):
+    return await repositories.chats.get_chat(db, chat_id)
+
+
+@router.get("/{chat_id}/messages", response_model=list[ChatMessageRead])
 async def get_messages(
     classroom_id: UUID,
     chat_id: UUID,
@@ -45,7 +56,7 @@ async def get_messages(
     return await repositories.chats.get_messages(db, chat_id)
 
 
-@router.post("/{chat_id}", response_model=ChatMessageRead)
+@router.post("/{chat_id}/messages", response_model=ChatMessageRead)
 async def post_message(
     message: ChatMessageCreate,
     classroom_id: UUID,

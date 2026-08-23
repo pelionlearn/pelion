@@ -49,6 +49,12 @@ async def get_chats(db: AsyncSession, classroom_id, user_id):
     return (await db.scalars(stmt)).all()
 
 
+async def get_chat(db: AsyncSession, chat_id):
+    chat = await db.get(Chat, chat_id)
+
+    return chat
+
+
 async def create_message(db: AsyncSession, chat_id: UUID, role: str, content: str):
     message = ChatMessage(
         chat_id=chat_id,
