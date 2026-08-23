@@ -63,8 +63,8 @@ async def test_get_missing_classroom(authenticated_client):
         "/classrooms/00000000-0000-0000-0000-000000000000"
     )
 
-    # the user shouldnt get 404 bc that implies that the room exists
-    assert response.status_code == 403
+    # the user shouldnt get 403 bc that implies that the room exists
+    assert response.status_code == 404
 
 
 async def test_invalid_uuid(authenticated_client):

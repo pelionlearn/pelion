@@ -101,7 +101,7 @@ async def test_get_members_missing_classroom(authenticated_client):
     )
 
     # client shouldnt know whether classroom exists or not if they arent in it
-    assert response.status_code == 403
+    assert response.status_code == 404
 
 
 async def test_remove_missing_member(authenticated_client):

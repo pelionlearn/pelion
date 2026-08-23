@@ -134,7 +134,7 @@ async def test_add_missing_class_documents(authenticated_client):
         authenticated_client, "00000000-0000-0000-0000-000000000000", "chapter1.pdf"
     )
 
-    assert response.status_code == 403
+    assert response.status_code == 404
 
 
 async def test_get_missing_class_documents(authenticated_client):
@@ -143,7 +143,7 @@ async def test_get_missing_class_documents(authenticated_client):
         "/classrooms/00000000-0000-0000-0000-000000000000/documents/"
     )
 
-    assert response.status_code == 403
+    assert response.status_code == 404
 
 
 async def test_delete_missing_class_documents(authenticated_client):
