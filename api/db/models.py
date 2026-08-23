@@ -1,6 +1,7 @@
+from datetime import datetime
 import uuid
 from typing import List
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from db.base import Base
 from fastapi_users.db import (
@@ -14,7 +15,7 @@ class OAuthAccount(SQLAlchemyBaseOAuthAccountTableUUID, Base):
     __tablename__ = "oauth_account"
 
     # override the "user.id" foreign key to "users.id"
-    user_id: Mapped[uuid.UUID] = mapped_column(
+    user_id: Mapped[uuid.UUID] = mapped_column(  # type: ignore
         ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
@@ -24,7 +25,7 @@ class AccessToken(SQLAlchemyBaseAccessTokenTableUUID, Base):
     __tablename__ = "access_token"
 
     # override the "user.id" foreign key to "users.id"
-    user_id: Mapped[uuid.UUID] = mapped_column(
+    user_id: Mapped[uuid.UUID] = mapped_column(  # type: ignore
         ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
@@ -71,7 +72,9 @@ class Document(Base):
     file_name: Mapped[str] = mapped_column(String(255), nullable=False)
     file_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
-    classroom_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("classrooms.id"))
+    classroom_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("classrooms.id"), index=True, nullable=False
+    )
 
     # weird name bc i cant use class keyword, prob should rename to classroom
     classroom: Mapped["Classroom"] = relationship(
@@ -84,6 +87,42 @@ class ClassroomMember(Base):
     __tablename__ = "classroom_members"
 
     classroom_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("classrooms.id"), primary_key=True
+        ForeignKey("classrooms.id"), primary_key=True, nullable=False
     )
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id"), primary_key=True, nullable=False
+    )
+
+
+class Chat(Base):
+    __tablename__ = "chats"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+
+    name: Mapped[uuid.UUID] = mapped_column(String(255), nullable=False)
+
+    classroom_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("classrooms.id"), nullable=False, index=True
+    )
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id"), nullable=False, index=True
+    )
+
+
+class ChatMessage(Base):
+    __tablename__ = "chat_messages"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+
+    chat_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("chats.id"), nullable=False, index=True
+    )
+
+    role: Mapped[str] = mapped_column(String(20), nullable=False)
+
+    content: Mapped[str] = mapped_column(Text)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.utcnow
+    )

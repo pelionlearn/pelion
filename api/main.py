@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import users, documents, classroom_members, classrooms, coref
+from routers import users, documents, classroom_members, classrooms, coref, chats
 from exceptions import errors, handlers
 
 from auth.authentication import fastapi_users, auth_backend
@@ -43,6 +43,7 @@ app.include_router(users.router)
 app.include_router(classrooms.router)
 app.include_router(documents.router)
 app.include_router(classroom_members.router)
+app.include_router(chats.router)
 
 # /auth/login + logout
 app.include_router(
