@@ -5,8 +5,8 @@ Pelion was born out of a desire to make studying more collaborative, organized, 
 ## Features
 
 - Classroom Organization: create classrooms and share your notes with others
-- Collaborative Notes System: save your study notes to cloud storage, making it accessible to others in your classroom and to your AI tutor
-- AI Tutor: chat to an AI tutor with access to your notes
+- Collaborative Notes System: save your study notes, making them accessible to others in your classroom and to your AI tutor
+- AI Tutor: chat to an AI tutor which can read your notes
 - Google OAuth: register and sign in with Google; Google Drive integration coming soon
 
 ## Setup and Run
@@ -44,6 +44,8 @@ Alternatively, you can start it normally with `docker compose up --build` and th
   - ChromaDB
 - Testing
   - Pytest
+- Caddy
+- Docker & Docker Compose
 
 **Future Stack**:
 
