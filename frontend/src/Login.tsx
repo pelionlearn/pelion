@@ -2,6 +2,7 @@ import { useState, type ChangeEvent } from "react";
 import Navbar from "./Navbar.tsx";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./auth.tsx";
+import { useToast } from "./components/toast/toast.tsx";
 
 function Login() {
     const [username, setUsername] = useState("");
@@ -9,6 +10,7 @@ function Login() {
 
     const { setUser } = useAuth();
     const navigate = useNavigate();
+    const toast = useToast();
 
     async function handleLogin(e: ChangeEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -28,6 +30,7 @@ function Login() {
 
             if (response.ok) {
                 console.log("Logged in");
+                toast.success("Logged In");
                 const meResponse = await fetch("/api/users/me");
                 const userData = await meResponse.json();
                 setUser(userData);
@@ -36,6 +39,7 @@ function Login() {
 
             if (response.status == 400) {
                 console.log("Invalid credentials");
+                toast.error("Invalid Credentials");
             }
         } catch (err) {
             console.log("ummm");

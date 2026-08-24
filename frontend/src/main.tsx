@@ -16,6 +16,9 @@ import ClassroomPageNotFound from "./dashboard/classroom/ClassroomPageNotFound.t
 import NotFound from "./NotFound.tsx";
 import Register from "./Register.tsx";
 import { AuthProvider } from "./auth.tsx";
+import { ToastProvider } from "./components/toast/toast.tsx";
+import ProtectedRoute from "./ProtectedRoute.tsx";
+import GuestRoute from "./GuestRoute.tsx";
 import VerifyEmail from "./VerifyEmail.tsx";
 
 const router = createBrowserRouter([
@@ -32,57 +35,69 @@ const router = createBrowserRouter([
         element: <Contact />,
     },
     {
-        path: "/login",
-        element: <Login />,
+        element: <GuestRoute />,
+        children: [
+            {
+                path: "/login",
+                element: <Login />,
+            },
+            {
+                path: "/register",
+                element: <Register />,
+            },
+        ],
     },
     {
-        path: "/register",
-        element: <Register />,
-    },
-    {
-        path: "/dashboard",
-        element: <Dashboard />,
-    },
-    {
-        path: "*",
-        element: <NotFound />,
+        element: <ProtectedRoute />,
+        children: [
+            {
+                path: "/dashboard",
+                element: <Dashboard />,
+            },
+            {
+                path: "/dashboard/classroom/:classroomId",
+                element: <Classroom />,
+                children: [
+                    {
+                        index: true,
+                        element: <Navigate to="tutor" replace />,
+                    },
+                    {
+                        path: "tutor",
+                        element: <Tutor />,
+                    },
+                    {
+                        path: "notes",
+                        element: <Notes />,
+                    },
+                    {
+                        path: "chat/:chatId",
+                        element: <Chat />,
+                    },
+                    {
+                        path: "quizzes",
+                        element: <ClassroomPageNotFound />,
+                    },
+                ],
+            },
+        ],
     },
     {
         path: "/verify-email",
         element: <VerifyEmail />,
     },
     {
-        path: "/dashboard/classroom/:classroomId",
-        element: <Classroom />,
-        children: [
-            {
-                index: true,
-                element: <Navigate to="tutor" replace />,
-            },
-            {
-                path: "tutor",
-                element: <Tutor />,
-            },
-            {
-                path: "notes",
-                element: <Notes />,
-            },
-            {
-                path: "chat/:chatId",
-                element: <Chat />,
-            },
-            {
-                path: "quizzes",
-                element: <ClassroomPageNotFound />,
-            },
-        ],
+        path: "*",
+        element: <NotFound />,
     },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-        <AuthProvider>
-            <RouterProvider router={router} />
-        </AuthProvider>
+        <ToastProvider>
+            <AuthProvider>
+                <RouterProvider router={router} />
+            </AuthProvider>
+        </ToastProvider>
     </React.StrictMode>
 );

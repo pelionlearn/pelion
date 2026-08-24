@@ -1,13 +1,12 @@
 import { motion } from "motion/react";
 import { useAuth } from "../auth";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import CreateClassPopup from "./classroom/CreateClassPopup";
 import type { ClassroomType } from "../types/classroom";
 
 function Dashboard() {
-    const { user, loading } = useAuth();
-    const navigate = useNavigate();
+    const { user } = useAuth();
 
     const [classrooms, setClassrooms] = useState<ClassroomType[]>([]);
     const [classroomsLoading, setClassroomsLoading] = useState(true);
@@ -55,20 +54,6 @@ function Dashboard() {
         };
     }, [user]);
 
-    useEffect(() => {
-        if (!loading && !user) {
-            navigate("/");
-        }
-    }, [loading, user, navigate]);
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (!user) {
-        return null;
-    }
-
     return (
         <div className="flex h-screen bg-(--bg-950) text-text">
             <div className="flex flex-1 flex-col overflow-hidden">
@@ -86,7 +71,7 @@ function Dashboard() {
 
                         <button className="flex items-center gap-3 rounded-xl px-4 py-2">
                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-semibold text-black">
-                                {user.name[0]}
+                                {user?.name[0]}
                             </div>
 
                             <div>
@@ -129,12 +114,11 @@ function Dashboard() {
 
                         {classroomsError && <div className="text-red-500">{classroomsError}</div>}
 
-
                         {!classroomsLoading && !classroomsError && (
                             <div className="grid gap-5">
                                 {classrooms.map((classroom, index) => (
                                     <Link to={`/dashboard/classroom/${classroom.id}`}>
-                                        <motion.div 
+                                        <motion.div
                                             className="rounded-2xl p-6 cursor-pointer outline outline-dark border-l-10 border-secondary"
                                             key={classroom.id}
                                             initial={{ opacity: 0 }}
@@ -150,7 +134,6 @@ function Dashboard() {
                                             </p>
                                         </motion.div>
                                     </Link>
-                                    
                                 ))}
                             </div>
                         )}

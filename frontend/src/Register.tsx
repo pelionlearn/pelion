@@ -1,15 +1,12 @@
 import { useState, type ChangeEvent } from "react";
 import Navbar from "./Navbar.tsx";
-import { useAuth } from "./auth.tsx";
-import { useNavigate } from "react-router-dom";
+import { useToast } from "./components/toast/toast.tsx";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
-    const { setUser } = useAuth();
-    const navigate = useNavigate();
+    const toast = useToast();
 
     async function handleRegister(e: ChangeEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -29,40 +26,21 @@ function Login() {
 
             if (response.ok) {
                 console.log("Registered");
-                handleLogin();
+
+                await fetch("/api/auth/request-verify-token", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                    }),
+                });
+                toast.info("Verification Email Sent: please check your email");
             }
 
             if (response.status == 400) {
-                console.log("Invalid credentials");
-            }
-        } catch (err) {
-            console.log("ummm");
-        }
-    }
-
-    async function handleLogin() {
-        try {
-            const body = new URLSearchParams();
-            body.append("username", email);
-            body.append("password", password);
-
-            const response = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body,
-            });
-
-            if (response.ok) {
-                console.log("Logged in");
-                const meResponse = await fetch("/api/users/me");
-                const userData = await meResponse.json();
-                setUser(userData);
-                navigate("/dashboard");
-            }
-
-            if (response.status == 400) {
+                toast.error("User already exists with this email");
                 console.log("Invalid credentials");
             }
         } catch (err) {

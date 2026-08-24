@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useToast } from "./components/toast/toast";
 
 export default function Upload() {
     const [file, setFile] = useState<File | null>(null);
+    const toast = useToast();
 
     const upload = async () => {
         if (!file) return;
@@ -15,8 +17,20 @@ export default function Upload() {
             credentials: "include",
         });
 
+        if (!response.ok) {
+            if (response.status === 413) {
+                toast.error("File is too large");
+                return;
+            }
+
+            toast.error("Upload failed");
+            return;
+        }
+
         const data = await response.json();
         console.log(data);
+
+        toast.success("Upload successful");
     };
 
     return (

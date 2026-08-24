@@ -65,6 +65,7 @@ app.include_router(
         backend=auth_backend,
         state_secret=OAUTH_SECRET,
         associate_by_email=True,
+        is_verified_by_default=True,
     ),
     prefix="/auth/google",
     tags=["Google OAuth"],
