@@ -1,12 +1,14 @@
 import { useState, type ChangeEvent } from "react";
 import Navbar from "./Navbar.tsx";
 import { useToast } from "./components/toast/toast.tsx";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const toast = useToast();
+    const navigate = useNavigate();
 
     async function handleRegister(e: ChangeEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -37,6 +39,7 @@ function Login() {
                     }),
                 });
                 toast.info("Verification Email Sent: please check your email");
+                navigate("/login");
             }
 
             if (response.status == 400) {

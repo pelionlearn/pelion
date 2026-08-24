@@ -28,6 +28,8 @@ Alternatively, you can start it normally with `docker compose up --build` and th
 
 ### Tech Stack
 
+**Current Stack**
+
 - Frontend
   - React + React Router
   - TypeScript
@@ -43,7 +45,7 @@ Alternatively, you can start it normally with `docker compose up --build` and th
 - Testing
   - Pytest
 
-Future Stack:
+**Future Stack**:
 
 - Neo4j
 - Redis
