@@ -2,6 +2,9 @@
 
 Pelion was born out of a desire to make studying more collaborative, organized, and integrated with the digital resources you already use every day.
 
+<img width="2231" height="1308" alt="screenshot_20261005_204901-region" src="https://github.com/user-attachments/assets/0c96a007-53e0-4b8d-89bb-cc9daaf6e718" />
+
+
 ## Features
 
 - Classroom Organization: create classrooms and share your notes with others
