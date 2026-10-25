@@ -2,15 +2,26 @@ import { useState, type KeyboardEvent } from "react";
 import { motion } from "motion/react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import type { ClassroomOutletContext } from "./Classroom";
+import { useAuth } from "../../auth";
 
 function Tutor() {
     const navigate = useNavigate();
     const { classroomId } = useParams();
     const { refetchChats } = useOutletContext<ClassroomOutletContext>();
+    const { user } = useAuth();
+
+    const firstName = user?.name?.split(" ")[0];
 
     const [message, setMessage] = useState("");
     const [creating, setCreating] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    function getGreeting() {
+        const hour = new Date().getHours();
+        if (hour < 12) return "Good morning";
+        if (hour < 18) return "Good afternoon";
+        return "Good evening";
+    }
 
     async function handleAsk() {
         const trimmed = message.trim();
@@ -56,7 +67,9 @@ function Tutor() {
             className="flex-1 overflow-auto p-8 max-w-7xl"
             animate={{ opacity: [0, 1], x: [-50, 0] }}
         >
-            <h1 className="text-4xl font-bold text-primary">Good evening, Jeremy.</h1>
+            <h1 className="text-4xl font-bold text-primary">
+                {getGreeting()}{firstName ? `, ${firstName}` : ""}.
+            </h1>
 
             <p className="mt-4">Ask anything about this class.</p>
 
