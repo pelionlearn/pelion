@@ -44,6 +44,7 @@ def lazy_load():  # type: ignore
             api_key=SecretStr(os.environ["OPENROUTER_API_KEY"]),
             check_embedding_ctx_length=False,
             model_kwargs={"encoding_format": "float"},
+            chunk_size=255
         )
     if parser is None:
         parser = LiteParse(ocr_enabled=True, output_format="markdown")
