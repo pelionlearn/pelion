@@ -130,7 +130,7 @@ function Dashboard() {
                                             <h3 className="font-semibold">{classroom.name}</h3>
 
                                             <p className="mt-2 text-sm text-text-secondary">
-                                                24 notes - 18 members
+                                                {/* TODO: 24 notes - 18 members */}
                                             </p>
                                         </motion.div>
                                     </Link>
