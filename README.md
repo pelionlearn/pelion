@@ -83,3 +83,7 @@ All pipeline stages are undergoing development. Current challenges include:
 - Merging extracted schemas from each text chunk into a single schema
 - Improving the accurancy and cleanliness of the entity and relation extraction
 - Reducing API calls and costs
+
+## AI Usage
+
+AI tools were used exclusively for frontend development to assist with React syntax and the implementation of toast notifications and protected routes.
