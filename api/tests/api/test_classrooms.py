@@ -4,7 +4,7 @@ from uuid import UUID
 async def test_create_classroom(authenticated_client):
 
     response = await authenticated_client.post(
-        "/classrooms/", json={"name": "Calculus 1"}
+        "/classrooms/", json={"name": "Calculus 1", "color": "#FF0000"}
     )
 
     assert response.status_code == 200
@@ -13,6 +13,7 @@ async def test_create_classroom(authenticated_client):
 
     assert body["name"] == "Calculus 1"
     assert "id" in body
+    assert body["color"] == "#FF0000"
 
     # verify UUID format
     UUID(body["id"])
@@ -22,7 +23,7 @@ async def test_get_classroom(authenticated_client):
 
     # create classroom first
     create_response = await authenticated_client.post(
-        "/classrooms/", json={"name": "Physics"}
+        "/classrooms/", json={"name": "Physics", "color": "#676767"}
     )
 
     assert create_response.status_code == 200
@@ -38,12 +39,13 @@ async def test_get_classroom(authenticated_client):
 
     assert body["id"] == classroom_id
     assert body["name"] == "Physics"
+    assert body["color"] == "#676767"
 
 
 async def test_delete_classroom(authenticated_client):
 
     create_response = await authenticated_client.post(
-        "/classrooms/", json={"name": "Drama"}
+        "/classrooms/", json={"name": "Drama", "color": "#00FF00"}
     )
 
     classroom_id = create_response.json()["id"]
@@ -77,4 +79,13 @@ async def test_invalid_uuid(authenticated_client):
 async def test_invalid_schema(authenticated_client):
     response = await authenticated_client.post("/classrooms/", json={"member": "Jawsh"})
 
+    assert response.status_code == 422
+
+async def test_invalid_color(authenticated_client):
+    response = await authenticated_client.post("/classrooms/", json={"name": "Biology", "color": "#000FF"})
+
+    assert response.status_code == 422
+
+    response = await authenticated_client.post("/classrooms/", json={"name": "Biology", "color": "0000FF"})
+    
     assert response.status_code == 422

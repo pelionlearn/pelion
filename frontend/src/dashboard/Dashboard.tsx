@@ -119,7 +119,8 @@ function Dashboard() {
                                 {classrooms.map((classroom, index) => (
                                     <Link to={`/dashboard/classroom/${classroom.id}`}>
                                         <motion.div
-                                            className="rounded-2xl p-6 cursor-pointer outline outline-dark border-l-10 border-secondary"
+                                            className="rounded-2xl p-6 cursor-pointer outline outline-dark border-l-10"
+                                            style={{ borderColor: classroom.color }}
                                             key={classroom.id}
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}

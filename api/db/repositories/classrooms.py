@@ -5,8 +5,8 @@ from db.repositories.classroom_members import add_classroom_member
 from exceptions import errors
 
 
-async def create_classroom(db: AsyncSession, name: str, user_id: UUID):
-    obj = Classroom(name=name)
+async def create_classroom(db: AsyncSession, name: str, color: str, user_id: UUID):
+    obj = Classroom(name=name, color=color)
     db.add(obj)
     await db.commit()
     await db.refresh(obj)
