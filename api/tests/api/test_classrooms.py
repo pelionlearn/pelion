@@ -1,11 +1,11 @@
 from uuid import UUID
 import pytest
 
-async def test_create_classroom(authenticated_client):
 
-    response = await authenticated_client.post(
-        "/classrooms/", json={"name": "Calculus 1", "color": "#FF0000"}
-    )
+### CRUD
+
+async def test_create_classroom(authenticated_client, classroom_factory):
+    response = await classroom_factory(name="Calculus 1", color="#FF0000")
 
     assert response.status_code == 200
 
@@ -19,12 +19,10 @@ async def test_create_classroom(authenticated_client):
     UUID(body["id"])
 
 
-async def test_get_classroom(authenticated_client):
+async def test_get_classroom(authenticated_client, classroom_factory):
 
     # create classroom first
-    create_response = await authenticated_client.post(
-        "/classrooms/", json={"name": "Physics", "color": "#676767"}
-    )
+    create_response = await classroom_factory(name="Physics", color="#676767")
 
     assert create_response.status_code == 200
 
@@ -42,11 +40,9 @@ async def test_get_classroom(authenticated_client):
     assert body["color"] == "#676767"
 
 
-async def test_delete_classroom(authenticated_client):
+async def test_delete_classroom(authenticated_client, classroom_factory):
 
-    create_response = await authenticated_client.post(
-        "/classrooms/", json={"name": "Drama", "color": "#00FF00"}
-    )
+    create_response = await classroom_factory()
 
     classroom_id = create_response.json()["id"]
 
@@ -59,6 +55,8 @@ async def test_delete_classroom(authenticated_client):
     assert body["id"] == classroom_id
 
 
+### 404
+
 async def test_get_missing_classroom(authenticated_client):
 
     response = await authenticated_client.get(
@@ -68,6 +66,8 @@ async def test_get_missing_classroom(authenticated_client):
     # the user shouldnt get 403 bc that implies that the room exists
     assert response.status_code == 404
 
+
+### SCHEMA
 
 async def test_invalid_uuid(authenticated_client):
 

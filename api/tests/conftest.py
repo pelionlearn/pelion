@@ -7,6 +7,7 @@ from db.base import Base
 from db.database import engine, get_db
 from auth.authentication import current_active_user
 
+### SESSION AND CLIENT FIXTURES
 
 @pytest.fixture
 async def db_session():
@@ -69,3 +70,42 @@ async def authenticated_client(client, user):
     yield client
 
     app.dependency_overrides.pop(current_active_user, None)
+
+
+# OBJECT FIXTURES
+
+@pytest.fixture
+async def classroom_factory(authenticated_client):
+    async def factory(name="Computer Science", color="#00FF00"):
+        response = await authenticated_client.post(
+            "/classrooms/", json={"name": name, "color": color}
+        )
+        return response
+    return factory
+
+@pytest.fixture
+async def user_factory(client):
+    async def factory(email="jane@example.com", password="hunter2hunter2", name="Jane Doe"):
+        response = await client.post(
+            "/auth/register/",
+            json={
+                "email": email,
+                "password": password,
+                "name": name,
+            },
+        )
+        return response
+    return factory
+
+# @pytest.fixture
+# async def document_factory(authenticated_client):
+#     async def factory(classroom_id, filename):
+#         response = await authenticated_client.post(
+#             "/classrooms/", json={"name": "Calculus 1", "color": "#FF0000"}
+#         )
+#         return response
+
+#     return factory
+
+
+### OBJECT HELPERS
