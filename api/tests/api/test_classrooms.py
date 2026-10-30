@@ -1,5 +1,5 @@
 from uuid import UUID
-
+import pytest
 
 async def test_create_classroom(authenticated_client):
 
@@ -75,17 +75,22 @@ async def test_invalid_uuid(authenticated_client):
 
     assert response.status_code == 422  # unproccesable entity
 
-
-async def test_invalid_schema(authenticated_client):
-    response = await authenticated_client.post("/classrooms/", json={"member": "Jawsh"})
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {"member": "Jawsh"},  # Missing required fields
+        {"color": "#FF0000"},  # Missing name
+        {"name": 123, "color": "#FF0000"},  # Invalid name type
+        {"name": "Biology", "color": 123},  # Invalid color type
+    ],
+)
+async def test_invalid_schema(authenticated_client, payload):
+    response = await authenticated_client.post("/classrooms/", json=payload)
 
     assert response.status_code == 422
 
-async def test_invalid_color(authenticated_client):
-    response = await authenticated_client.post("/classrooms/", json={"name": "Biology", "color": "#000FF"})
+@pytest.mark.parametrize("color", ["#000FF", "F0000FF", "#9I02GL"])
+async def test_invalid_color(authenticated_client, color):
+    response = await authenticated_client.post("/classrooms/", json={"name": "Biology", "color": color})
 
-    assert response.status_code == 422
-
-    response = await authenticated_client.post("/classrooms/", json={"name": "Biology", "color": "0000FF"})
-    
     assert response.status_code == 422
