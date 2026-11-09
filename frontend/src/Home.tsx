@@ -12,24 +12,23 @@ function Home() {
                 </h1>
                 <div className="flex flex-col md:flex-row">
                     <p className="text-text text-md font-arvo p-8 md:pl-20 md:pt-25 leading-relaxed">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed massa felis,
-                        molestie elementum accumsan vitae, mollis sed dolor. Nunc ultrices vulputate
-                        ullamcorper. Proin a magna et nulla bibendum aliquam ac vel eros. Quisque
-                        velit lacus, congue a placerat non, rhoncus ut diam. Nullam rutrum dictum
-                        est. Nulla ornare sapien quis venenatis iaculis. Orci varius natoque
-                        penatibus et magnis dis parturient montes, nascetur ridiculus mus. In hac
-                        habitasse platea dictumst. Fusce mollis quam id nulla fermentum, sed semper
-                        nisl iaculis. Fusce sollicitudin mauris sed gravida volutpat.
+                        Pelion is an AI-powered learning platform designed to bridge the gap between
+                        simply consuming digital content and truly mastering it. In today's digital
+                        landscape, high-quality educational videos are everywhere, but converting
+                        that incoming stream of information into lasting comprehension remains a
+                        major challenge. We solve this by combining structured AI notetaking,
+                        interactive study groups, and seamless video integration into a single,
+                        cohesive ecosystem—making learning more active, connected, and genuinely
+                        effective for every student.
                     </p>
                     <p className="text-text text-md font-arvo p-8 pt-0 md:pr-20 md:pt-25 leading-relaxed">
-                        Suspendisse consectetur laoreet interdum. Vivamus augue quam, congue nec
-                        nulla sed, interdum rutrum lorem. Integer tempor a turpis id rutrum. Vivamus
-                        pharetra eros ut est euismod, eget euismod odio feugiat. Fusce a massa
-                        turpis. Nam aliquet at metus in congue. Aliquam egestas scelerisque
-                        consectetur. Duis id eros posuere, aliquam tellus sed, sodales neque. Donec
-                        commodo nibh ut sapien congue ullamcorper. Quisque interdum euismod diam,
-                        quis eleifend mauris molestie id. Ut at lacus vitae purus pretium dictum in
-                        eu quam.
+                        Whether you are a high school student tackling advanced coursework, a
+                        college student balancing heavy lectures, an educator seeking to engage your
+                        classroom, or simply a lifelong learner pursuing a new passion, Pelion is
+                        built specifically for you. By pairing peer-to-peer community spaces with
+                        intelligent AI tutoring, Pelion makes productive self-improvement feel
+                        engaging rather than burdensome. We believe that learning should be fun,
+                        intuitive, and designed to help you succeed on your own terms.
                     </p>
                 </div>
             </div>

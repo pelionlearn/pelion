@@ -10,25 +10,32 @@ function Contact() {
                     Let's get in <span className="text-primary">touch.</span>
                 </h1>
                 <div className="flex flex-col md:flex-row">
-                    <p className="text-text text-md font-arvo p-8 md:pl-20 md:pt-25 leading-relaxed">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed massa felis,
-                        molestie elementum accumsan vitae, mollis sed dolor. Nunc ultrices vulputate
-                        ullamcorper. Proin a magna et nulla bibendum aliquam ac vel eros. Quisque
-                        velit lacus, congue a placerat non, rhoncus ut diam. Nullam rutrum dictum
-                        est. Nulla ornare sapien quis venenatis iaculis. Orci varius natoque
-                        penatibus et magnis dis parturient montes, nascetur ridiculus mus. In hac
-                        habitasse platea dictumst. Fusce mollis quam id nulla fermentum, sed semper
-                        nisl iaculis. Fusce sollicitudin mauris sed gravida volutpat.
+                    <p className="w-full md:w-2/3 text-text text-lg font-arvo p-8 md:pl-20 md:pt-25 leading-relaxed">
+                        Have questions, feedback, or ideas on how we can make Pelion even better? We
+                        would love to hear from you. Whether you're a student with feature requests,
+                        an educator interested in bringing Pelion to your classroom, or an early
+                        adopter wanting to share your experience, our team is always ready to
+                        connect.
                     </p>
-                    <p className="text-text text-md font-arvo p-8 pt-0 md:pr-20 md:pt-25 leading-relaxed">
-                        Suspendisse consectetur laoreet interdum. Vivamus augue quam, congue nec
-                        nulla sed, interdum rutrum lorem. Integer tempor a turpis id rutrum. Vivamus
-                        pharetra eros ut est euismod, eget euismod odio feugiat. Fusce a massa
-                        turpis. Nam aliquet at metus in congue. Aliquam egestas scelerisque
-                        consectetur. Duis id eros posuere, aliquam tellus sed, sodales neque. Donec
-                        commodo nibh ut sapien congue ullamcorper. Quisque interdum euismod diam,
-                        quis eleifend mauris molestie id. Ut at lacus vitae purus pretium dictum in
-                        eu quam.
+                    <p className="w-full md:w-1/3 text-text text-lg font-arvo p-8 pt-0 md:pr-20 md:pt-25 leading-relaxed">
+                        Email Us Directly:{" "}
+                        <a
+                            href="mailto:contact@pelionlearn.com"
+                            className="underline text-primary hover:text-secondary"
+                        >
+                            contact@pelionlearn.com
+                        </a>
+                        <br />
+                        Visit Our Platform:{" "}
+                        <a
+                            href="www.pelionlearn.com"
+                            className="underline text-primary hover:text-secondary"
+                        >
+                            www.pelionlearn.com
+                        </a>
+                        <br />
+                        <br />
+                        <i>We respond to all early-access inquiries within 2-3 Business Days.</i>
                     </p>
                 </div>
             </div>
