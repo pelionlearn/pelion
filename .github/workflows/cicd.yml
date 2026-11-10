@@ -85,15 +85,15 @@ jobs:
           - name: frontend
             context: frontend
             dockerfile: frontend/Dockerfile
-            image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-frontend:latest
+            image: pelion-frontend:latest
           - name: api
             context: api
             dockerfile: api/Dockerfile
-            image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-api:latest
+            image: pelion-api:latest
           - name: celery
             context: coref
             dockerfile: coref/Dockerfile
-            image: us-central1-docker.pkg.dev/pelion-503219/docker-repo/pelion-celery:latest
+            image: pelion-celery:latest
 
     steps:
       - name: free space
@@ -110,23 +110,6 @@ jobs:
             changed:
               - '${{ matrix.context }}/**'
 
-      - name: auth google cloud
-        if: steps.changes.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
-        uses: google-github-actions/auth@v2
-        id: auth
-        with:
-          workload_identity_provider: ${{ secrets.GCP_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-          token_format: "access_token"
-
-      - name: auth google artifact registry
-        if: steps.changes.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
-        uses: docker/login-action@v3
-        with:
-          registry: us-central1-docker.pkg.dev
-          username: oauth2accesstoken
-          password: ${{ steps.auth.outputs.access_token }}
-
       - name: set up docker buildx
         if: steps.changes.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: docker/setup-buildx-action@v3
@@ -138,6 +121,6 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
           tags: ${{ matrix.image }}
-          push: true
+          push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
