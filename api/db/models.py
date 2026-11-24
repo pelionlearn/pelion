@@ -61,6 +61,8 @@ class Classroom(Base):
     documents: Mapped[list["Document"]] = relationship(
         back_populates="classroom", lazy="raise"
     )
+    owner: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+
 
 
 class Document(Base):

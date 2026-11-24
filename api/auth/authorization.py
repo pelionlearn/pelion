@@ -19,6 +19,15 @@ async def require_classroom_member(
     ):
         raise errors.NotFoundError("Classroom not found")
 
+async def require_classroom_owner(
+    classroom_id: UUID, 
+    current_user: User = Depends(current_active_user), 
+    db: AsyncSession = Depends(get_db)
+):
+    if not await repositories.classrooms.is_classroom_owner(
+        db, classroom_id, current_user.id
+    ):
+        raise errors.AuthorizationError("Requires owner permissions")
 
 async def require_document_in_class(
     classroom_id: UUID,

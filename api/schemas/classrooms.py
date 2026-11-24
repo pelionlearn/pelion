@@ -11,3 +11,4 @@ class ClassroomResponse(BaseModel):
     id: UUID
     name: str
     color: str
+    owner: UUID

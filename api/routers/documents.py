@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from auth.authorization import require_classroom_member, require_document_in_class
+from auth.authorization import require_classroom_member, require_document_in_class, require_classroom_owner
 from db import repositories
 from db.database import get_db
 from schemas.documents import DocumentResponse
@@ -80,7 +80,7 @@ async def create_document(
 async def delete_document(
     classroom_id: UUID,
     document_id: UUID,
-    _: None = Depends(require_classroom_member),
+    _: None = Depends(require_classroom_owner),
     db: AsyncSession = Depends(get_db),
 ):
     return await repositories.documents.delete_document(db, document_id, classroom_id)

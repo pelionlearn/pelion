@@ -6,15 +6,15 @@ from exceptions import errors
 
 
 async def create_classroom(db: AsyncSession, name: str, color: str, user_id: UUID):
-    obj = Classroom(name=name, color=color)
-    db.add(obj)
+    class_obj = Classroom(name=name, color=color, owner=user_id)
+    db.add(class_obj)
     await db.commit()
-    await db.refresh(obj)
+    await db.refresh(class_obj)
 
     # add first user to classroom
-    await add_classroom_member(db, obj.id, user_id)
+    await add_classroom_member(db, class_obj.id, user_id)
 
-    return obj
+    return class_obj
 
 
 async def delete_classroom(db: AsyncSession, id: UUID):
@@ -45,3 +45,21 @@ async def rename_classroom(db: AsyncSession, id: UUID, name: str):
     await db.refresh(class_obj)
 
     return class_obj
+
+async def set_classroom_owner(db: AsyncSession, classroom_id: UUID, user_id: UUID):
+    obj = await db.get(Classroom, classroom_id)
+    if obj is None:
+        raise errors.NotFoundError(f"Classroom {id} not found")
+
+    obj.owner = user_id
+
+    await db.commit()
+
+    return obj
+
+async def is_classroom_owner(db: AsyncSession, classroom_id: UUID, user_id: UUID):
+    obj = await db.get(Classroom, classroom_id)
+    if obj is None:
+        raise errors.NotFoundError(f"Classroom {id} not found")
+
+    return obj.owner == user_id

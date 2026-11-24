@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from auth.authorization import require_classroom_member
+from auth.authorization import require_classroom_member, require_classroom_owner
 from db import repositories
 from db.database import get_db
 from schemas.users import UserRead
@@ -23,7 +23,7 @@ async def get_members(
 async def add_member(
     classroom_id,
     user_id,
-    _: None = Depends(require_classroom_member),
+    _: None = Depends(require_classroom_owner),
     db: AsyncSession = Depends(get_db),
 ):
     await repositories.classroom_members.add_classroom_member(db, classroom_id, user_id)
@@ -34,7 +34,7 @@ async def add_member(
 async def remove_member(
     classroom_id,
     user_id: UUID,
-    _: None = Depends(require_classroom_member),
+    _: None = Depends(require_classroom_owner),
     db: AsyncSession = Depends(get_db),
 ):
     await repositories.classroom_members.remove_classroom_member(

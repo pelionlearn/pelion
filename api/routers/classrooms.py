@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from auth.authorization import require_classroom_member
+from auth.authorization import require_classroom_member, require_classroom_owner
 from auth.authentication import current_active_user
 from db import repositories
 from db.database import get_db
@@ -33,7 +33,7 @@ async def create_classroom(
 @router.delete("/{classroom_id}", response_model=ClassroomResponse)
 async def delete_classroom(
     classroom_id: UUID,
-    _: None = Depends(require_classroom_member),
+    _: None = Depends(require_classroom_owner),
     db: AsyncSession = Depends(get_db),
 ):
     return await repositories.classrooms.delete_classroom(db, classroom_id)
