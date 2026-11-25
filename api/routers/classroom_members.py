@@ -21,8 +21,8 @@ async def get_members(
 
 @router.post("/{user_id}", response_model=UserRead)
 async def add_member(
-    classroom_id,
-    user_id,
+    classroom_id: UUID,
+    user_id: UUID,
     _: None = Depends(require_classroom_owner),
     db: AsyncSession = Depends(get_db),
 ):
@@ -32,7 +32,7 @@ async def add_member(
 
 @router.delete("/{user_id}")
 async def remove_member(
-    classroom_id,
+    classroom_id: UUID,
     user_id: UUID,
     _: None = Depends(require_classroom_owner),
     db: AsyncSession = Depends(get_db),

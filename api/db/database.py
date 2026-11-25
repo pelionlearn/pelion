@@ -14,7 +14,7 @@ DATABASE_URL = (
     f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
 
-engine = create_async_engine(DATABASE_URL)
+engine = create_async_engine(DATABASE_URL, echo=True)
 
 
 async def create_tables():
@@ -29,4 +29,9 @@ Session = async_sessionmaker(bind=engine, autoflush=True, expire_on_commit=False
 
 async def get_db():
     async with Session() as session:
-        yield session
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise

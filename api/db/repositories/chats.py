@@ -35,7 +35,7 @@ async def get_all_messages(db: AsyncSession, chat_id: UUID):
 async def create_chat(db: AsyncSession, classroom_id: UUID, user_id: UUID, name: str):
     obj = Chat(name=name, classroom_id=classroom_id, user_id=user_id)
     db.add(obj)
-    await db.commit()
+    await db.flush()
     await db.refresh(obj)
 
     return obj
@@ -62,7 +62,7 @@ async def create_message(db: AsyncSession, chat_id: UUID, role: str, content: st
         content=content,
     )
     db.add(message)
-    await db.commit()
+    await db.flush()
     await db.refresh(message)
 
     return message

@@ -24,7 +24,7 @@ async def create_document(
         classroom_id=classroom_id,
     )
     db.add(obj)
-    await db.commit()
+    await db.flush()
     await db.refresh(obj)
     return obj
 
@@ -37,7 +37,7 @@ async def delete_document(db: AsyncSession, document_id, classroom_id):
     if obj is None:
         raise errors.NotFoundError(f"Document {document_id} not found")
     await db.delete(obj)
-    await db.commit()
+    await db.flush()
     return obj
 
 
@@ -63,7 +63,7 @@ async def rename_document(db: AsyncSession, document_id, classroom_id, name: str
 
     document.file_name = name
 
-    await db.commit()
+    await db.flush()
     await db.refresh(document)
 
     return document

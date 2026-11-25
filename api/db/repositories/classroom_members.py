@@ -21,7 +21,7 @@ async def get_classroom_members(db: AsyncSession, classroom_id: UUID):
 async def add_classroom_member(db: AsyncSession, classroom_id: UUID, user_id: UUID):
     class_member = ClassroomMember(classroom_id=classroom_id, user_id=user_id)
     db.add(class_member)
-    await db.commit()
+    await db.flush()
     await db.refresh(class_member)
     return class_member
 
@@ -33,7 +33,7 @@ async def remove_classroom_member(db: AsyncSession, classroom_id: UUID, user_id:
             f"User {user_id} not found in classroom {classroom_id}"
         )
     await db.delete(class_member)
-    await db.commit()
+    await db.flush()
 
 
 async def is_classroom_member(

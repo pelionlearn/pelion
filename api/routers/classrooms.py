@@ -27,7 +27,12 @@ async def create_classroom(
     user: User = Depends(current_active_user),
     db: AsyncSession = Depends(get_db),
 ):
-    return await repositories.classrooms.create_classroom(db, class_.name, class_.color, user.id)
+    classroom = await repositories.classrooms.create_classroom(db, class_.name, class_.color, user.id)
+
+    # add owner to classroom
+    await repositories.classrooms.add_classroom_member(db, classroom.id, user.id)
+
+    return classroom
 
 
 @router.delete("/{classroom_id}", response_model=ClassroomResponse)

@@ -17,7 +17,7 @@ async def delete_user(db: AsyncSession, id):
     if user is None:
         raise errors.NotFoundError(f"User {id} not found")
     await db.delete(user)
-    await db.commit()
+    await db.flush()
     return user
 
 
@@ -29,7 +29,7 @@ async def rename_user(db: AsyncSession, id, name: str):
 
     user.name = name
 
-    await db.commit()
+    await db.flush()
     await db.refresh(user)
 
     return user
