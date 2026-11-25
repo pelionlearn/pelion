@@ -63,6 +63,28 @@ class Classroom(Base):
     )
     owner: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
 
+    invitations: Mapped[list["Invitation"]] = relationship(
+        back_populates="classroom",
+        cascade="delete, delete-orphan",
+        lazy="raise"
+    )
+
+class Invitation(Base):
+    __tablename__ = "invitations"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+
+    classroom_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("classrooms.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    expires_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+
+    classroom: Mapped["Classroom"] = relationship()
 
 
 class Document(Base):
@@ -80,7 +102,6 @@ class Document(Base):
         ForeignKey("classrooms.id"), index=True, nullable=False
     )
 
-    # weird name bc i cant use class keyword, prob should rename to classroom
     classroom: Mapped["Classroom"] = relationship(
         back_populates="documents", lazy="raise"
     )
