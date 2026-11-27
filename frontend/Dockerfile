@@ -6,8 +6,5 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-RUN npm run build
 
-FROM caddy:2-alpine
-
-COPY --from=build /app/dist /srv
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

@@ -82,10 +82,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: frontend
+          - name: web
             context: frontend
-            dockerfile: frontend/Dockerfile
-            image: pelion-frontend:latest
+            dockerfile: frontend/Dockerfile.prod
+            image: pelion-web:latest
           - name: api
             context: api
             dockerfile: api/Dockerfile
