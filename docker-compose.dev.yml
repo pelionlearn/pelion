@@ -1,0 +1,76 @@
+name: pelion-dev
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    volumes:
+      - ./Caddyfile.dev:/etc/caddy/Caddyfile:ro
+    ports:
+      - "${FRONTEND_PORT}:8080"
+    depends_on: [frontend, api]
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    image: pelion-frontend-dev:latest
+    expose: ["8080"]
+    volumes:
+      - ./frontend:/app
+      - frontend_dev_node_modules:/app/node_modules
+    environment:
+      - DOCKER_DEV=true
+    depends_on: [api]
+    restart: unless-stopped
+
+  api:
+    build: api/
+    image: pelion-api:latest
+    ports:
+      - "${API_PORT}:5000"
+    environment:
+      STORAGE_LOCATION: /storage # its probably best if you dont touch this
+    env_file:
+      - ./.env.dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+      chromadb:
+        condition: service_started
+    volumes:
+      - ./api/migrations:/home/myuser/migrations
+      - file_storage:/storage
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - ./.env.dev
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  chromadb:
+    image: chromadb/chroma:latest
+    restart: unless-stopped
+    ports:
+      - "${CHROMA_PORT}:8000"
+    volumes:
+      - chroma_data:/data
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+
+volumes:
+  postgres_data:
+  chroma_data:
+  file_storage:
+  frontend_dev_node_modules:
