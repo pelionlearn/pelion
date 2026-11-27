@@ -1,64 +1,94 @@
-import { useState, type ChangeEvent } from "react";
+
+import { useState, type FormEvent } from "react";
+import { useMutation } from "@tanstack/react-query";
 import Navbar from "./Navbar.tsx";
 import { useToast } from "./components/toast/toast.tsx";
 import { useNavigate } from "react-router-dom";
+
+async function registerUser(email: string, username: string, password: string) {
+    const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email,
+            name: username,
+            password,
+        }),
+    });
+
+    if (response.status === 400) {
+        throw new Error("User already exists with this email");
+    }
+
+    if (!response.ok) {
+        throw new Error("Registration failed");
+    }
+
+    const verifyResponse = await fetch("/api/auth/request-verify-token", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+    });
+
+    if (!verifyResponse.ok) {
+        throw new Error("Account created, but verification email could not be sent");
+    }
+}
+
+async function registerWithGoogle() {
+    const response = await fetch("/api/auth/google/authorize");
+
+    if (!response.ok) {
+        throw new Error("Failed to initialize Google authentication");
+    }
+
+    const data = await response.json();
+
+    return new URL(data.authorization_url, window.location.origin).toString();
+}
 
 function Login() {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
     const toast = useToast();
     const navigate = useNavigate();
 
-    async function handleRegister(e: ChangeEvent<HTMLFormElement>) {
+    const registerMutation = useMutation({
+        mutationFn: () => registerUser(email, username, password),
+
+        onSuccess: () => {
+            toast.info("Verification Email Sent: please check your email");
+            navigate("/login");
+        },
+
+        onError: (error) => {
+            toast.error(error.message);
+            console.error(error);
+        },
+    });
+
+    const googleMutation = useMutation({
+        mutationFn: registerWithGoogle,
+
+        onSuccess: (authUrl) => {
+            window.location.href = authUrl;
+        },
+
+        onError: (error) => {
+            toast.error(error.message);
+            console.error(error);
+        },
+    });
+
+    function handleRegister(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
-        try {
-            const response = await fetch("/api/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: email,
-                    name: username,
-                    password: password,
-                }),
-            });
-
-            if (response.ok) {
-                console.log("Registered");
-
-                await fetch("/api/auth/request-verify-token", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                    }),
-                });
-                toast.info("Verification Email Sent: please check your email");
-                navigate("/login");
-            }
-
-            if (response.status == 400) {
-                toast.error("User already exists with this email");
-                console.log("Invalid credentials");
-            }
-        } catch (err) {
-            console.log("ummm");
-        }
-    }
-
-    async function handleRegisterWithGoogle() {
-        const response = await fetch("/api/auth/google/authorize");
-
-        const data = await response.json();
-
-        const authUrl = new URL(data.authorization_url, window.location.origin);
-
-        window.location.href = authUrl.toString();
+        registerMutation.mutate();
     }
 
     return (
@@ -81,6 +111,7 @@ function Login() {
                                     type="email"
                                     placeholder="Email"
                                     className="pl-10 px-3 py-2 w-full outline outline-dark rounded-lg"
+                                    value={email}
                                     onChange={e => setEmail(e.target.value)}
                                     required
                                 />
@@ -96,6 +127,7 @@ function Login() {
                                     type="username"
                                     placeholder="Username"
                                     className="pl-10 px-3 py-2 w-full outline outline-dark rounded-lg"
+                                    value={username}
                                     onChange={e => setUsername(e.target.value)}
                                     required
                                 />
@@ -111,6 +143,7 @@ function Login() {
                                     type="password"
                                     placeholder="Password"
                                     className="pl-10 px-3 py-2 w-full outline outline-dark rounded-lg"
+                                    value={password}
                                     onChange={e => setPassword(e.target.value)}
                                     required
                                 />
@@ -119,9 +152,10 @@ function Login() {
                         <div className="flex justify-center mt-2">
                             <button
                                 type="submit"
+                                disabled={registerMutation.isPending}
                                 className="w-full py-3 bg-primary text-dark rounded-2xl cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
                             >
-                                Register
+                                {registerMutation.isPending ? "Registering..." : "Register"}
                             </button>
                         </div>
                     </form>
@@ -130,12 +164,13 @@ function Login() {
 
                     <div className="flex justify-center mt-4 gap-4">
                         <button
-                            type="submit"
-                            onClick={handleRegisterWithGoogle}
-                            className="w-full py-3 bg-background text-text rounded-2xl outline outline-dark cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
+                            type="button"
+                            onClick={() => googleMutation.mutate()}
+                            disabled={googleMutation.isPending}
+                            className="w-full py-3 bg-background text-text rounded-2xl outline outline-dark cursor-pointer hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50"
                         >
                             <i className="fa-brands fa-google mr-2" />
-                            Google
+                            {googleMutation.isPending ? "Redirecting..." : "Google"}
                         </button>
                     </div>
 
