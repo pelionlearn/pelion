@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from db.models import Invitation
 from uuid import UUID
 from exceptions import errors
@@ -21,14 +21,12 @@ async def create_invitation(
 async def get_valid_invitation(db: AsyncSession, invitation_id: UUID):
     now = datetime.now()
 
-    result = await db.execute(
-        select(Invitation).where(Invitation.id == invitation_id)
-    )
+    result = await db.get(Invitation, invitation_id)
 
     invitation = result.scalar_one_or_none()
 
     if invitation is None:
-        raise errors.NotFoundError(f"Invitation {invitation_id} not found")
+        raise errors.NotFoundError(f"Invitation {invitation_id} not found or expired")
 
     if invitation.expires_at <= now:
         await delete_invitation(db, invitation_id)
@@ -40,10 +38,18 @@ async def get_valid_invitation(db: AsyncSession, invitation_id: UUID):
 async def delete_invitation(db: AsyncSession, invitation_id: UUID):
     invitation = await db.get(Invitation, invitation_id)
 
-    # TODO: may be better not to raise error, more idempotent, error feedback for this isnt necessary
-    if invitation is None:
-        raise errors.NotFoundError(f"Invitation {invitation_id} not found")
-    
-    await db.delete(invitation)
-    await db.flush()
-    return invitation
+    if invitation is not None:
+        await db.delete(invitation)
+        await db.flush()
+
+async def delete_expired_invitations(db: AsyncSession) -> int:
+    now = datetime.now()
+
+    stmt = delete(Invitation).where(Invitation.expires_at <= now)
+
+    result = await db.execute(stmt)
+
+    # commit this so it updates immediately
+    await db.commit()
+
+    return result.rowcount

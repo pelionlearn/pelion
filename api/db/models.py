@@ -77,11 +77,11 @@ class Invitation(Base):
     classroom_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("classrooms.id", ondelete="CASCADE"),
         nullable=False,
-        index=True,
+        index=True
     )
 
     expires_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow, nullable=False
+        DateTime, default=datetime.utcnow, index=True, nullable=False
     )
 
     classroom: Mapped["Classroom"] = relationship()
