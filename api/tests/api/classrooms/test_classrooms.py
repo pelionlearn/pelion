@@ -59,6 +59,10 @@ class TestDeleteClassroom:
 
         assert response.status_code == 200
 
+        # only write follow ups for endpoints (like DELETE) that arent required to return the resource
+        follow_up = await client.get(f"/classrooms/{classroom["id"]}", headers=as_user(user))
+        assert follow_up.status_code == 404
+
     async def test_non_owner_cannot_delete(self, client, user, outsider):
         classroom = (await create_classroom(client, user)).json()
         response = await client.delete(
