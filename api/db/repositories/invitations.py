@@ -21,9 +21,7 @@ async def create_invitation(
 async def get_valid_invitation(db: AsyncSession, invitation_id: UUID):
     now = datetime.now()
 
-    result = await db.get(Invitation, invitation_id)
-
-    invitation = result.scalar_one_or_none()
+    invitation = await db.get(Invitation, invitation_id)
 
     if invitation is None:
         raise errors.NotFoundError(f"Invitation {invitation_id} not found or expired")
