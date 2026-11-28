@@ -1,13 +1,5 @@
 from uuid import UUID
-
-### HELPERS
-
-async def create_user(user_factory):
-    response = await user_factory()
-
-    assert response.status_code == 201
-
-    return response.json()["id"]
+from tests.conftest import create_classroom, create_user
 
 ### CRUD
 
@@ -45,6 +37,7 @@ async def test_update_me(authenticated_client):
     body = response.json()
 
     assert body["name"] == "DifferentUser"
+
 
 ### SCOPE
 

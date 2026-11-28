@@ -1,5 +1,6 @@
 from uuid import UUID
 import pytest
+from tests.conftest import create_user, create_classroom
 
 
 ### CRUD
@@ -40,7 +41,7 @@ async def test_get_classroom(authenticated_client, classroom_factory):
     assert body["color"] == "#676767"
 
 
-async def test_delete_classroom(authenticated_client, classroom_factory):
+async def test_owner_delete_classroom(authenticated_client, classroom_factory):
 
     create_response = await classroom_factory()
 
@@ -53,7 +54,6 @@ async def test_delete_classroom(authenticated_client, classroom_factory):
     body = response.json()
 
     assert body["id"] == classroom_id
-
 
 ### 404
 
