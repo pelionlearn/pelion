@@ -1,71 +1,35 @@
 import { Outlet, useNavigate, useLocation, Link, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import { useCallback, useEffect, useState } from "react";
 import type { ClassroomType } from "../../types/classroom";
 import type { ChatType } from "../../types/chat";
-
-export interface ClassroomOutletContext {
-    refetchChats: () => void;
-}
+import { useQuery } from "@tanstack/react-query";
 
 function Classroom() {
     const navigate = useNavigate();
     const location = useLocation();
     const { classroomId } = useParams();
 
-    const [classroom, setClassroom] = useState<ClassroomType | null>(null);
-    const [loading, setLoading] = useState(true);
+    // const [chats, setChats] = useState<ChatType[]>([]);
 
-    const [chats, setChats] = useState<ChatType[]>([]);
-    const [chatsError, setChatsError] = useState<string | null>(null);
+    const { data: classroom } = useQuery<ClassroomType>({
+        queryKey: ["classroom", classroomId],
+        queryFn: async () => {
+            const res = await fetch(`/api/classrooms/${classroomId}`);
+            if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+            return res.json();
+        },
+        enabled: !!classroomId,
+    });
 
-    useEffect(() => {
-        if (!classroomId) return;
-
-        let cancelled = false;
-        setLoading(true);
-
-        fetch(`/api/classrooms/${classroomId}`)
-            .then(res => {
-                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                if (!cancelled) setClassroom(data);
-            })
-            .catch(() => {
-                if (!cancelled) setClassroom(null);
-            })
-            .finally(() => {
-                if (!cancelled) setLoading(false);
-            });
-
-        return () => {
-            cancelled = true;
-        };
-    }, [classroomId]);
-
-    const fetchChats = useCallback(() => {
-        if (!classroomId) return;
-
-        setChatsError(null);
-
-        fetch(`/api/classrooms/${classroomId}/chats`)
-            .then(res => {
-                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-                return res.json();
-            })
-            .then((data: ChatType[]) => {
-                setChats(data);
-            })
-            .catch(() => {
-                setChatsError("Failed to load chats");
-            });
-    }, [classroomId]);
-
-    useEffect(() => {
-        fetchChats();
-    }, [fetchChats]);
+    const { data: chats } = useQuery<ChatType[]>({
+        queryKey: ["classroom", classroomId, "chats"],
+        queryFn: async () => {
+            const res = await fetch(`/api/classrooms/${classroomId}/chats`);
+            if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+            return res.json();
+        },
+        enabled: !!classroomId,
+    });
 
     const items: [string, string, string][] = [
         ["user-tie", "Tutor", "tutor"],
@@ -121,13 +85,11 @@ function Classroom() {
                         </motion.button>
                     ))} */}
 
-                    {!chatsError && chats.length !== 0 && (
+                    {chats && chats.length !== 0 && (
                         <p className="mt-6 ml-2 mb-2 text-primary">Tutor</p>
                     )}
 
-                    {chatsError && <p className="px-3 text-sm text-red-500">{chatsError}</p>}
-
-                    {!chatsError &&
+                    {chats &&
                         [...chats].reverse().map(chat => (
                             <motion.button
                                 key={chat.id}
@@ -163,11 +125,11 @@ function Classroom() {
             <div className="flex flex-1 flex-col overflow-hidden">
                 {/* top bar */}
                 <header className="flex h-18 items-center justify-between border-b border-dark px-8">
-                    <h2 className="text-xl">{loading ? "" : classroom?.name}</h2>
+                    <h2 className="text-xl">{classroom?.name}</h2>
                 </header>
 
                 {/* content */}
-                <Outlet context={{ refetchChats: fetchChats } satisfies ClassroomOutletContext} />
+                <Outlet />
             </div>
         </div>
     );

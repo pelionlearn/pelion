@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useLocation, useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import type { ChatType } from "../../types/chat";
 
 type Message = {
@@ -18,132 +19,99 @@ function Chat() {
     const { classroomId, chatId } = useParams<{ classroomId: string; chatId: string }>();
     const location = useLocation();
 
-    const [chat, setChat] = useState<ChatType | null>(null);
-
-    const [userText, setUserText] = useState<string>("");
+    const [userText, setUserText] = useState("");
     const [messages, setMessages] = useState<Message[]>([]);
-    const [_, setLoading] = useState(true);
 
-    const [sending, setSending] = useState(false);
+    const { data: chat } = useQuery<ChatType>({
+        queryKey: ["chat", classroomId, chatId],
+        queryFn: async () => {
+            const res = await fetch(`/api/classrooms/${classroomId}/chats/${chatId}`);
+            if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+            return res.json();
+        },
+        enabled: !!classroomId && !!chatId,
+    });
 
-    // const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    const sendMessage = useMutation({
+        mutationFn: async (message: string): Promise<Message> => {
+            const res = await fetch(
+                `/api/classrooms/${classroomId}/chats/${chatId}/messages`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ content: message }),
+                }
+            );
 
-    useEffect(() => {
-        if (!classroomId) return;
+            if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+            return res.json();
+        },
 
-        let cancelled = false;
+        onMutate: (message) => {
+            const userMessage: Message = {
+                id: "",
+                chat_id: chatId!,
+                role: "user",
+                content: message,
+                created_at: new Date().toISOString(),
+            };
 
-        fetch(`/api/classrooms/${classroomId}/chats/${chatId}`)
-            .then(res => {
-                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                if (!cancelled) setChat(data);
-            })
-            .catch(() => {
-                if (!cancelled) setChat(null);
-            });
+            setMessages(prev => [...prev, userMessage]);
+        },
 
-        return () => {
-            cancelled = true;
-        };
-    }, [classroomId, chatId]);
+        onSuccess: (response) => {
+            setMessages(prev => [...prev, response]);
+        },
 
-    const requestIdRef = useRef(0);
+        onError: (error) => {
+            console.error(error);
+        },
+    });
 
-    const sendMessage = async (message: string) => {
-        if (!classroomId || !chatId) return;
-        if (message == "") return;
+    // fetch messages
+    const { data: chatMessages } = useQuery<Message[]>({
+        queryKey: ["chat", classroomId, chatId, "messages"],
+        queryFn: async () => {
+            const res = await fetch(
+                `/api/classrooms/${classroomId}/chats/${chatId}/messages`
+            );
 
-        setSending(true);
-
-        // this is basically a fake client-side only message rn
-        const userMessage: Message = {
-            id: "",
-            chat_id: chatId,
-            role: "user",
-            content: message,
-            created_at: new Date().toISOString(),
-        };
-
-        setMessages(prev => [...prev, userMessage]);
-
-        const llm_response: Message = await fetch(
-            `/api/classrooms/${classroomId}/chats/${chatId}/messages`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ content: message }),
-            }
-        )
-            .then(res => {
-                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-                return res.json();
-            })
-            .finally(() => {
-                setSending(false);
-            });
-
-        setMessages(prev => [...prev, llm_response]);
-
-        // const prevLength = messages.length;
-        // let currLength = messages.length;
-        // while (prevLength == currLength) {
-        //     await sleep(500);
-        //     fetchMessages();
-        //     currLength = messages.length;
-        //     console.log(prevLength, currLength);
-        // }
-    };
+            if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+            return res.json();
+        },
+        enabled: !!classroomId && !!chatId,
+    });
 
     useEffect(() => {
-        if (!classroomId || !chatId) return;
-        
-        const requestId = ++requestIdRef.current;
-
         initialLoad.current = true;
         initialMessageSent.current = false;
-        setLoading(true);
-
-        fetch(`/api/classrooms/${classroomId}/chats/${chatId}/messages`)
-            .then(res => {
-                if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                if (requestIdRef.current !== requestId) return;
-                setMessages(data);
-
-                const initialMessage = (location.state as { initialMessage?: string } | null)
-                    ?.initialMessage;
-
-                if (initialMessage && !initialMessageSent.current) {
-                    initialMessageSent.current = true;
-                    sendMessage(initialMessage);
-                    window.history.replaceState({}, "");
-                }
-            })
-            .catch(() => {
-                if (requestIdRef.current !== requestId) return;
-                setMessages([]);
-            })
-            .finally(() => {
-                if (requestIdRef.current !== requestId) return;
-                setLoading(false);
-            });
-
+        setMessages([]);
     }, [classroomId, chatId]);
 
-    const handleSend = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    useEffect(() => {
+        if (!chatMessages) return;
+
+        setMessages(chatMessages);
+
+        const initialMessage = (location.state as { initialMessage?: string } | null)
+            ?.initialMessage;
+
+        if (initialMessage && !initialMessageSent.current) {
+            initialMessageSent.current = true;
+            sendMessage.mutate(initialMessage);
+            window.history.replaceState({}, "");
+        }
+    }, [chatMessages]);
+
+    const handleSend = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (userText == "") return;
+        if (userText == "" || sendMessage.isPending) return;
 
         const message = userText;
         setUserText("");
-        await sendMessage(message);
+        sendMessage.mutate(message);
     };
 
     useEffect(() => {
@@ -220,7 +188,7 @@ function Chat() {
                         type="submit"
                         className="text-md cursor-pointer px-2 py-1 rounded-xl text-primary hover:opacity-70 hover:bg-primary/25 transition-opacity"
                     >
-                        {sending ? "..." : <i className="fa-solid fa-arrow-right-long" />}
+                        {sendMessage.isPending ? "..." : <i className="fa-solid fa-arrow-right-long" />}
                     </button>
                 </form>
             </div>

@@ -1,13 +1,12 @@
 import { useState, type KeyboardEvent } from "react";
 import { motion } from "motion/react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import type { ClassroomOutletContext } from "./Classroom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../auth";
+import { queryClient } from "../../query-client";
 
 function Tutor() {
     const navigate = useNavigate();
     const { classroomId } = useParams();
-    const { refetchChats } = useOutletContext<ClassroomOutletContext>();
     const { user } = useAuth();
 
     const firstName = user?.name?.split(" ")[0];
@@ -44,7 +43,9 @@ function Tutor() {
             }
 
             const chat = await response.json();
-            refetchChats();
+            queryClient.invalidateQueries({
+                queryKey: ["classroom", classroomId, "chats"],
+            });
             navigate(`/dashboard/classroom/${classroomId}/chat/${chat.id}`, {
                 state: { initialMessage: trimmed },
             });
